@@ -1,6 +1,5 @@
 package org.utils;
 
-import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -13,12 +12,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MethotsAzureMasterFiles {
-
-    public static String file1 = /*System.getProperty("user.dir") + */"Documentos\\documents\\initialDocument\\Historico Cartera Comercial.xlsx";
-    public static String file2 = /*System.getProperty("user.dir") + */"Documentos\\documents\\finalDocument\\Historico Cartera COMERCIAL por OF.xlsx";
 
     public static void buscarYListarArchivos(String ubicacion) throws IOException {
         Path ruta = Paths.get(ubicacion);
@@ -53,15 +50,35 @@ public class MethotsAzureMasterFiles {
         fileChooser.setCurrentDirectory(new File(rutaDocumentos));
 
         // Filtra para mostrar solo archivos de Excel
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Excel", "xlsx", "xls"));
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos CSV y Excel", "csv", "xlsx", "xls"));
 
         // Muestra el diálogo de selección de archivo
         int resultado = fileChooser.showOpenDialog(null);
 
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivoSeleccionado = fileChooser.getSelectedFile();
-            String rutaCompleta = archivoSeleccionado.getAbsolutePath();
-            return rutaCompleta;
+            return archivoSeleccionado.getAbsolutePath();
+        } else {
+            return null; // Si no se seleccionó ningún archivo, retorna null
+        }
+    }
+    public static String getDirecotry() {
+        // Crea un objeto JFileChooser
+        JFileChooser fileChooser = new JFileChooser();
+
+        // Configura el directorio inicial en la carpeta de documentos del usuario
+        String rutaDocumentos = System.getProperty("user.home")/* + File.separator + "Documentos"*/;
+        fileChooser.setCurrentDirectory(new File(rutaDocumentos));
+
+        // Filtra para mostrar solo archivos de Excel
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        // Muestra el diálogo de selección de archivo
+        int resultado = fileChooser.showOpenDialog(null);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File archivoSeleccionado = fileChooser.getSelectedFile();
+            return archivoSeleccionado.getAbsolutePath();
         } else {
             return null; // Si no se seleccionó ningún archivo, retorna null
         }
@@ -108,28 +125,6 @@ public class MethotsAzureMasterFiles {
             System.gc();
         }
     }
-
-    public static String convertToAsciiAndSort(String input) {
-        //String input = convertToLowerCase(input);
-        int[] asciiValues = new int[input.length()];
-        for (int i = 0; i < input.length(); i++) {
-            asciiValues[i] = input.charAt(i); // Obtener el valor ASCII de cada carácter
-        }
-
-        Arrays.sort(asciiValues); // Ordenar de menor a mayor (valores ASCII)
-
-        StringBuilder result = new StringBuilder();
-        for (int value : asciiValues) {
-            result.append((char) value); // Convertir el valor ASCII de nuevo a carácter
-        }
-
-        return result.toString();
-    }
-
-    static double calculateSimilarity(String str1, String str2, LevenshteinDistance distance) {
-        int maxLen = Math.max(str1.length(), str2.length());
-        return 1.0 - (double) distance.apply(str1, str2) / maxLen;
-    }
     /*---------------------------------------------------------------------------------------------------------------*/
 
     public static List<String> getWorkSheet(String filePath, int i) {
@@ -152,6 +147,29 @@ public class MethotsAzureMasterFiles {
             throw new RuntimeException(e);
         }
         return shetNames;
+    }
+
+    public static List<String> getHeadersMF(String excelFilePath, String sheetName) {
+        List<String> headers = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream(excelFilePath);
+            Workbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheet(sheetName);
+            Row headerRow = sheet.getRow(168 );
+            for (int i = 0; i < headerRow.getRowNum(); i++) {
+                System.out.println("ROW: " + headerRow.getCell(i));
+            }
+
+            for (Cell cell : headerRow) {
+                headers.add(obtenerValorVisibleCelda(cell));//obtenerValorCelda(cell)
+
+            }
+            workbook.close();
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return headers;
     }
 
     public static List<Map<String, String>> getValuebyHeader(String excelFilePath, String sheetName) {
@@ -220,7 +238,7 @@ public class MethotsAzureMasterFiles {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    encabezados.add(obtenerValorCelda(cell));
+                    encabezados.add(obtenerValorVisibleCelda(cell));
                 }
                 break; // Terminamos de buscar encabezados una vez que los encontramos
             }
@@ -262,7 +280,7 @@ public class MethotsAzureMasterFiles {
         Iterator<Cell> cellIterator = row.cellIterator();
         while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
-            valoresFila.add(obtenerValorCelda(cell));
+            valoresFila.add(obtenerValorVisibleCelda(cell));//obtenerValorCelda()
         }
         return valoresFila;
     }
@@ -270,28 +288,118 @@ public class MethotsAzureMasterFiles {
     public static String obtenerValorCelda(Cell cell) {
         String valor = "";
         if (cell != null) {
+            try {
+                switch (cell.getCellType()) {
+                    case STRING:
+                        System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getStringCellValue() + ", CELL: " + cell);
+                        valor = cell.getStringCellValue();
+                        break;
+                    case NUMERIC:
+                        if (DateUtil.isCellDateFormatted(cell)) {
+                            //valor = cell.getDateCellValue().toString();
+                            System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getNumericCellValue() + ", CELL: " + cell);
+                            String formatDate = cell.getDateCellValue().toString();
+                            SimpleDateFormat formatoEntrada = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                            Date date = formatoEntrada.parse(formatDate);
+                            SimpleDateFormat formatoSalida = new SimpleDateFormat("dd/MM/yyyy");
+                            //valor = formatoSalida.format(date);
+                            valor = cell.toString();
+                            System.out.println("VALOR1 " + valor);
+                        }else {
+                            //valor = Date.toString(cell.getDateCellValue()/*NumericCellValue()*/);
+                            System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getNumericCellValue() + ", CELL: " + cell);
+                            valor = cell.getStringCellValue();
+                            System.out.println("VALOR3 " + valor);
+                        }
+                        break;
+                    case BOOLEAN:
+                        System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getBooleanCellValue() + ", CELL: " + cell);
+                        valor = Boolean.toString(cell.getBooleanCellValue());
+                        break;
+                    case FORMULA:
+                        System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getCellFormula().toString() + ", CELL: " + cell + " CELLADD: " + cell.getAddress());
+                        /*System.err.println("Formato fecha no valido."+ cell.getCellFormula() +" Encabezado "+ cell.getSheet().getSheetName() +" Posición: "+ cell.getAddress() +" puede contener formula o valor cadena de caracteres");
+                        valor = evaluarFormula(cell);
+                        System.out.println("VALORF: " + valor);
+                        FunctionsApachePoi.waitSeconds(20);
+                        System.exit(1);*/
+                        valor = obtenerValorCeldaString(cell);
+
+                        //break;
+                    default:
+                        /*valor = obtenerValorCeldaString(cell);*/
+                        break;
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return valor;
+    }
+
+    public static String obtenerValorVisibleCelda(Cell cell) {
+        try {
+            DataFormatter dataFormatter = new DataFormatter();
+            String valor = "";
+
+            // Verificar el tipo de celda
             switch (cell.getCellType()) {
                 case STRING:
                     valor = cell.getStringCellValue();
                     break;
                 case NUMERIC:
                     if (DateUtil.isCellDateFormatted(cell)) {
-                        valor = cell.getDateCellValue().toString();
+                        valor = dataFormatter.formatCellValue(cell);
                     } else {
-                        valor = Double.toString(cell.getNumericCellValue());
+                        valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
                     }
                     break;
                 case BOOLEAN:
                     valor = Boolean.toString(cell.getBooleanCellValue());
                     break;
-                case FORMULA:
-                    valor = evaluarFormula(cell);
+                case BLANK:
+                    valor = "";
                     break;
                 default:
-                    break;
+                    valor = dataFormatter.formatCellValue(cell);
             }
+
+            return valor;
+        } catch (Exception e) {
+            return "";
         }
-        return valor;
+    }
+
+    public static String evaluarFormulas(Cell cell) {
+        try {
+            Workbook workbook = cell.getSheet().getWorkbook();
+            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+            CellValue cellValue = evaluator.evaluate(cell);
+            if (cellValue.getCellType() == CellType.NUMERIC) {
+                double valor = cellValue.getNumberValue();
+                //System.out.println("El valor de la fórmula en A5 es: " + valor);
+                return Double.toString(valor);
+            } else if (cellValue.getCellType() == CellType.STRING) {
+                String valor = cellValue.getStringValue();
+                //System.out.println("El valor de la fórmula en A5 es: " + valor);
+                return valor;
+            }else {
+                return cellValue.formatAsString();
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static String obtenerValorCeldaString(Cell cell) {
+        try {
+            DataFormatter dataFormatter = new DataFormatter();
+            String valor = dataFormatter.formatCellValue(cell);
+            return valor;
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public static String evaluarFormula(Cell cell) {
@@ -299,10 +407,140 @@ public class MethotsAzureMasterFiles {
             Workbook workbook = cell.getSheet().getWorkbook();
             FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
             CellValue cellValue = evaluator.evaluate(cell);
-            return cellValue.formatAsString();
+
+            if (cellValue.getCellType() == CellType.FORMULA) {
+                // Si la celda contiene una fórmula, obtén su valor calculado
+                if (cellValue.getCellType() == CellType.NUMERIC) {
+                    double valor = cellValue.getNumberValue();
+                    return Double.toString(valor);
+                } else if (cellValue.getCellType() == CellType.STRING) {
+                    return cellValue.getStringValue();
+                }
+            } else {
+                // Si no es una fórmula, obtén el valor directo de la celda
+                System.out.println("NO ES FORMULA");
+                DataFormatter dataFormatter = new DataFormatter();
+                String valor = dataFormatter.formatCellValue(cell);
+                return valor;
+            }
         } catch (Exception e) {
             return "";
         }
+
+        return ""; // Valor por defecto si no se pudo obtener el valor de la fórmula
+    }
+
+    public static List<Map<String, String>> createMapList(List<Map<String, String>> originalList, String keyHeader, String valueHeader) {
+        List<Map<String, String>> mapList = new ArrayList<>();
+
+        for (Map<String, String> originalMap : originalList) {
+            String key = originalMap.get(keyHeader);
+            String value = originalMap.get(valueHeader);
+
+            Map<String, String> newMap = new HashMap<>();
+            newMap.put(key, value);
+
+            mapList.add(newMap);
+        }
+
+        return mapList;
+    }
+
+    public static List<Map<String, String>> obtenerValoresPorFilas(Workbook workbook1, Workbook workbook2, String sheetName1, String sheetName2, String header1, String header2) throws IOException {
+        List<Map<String, String>> valoresPorFilas = new ArrayList<>();
+        Sheet sheet1 = workbook1.getSheet(sheetName1);
+        Sheet sheet2 = workbook2.getSheet(sheetName2);
+
+        List<String> encabezados = getHeadersMasterfile(sheet1, sheet2);
+
+        int indexHeader1 = encabezados.indexOf(header1);
+        int indexHeader2 = encabezados.indexOf(header2);
+
+        if (indexHeader1 == -1 || indexHeader2 == -1) {
+            // Los encabezados especificados no se encontraron en la lista de encabezados
+            // Puedes manejar esta situación como desees, por ejemplo, lanzando una excepción
+            throw new IllegalArgumentException("Los encabezados especificados no se encontraron en la hoja.");
+        }
+
+        Iterator<Row> rowIterator = sheet1.iterator();
+        // Omitir la primera fila ya que contiene los encabezados
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            List<String> valoresFila = obtenerValoresFila(row);
+
+            Map<String, String> fila = new HashMap<>();
+            try {
+                fila.put(header1, valoresFila.get(indexHeader1));
+                fila.put(header2, valoresFila.get(indexHeader2));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+
+            valoresPorFilas.add(fila);
+        }
+
+        return valoresPorFilas;
+    }
+
+    public static List<Map<String, String>> obtenerValoresPorFilas(Workbook workbook1, Workbook workbook2, String sheetName1, String sheetName2) throws IOException {
+        List<Map<String, String>> valoresPorFilas = new ArrayList<>();
+        Sheet sheet1 = workbook1.getSheet(sheetName1);
+        Sheet sheet2 = workbook2.getSheet(sheetName2);
+
+        List<String> encabezados = getHeadersMasterfile(sheet1, sheet2);
+
+        Iterator<Row> rowIterator = sheet1.iterator();
+        // Omitir la primera fila ya que contiene los encabezados
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            List<String> valoresFila = obtenerValoresFila(row);
+
+            Map<String, String> fila = new HashMap<>();
+            for (int i = 0; i < encabezados.size() && i < valoresFila.size(); i++) {
+                String encabezado = encabezados.get(i);
+                String valor = valoresFila.get(i);
+                fila.put(encabezado, valor);
+            }
+
+            valoresPorFilas.add(fila);
+        }
+
+        return valoresPorFilas;
+    }
+    public static List<Map<String, String>> obtenerValoresPorFilas(Sheet sheet, Sheet sheet2) throws IOException {
+        List<Map<String, String>> valoresPorFilas = new ArrayList<>();
+        List<String> encabezados = getHeadersMasterfile(sheet, sheet2);
+
+        Iterator<Row> rowIterator = sheet.iterator();
+        // Omitir la primera fila ya que contiene los encabezados
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            List<String> valoresFila = obtenerValoresFila(row);
+
+            Map<String, String> fila = new HashMap<>();
+            for (int i = 0; i < encabezados.size() && i < valoresFila.size(); i++) {
+                String encabezado = encabezados.get(i);
+                String valor = valoresFila.get(i);
+                fila.put(encabezado, valor);
+            }
+
+            valoresPorFilas.add(fila);
+        }
+
+        return valoresPorFilas;
     }
 
     public static List<Map<String, String>> obtenerValoresPorFilas(Sheet sheet, List<String> encabezados) {
