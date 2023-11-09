@@ -3,6 +3,7 @@ package org.utils;
 import org.utils.configuration.historicoCarteraConsumoPorOF.HistoricoCarteraConsumoPorOF;
 import org.utils.configuration.historicoCarteraComercialPorOF.HistoricoCarteraComercialPorOF;
 import org.utils.configuration.historicoCarteraMicrocreditoPorOF.HistoricoCarteraMicrocreditoPorOF;
+import org.utils.configuration.historicoCarteraPorLC.HistoricoCarteraPorLC;
 
 
 import javax.swing.*;
@@ -51,7 +52,9 @@ public class Start {
                 HistoricoCarteraConsumoPorOF.configuracion(masterFile);
             } else if (fileName.contains("microcredito")) {
                 HistoricoCarteraMicrocreditoPorOF.configuracion(masterFile);
-            }else {
+            } else if (fileName.contains("historico cartera por lc")) {
+                HistoricoCarteraPorLC.configuracion(masterFile);
+            } else {
                 System.out.println("EL ARCHIVO SELECCIONADO NO TIENE ANÁLISIS ASIGNADO");
             }
         } catch (Exception e) {

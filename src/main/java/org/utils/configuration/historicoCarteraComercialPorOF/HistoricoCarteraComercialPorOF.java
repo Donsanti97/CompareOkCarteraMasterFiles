@@ -3,7 +3,6 @@ package org.utils.configuration.historicoCarteraComercialPorOF;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,8 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.utils.MethotsAzureMasterFiles.getDirecotry;
-import static org.utils.MethotsAzureMasterFiles.getDocument;
+import static org.utils.MethotsAzureMasterFiles.*;
 import static org.utils.FunctionsApachePoi.*;
 
 public class HistoricoCarteraComercialPorOF {
@@ -532,7 +530,6 @@ public class HistoricoCarteraComercialPorOF {
         List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
         String reEstCapital = "re_est";
-        String diasDeMora = "dias_de_mora";
 
         List<String> headers = null;
         List<Map<String, String>> datosFiltrados = null;

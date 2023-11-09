@@ -12,8 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.utils.MethotsAzureMasterFiles.getDirecotry;
-import static org.utils.MethotsAzureMasterFiles.getDocument;
+import static org.utils.MethotsAzureMasterFiles.*;
 import static org.utils.FunctionsApachePoi.*;
 
 public class HistoricoCarteraMicrocreditoPorOF {

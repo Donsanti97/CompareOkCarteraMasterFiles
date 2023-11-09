@@ -12,6 +12,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -50,18 +51,20 @@ public class MethotsAzureMasterFiles {
         fileChooser.setCurrentDirectory(new File(rutaDocumentos));
 
         // Filtra para mostrar solo archivos de Excel
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos CSV y Excel", "csv", "xlsx", "xls"));
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Excel", "xlsx", "xls"));
 
         // Muestra el diálogo de selección de archivo
         int resultado = fileChooser.showOpenDialog(null);
 
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivoSeleccionado = fileChooser.getSelectedFile();
-            return archivoSeleccionado.getAbsolutePath();
+            String rutaCompleta = archivoSeleccionado.getAbsolutePath();
+            return rutaCompleta;
         } else {
             return null; // Si no se seleccionó ningún archivo, retorna null
         }
     }
+
     public static String getDirecotry() {
         // Crea un objeto JFileChooser
         JFileChooser fileChooser = new JFileChooser();
@@ -78,7 +81,8 @@ public class MethotsAzureMasterFiles {
 
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivoSeleccionado = fileChooser.getSelectedFile();
-            return archivoSeleccionado.getAbsolutePath();
+            String rutaCompleta = archivoSeleccionado.getAbsolutePath();
+            return rutaCompleta;
         } else {
             return null; // Si no se seleccionó ningún archivo, retorna null
         }
@@ -133,7 +137,7 @@ public class MethotsAzureMasterFiles {
             FileInputStream fis = new FileInputStream(filePath);
             Workbook workbook = new XSSFWorkbook(fis);
             int numberOfSheets = workbook.getNumberOfSheets();
-
+            ;
             for (int index = i; index < numberOfSheets; index++) {
                 Sheet sheet = workbook.getSheetAt(index);
                 shetNames.add(sheet.getSheetName());
@@ -317,7 +321,7 @@ public class MethotsAzureMasterFiles {
                         valor = Boolean.toString(cell.getBooleanCellValue());
                         break;
                     case FORMULA:
-                        System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getCellFormula().toString() + ", CELL: " + cell + " CELLADD: " + cell.getAddress());
+                            System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getCellFormula().toString() + ", CELL: " + cell + " CELLADD: " + cell.getAddress());
                         /*System.err.println("Formato fecha no valido."+ cell.getCellFormula() +" Encabezado "+ cell.getSheet().getSheetName() +" Posición: "+ cell.getAddress() +" puede contener formula o valor cadena de caracteres");
                         valor = evaluarFormula(cell);
                         System.out.println("VALORF: " + valor);
@@ -352,15 +356,29 @@ public class MethotsAzureMasterFiles {
                     if (DateUtil.isCellDateFormatted(cell)) {
                         valor = dataFormatter.formatCellValue(cell);
                     } else {
-                        valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
+                        double numericValue = cell.getNumericCellValue();
+                        String dataFormatString = cell.getCellStyle().getDataFormatString();
+
+                        if (numericValue >= -99.99 && numericValue <= 99.99) {
+                            if (numericValue == 0){
+                                valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
+
+                            }else {
+                                valor = String.format("%.2f%%", numericValue * 100);
+                            }
+                        }else {
+                            valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
+                        }
                     }
                     break;
                 case BOOLEAN:
                     valor = Boolean.toString(cell.getBooleanCellValue());
                     break;
                 case BLANK:
-                    valor = "";
+                case _NONE:
+                    valor = "0";
                     break;
+
                 default:
                     valor = dataFormatter.formatCellValue(cell);
             }

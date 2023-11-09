@@ -1,23 +1,21 @@
 package org.utils;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFPivotTable;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,8 +23,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.utils.MethotsAzureMasterFiles.*;
+//import static org.utils.MethotsAzureMasterFiles.*;
 
 public class FunctionsApachePoi {
+
 
     private static final Logger logger = LogManager.getLogger(FunctionsApachePoi.class);
 
@@ -221,13 +221,6 @@ public class FunctionsApachePoi {
         }
     }
 
-    public static void runtime() {
-        Runtime runtime = Runtime.getRuntime();
-        long minRunningMemory = (1024 * 1024);
-        if (runtime.freeMemory() < minRunningMemory) {
-            System.gc();
-        }
-    }
 
     public static void waitSeconds(int seconds) {
         try {
@@ -308,34 +301,6 @@ public class FunctionsApachePoi {
 
         fis.close();
         return resultMap;
-    }
-
-    public static void convertirCSVaExcel(String csvFilePath, String excelFilePath, String sheetName) {
-        try {
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet(sheetName);
-            Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
-            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);
-
-            int rowNumber = 0;
-            for (CSVRecord csvRecord : csvParser) {
-                Row row = sheet.createRow(rowNumber++);
-                int cellNumber = 0;
-                for (String cellValue : csvRecord) {
-                    Cell cell = row.createCell(cellNumber++);
-                    cell.setCellValue(cellValue);
-                }
-            }
-
-            // Guardar el archivo de Excel
-            FileOutputStream fileOutputStream = new FileOutputStream(excelFilePath);
-            workbook.write(fileOutputStream);
-            fileOutputStream.close();
-
-            workbook.close();
-        } catch (IOException e) {
-            logger.error("Error al convertir CSV a Excel", e);
-        }
     }
 
     //Metodo para obtener los nombres de las hojas existentes en el excel
@@ -423,6 +388,8 @@ public class FunctionsApachePoi {
         return data;
     }
 
+
+
     public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados, String header) {
         List<Map<String, String>> data = new ArrayList<>();
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
@@ -501,6 +468,50 @@ public class FunctionsApachePoi {
 
 
     /*---------------------------------------------------------------------------------------------------*/
+
+    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar, int valorInicio, int valorFin) {
+        List<Map<String, String>> datosFiltrados = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream(excelFilePath);
+            Workbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheet(sheetName);
+            List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
+            int campoFiltrarIndex = headers.indexOf(campoFiltrar);
+            if (campoFiltrarIndex == -1) {
+                System.err.println("El campo especificado para el filtro no existe.");
+                return datosFiltrados;
+            }
+
+            int numberOfRows = sheet.getPhysicalNumberOfRows();
+            for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                Cell cell = row.getCell(campoFiltrarIndex);
+                double valorCelda = (cell != null && cell.getCellType() == CellType.NUMERIC) ? cell.getNumericCellValue() : 0;
+                if (valorCelda >= valorInicio && valorCelda <= valorFin) {
+                    Map<String, String> rowData = new HashMap<>();
+                    for (int cellIndex = 0; cellIndex < headers.size(); cellIndex++) {
+                        Cell dataCell = row.getCell(cellIndex);
+                        String header = headers.get(cellIndex);
+                        String value = "";
+                        if (dataCell != null) {
+                            if (dataCell.getCellType() == CellType.STRING) {
+                                value = dataCell.getStringCellValue();
+                            } else if (dataCell.getCellType() == CellType.NUMERIC) {
+                                value = String.valueOf(dataCell.getNumericCellValue());
+                            }
+                        }
+                        rowData.put(header, value);
+                    }
+                    datosFiltrados.add(rowData);
+                }
+            }
+            workbook.close();
+            fis.close();
+        } catch (IOException e) {
+            logger.error("Error al procesar el archivo Excel", e);
+        }
+        return datosFiltrados;
+    }
 
     //Metodo para obtener valores de los encabezados en un rago especifico de valores
     public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar, String valorInicio, String valorFin) {
@@ -797,6 +808,31 @@ public class FunctionsApachePoi {
             workbook.close();
         } catch (IOException e) {
             logger.error("Error al procesar el archivo Excel", e);
+        }
+    }
+
+    public static void crearNuevaHojaExcel(String filePath, List<String> headers) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("NuevaHoja");
+
+        // Crear la fila de encabezados en la nueva hoja
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < headers.size(); i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers.get(i));
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            workbook.write(fos);
+            System.out.println("Nueva hoja Excel creada o reemplazada en: " + filePath);
+        } catch (IOException e) {
+            logger.error("Error al procesar el archivo Excel", e);
+        } finally {
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                logger.error("Error al cerrar el libro de Excel", e);
+            }
         }
     }
 
@@ -1133,28 +1169,6 @@ public class FunctionsApachePoi {
 
     /*------------------------------------------------------------------------------------------------------------------------------*/
     /*LECTURA DEL ARCHIVO MAESTRO PARA ANALISIS*/
-    public static String getDocument() {
-        // Crea un objeto JFileChooser
-        JFileChooser fileChooser = new JFileChooser();
-
-        // Configura el directorio inicial en la carpeta de documentos del usuario
-        String rutaDocumentos = System.getProperty("user.home") + File.separator + "Documentos";
-        fileChooser.setCurrentDirectory(new File(rutaDocumentos));
-
-        // Filtra para mostrar solo archivos de Excel
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Excel", "xlsx", "xls"));
-
-        // Muestra el diálogo de selección de archivo
-        int resultado = fileChooser.showOpenDialog(null);
-
-        if (resultado == JFileChooser.APPROVE_OPTION) {
-            File archivoSeleccionado = fileChooser.getSelectedFile();
-            String rutaCompleta = archivoSeleccionado.getAbsolutePath();
-            return rutaCompleta;
-        } else {
-            return null; // Si no se seleccionó ningún archivo, retorna null
-        }
-    }
 
     public static List<String> getHeaders(String excelFilePath, String sheetName) {
         List<String> headers = new ArrayList<>();
@@ -1173,6 +1187,7 @@ public class FunctionsApachePoi {
         }
         return headers;
     }
+
 
     public static List<Map<String, String>> obtenerValoresEncabezados2(String file1, String file2, String hoja, String fechaCorte) {
         List<Map<String, String>> valoresEncabezados2 = new ArrayList<>();
@@ -1256,22 +1271,34 @@ public class FunctionsApachePoi {
             for (String sheets2 : nameSheets2) {
                 System.out.println("Analizando: " + sheets2);
                 encabezados2 = getHeadersMasterfile(sheet1, sheet2);
-                /*for (String headers : encabezados2) {
-                    System.out.println("Headers2: " + headers);
-                }*/
+                for (String headers : encabezados2) {
+                    sheets2.toLowerCase();
+                    hoja.toLowerCase();
+                    if (sheets2.equals(hoja)) {
+                        System.out.println("Headers2: " + headers);
+                    }
+                }
             }
 
             System.out.println("-------------------------------------------------------------------------------------");
             System.out.println("ANALISIS DE DATOS MASTERFILE");
 
-
+            JOptionPane.showMessageDialog(null, "Tomando en cuenta la información mostrada anteriormente en consola " +
+                    "\n Seleccione por favor el encabezado \"Codigo\" que será usado para el análisis de los valores");
+            assert encabezados2 != null;
+            String seleccion = mostrarMenu(encabezados2);
             for (String sheetName1 : nameSheets1) {
                 for (String sheetName2 : nameSheets2) {
+                    sheetName2.toLowerCase();
+                    hoja.toLowerCase();
                     if (sheetName2.equals(hoja)) {
                         System.out.println("ENTRA A " + hoja);
                         System.out.println("SHEETNAME2: " + sheetName2);
-                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, "Cod", fechaCorte);
-                        mapList = createMapList(valoresEncabezados2, "Cod", fechaCorte);
+                        /*JOptionPane.showMessageDialog(null, "Tomando en cuenta la información mostrada anteriormente en consola " +
+                                "\n Digite por favor el nombre del campo del que se tomará el código:");
+                        String campoCodigo = mostrarCuadroDeTexto();*/
+                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, fechaCorte);
+                        mapList = createMapList(valoresEncabezados2, seleccion, fechaCorte);
                         for (Map<String, String> map : mapList) {
                             System.out.println("Analizando valores... ");
                             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -1288,15 +1315,7 @@ public class FunctionsApachePoi {
 
 
             System.out.println("---------------------------------------------------------------------------------------");
-            /*for (String e1 : encabezados1) {
-                for (String e2 : encabezados2) {
-                    if (e1.equals(e2)) {
-                        System.out.println("equals" + e1 + ", " + e2);
-                    } else {
-                        System.out.println("No equals");
-                    }
-                }
-            }*/
+
             System.out.println("Analisis completado...");
             workbook.close();
             workbook2.close();
@@ -1319,9 +1338,47 @@ public class FunctionsApachePoi {
     }
 
 
+    public static String mostrarMenu(List<String> opciones) {
+        JFrame frame = new JFrame("Menú de Opciones");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JComboBox<String> comboBox = new JComboBox<>(opciones.toArray(new String[0]));
+        comboBox.setSelectedIndex(0);
+
+        JButton button = new JButton("Seleccionar");
+
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Cerrar la ventana después de seleccionar una opción
+            }
+        };
+        button.addActionListener(actionListener);
+
+        JPanel panel = new JPanel();
+        panel.add(comboBox);
+        panel.add(button);
+
+        frame.add(panel);
+        frame.setSize(300, 100);
+        frame.setVisible(true);
+
+        while (frame.isVisible()) {
+            // Esperar hasta que la ventana se cierre
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return comboBox.getSelectedItem().toString();
+    }
+
+
     public static String mostrarCuadroDeTexto() {
         // Crea una ventana Swing
-        JFrame frame = new JFrame("Cuadro de Texto");
+        JFrame frame = new JFrame("Ingrese el valor Indicado");
 
         // Crea un cuadro de texto
         JTextField textField = new JTextField(20); // 20 es el ancho del cuadro de texto
@@ -1363,6 +1420,7 @@ public class FunctionsApachePoi {
 
         return textoIngresado.get();
     }
+
 }
 
 
