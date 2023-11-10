@@ -713,6 +713,59 @@ public class FunctionsApachePoi {
         return datosFiltrados;
     }
 
+    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, int valorInicio1, int valorFin1, String campoFiltrar2, int valorInicio2, int valorFin2) {
+        List<Map<String, String>> datosFiltrados = new ArrayList<>();
+        List<String> headers = null;
+        try {
+            IOUtils.setByteArrayMaxOverride(300000000);
+
+            FileInputStream fis = new FileInputStream(excelFilePath);
+            Workbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheet(sheetName);
+            headers = obtenerEncabezados(excelFilePath, sheetName);
+            int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
+            int campoFiltrarIndex2 = headers.indexOf(campoFiltrar2);
+            if (campoFiltrarIndex1 == -1 || campoFiltrarIndex2 == -1) {
+                System.err.println("Alguno de los campos especificados para el filtro no existe.");
+                return datosFiltrados;
+            }
+
+            int numberOfRows = sheet.getPhysicalNumberOfRows();
+            for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                Cell cell1 = row.getCell(campoFiltrarIndex1);
+                Cell cell2 = row.getCell(campoFiltrarIndex2);
+                String valorCelda1 = (cell1 != null && cell1.getCellType() == CellType.STRING) ? cell1.getStringCellValue() : "";
+                double valorCelda2 = (cell2 != null && cell2.getCellType() == CellType.NUMERIC) ? cell2.getNumericCellValue() : 0.0;
+
+                if (valorCelda1.compareTo(String.valueOf(valorInicio1)) >= 0 && valorCelda1.compareTo(String.valueOf(valorFin1)) <= 0 &&
+                        valorCelda2 >= valorInicio2 && valorCelda2 <= valorFin2) {
+                    Map<String, String> rowData = new HashMap<>();
+                    for (int cellIndex = 0; cellIndex < headers.size(); cellIndex++) {
+                        Cell dataCell = row.getCell(cellIndex);
+                        String header = headers.get(cellIndex);
+                        String value = "";
+                        if (dataCell != null) {
+                            if (dataCell.getCellType() == CellType.STRING) {
+                                value = dataCell.getStringCellValue();
+                            } else if (dataCell.getCellType() == CellType.NUMERIC) {
+                                value = String.valueOf(dataCell.getNumericCellValue());
+                            }
+                        }
+
+                        rowData.put(header, value);
+                    }
+                    datosFiltrados.add(rowData);
+                }
+            }
+            workbook.close();
+            fis.close();
+        } catch (IOException e) {
+            logger.error("Error al procesar el archivo Excel", e);
+        }
+        return datosFiltrados;
+    }
+
     public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, String valorInicio1, String valorFin1, String campoFiltrar2, Date valorInicio2, Date valorFin2) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
@@ -745,6 +798,73 @@ public class FunctionsApachePoi {
 
                 if (fechaCelda2 != null &&
                         valorCelda1.compareTo(valorInicio1) >= 0 && valorCelda1.compareTo(valorFin1) <= 0 &&
+                        fechaCelda2.compareTo(valorInicio2) >= 0 && fechaCelda2.compareTo(valorFin2) <= 0) {
+                    Map<String, String> rowData = new HashMap<>();
+                    for (int cellIndex = 0; cellIndex < headers.size(); cellIndex++) {
+                        Cell dataCell = row.getCell(cellIndex);
+                        String header = headers.get(cellIndex);
+                        String value = "";
+                        if (dataCell != null) {
+                            if (dataCell.getCellType() == CellType.STRING) {
+                                value = dataCell.getStringCellValue();
+                            } else if (dataCell.getCellType() == CellType.NUMERIC) {
+                                if (DateUtil.isCellDateFormatted(dataCell)) {
+                                    Date fecha = dataCell.getDateCellValue();
+                                    value = dateFormat.format(fecha);
+                                } else {
+                                    value = String.valueOf(dataCell.getNumericCellValue());
+                                }
+                            }
+                        }
+                        rowData.put(header, value);
+                    }
+                    datosFiltrados.add(rowData);
+                }
+            }
+            workbook.close();
+            fis.close();
+        } catch (IOException e) {
+            logger.error("Error al procesar el archivo Excel", e);
+        }
+        return datosFiltrados;
+    }
+
+    public static void deleteTempFile(String tempFile) {
+        eliminarExcel(tempFile, 5);
+    }
+
+    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, int valorInicio1, int valorFin1, String campoFiltrar2, Date valorInicio2, Date valorFin2) {
+        List<Map<String, String>> datosFiltrados = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream(excelFilePath);
+            Workbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheet(sheetName);
+            List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
+            int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
+            int campoFiltrarIndex2 = headers.indexOf(campoFiltrar2);
+            if (campoFiltrarIndex1 == -1 || campoFiltrarIndex2 == -1) {
+                System.err.println("Alguno de los campos especificados para el filtro no existe.");
+                return datosFiltrados;
+            }
+
+            int numberOfRows = sheet.getPhysicalNumberOfRows();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                Cell cell1 = row.getCell(campoFiltrarIndex1);
+                Cell cell2 = row.getCell(campoFiltrarIndex2);
+
+                // Convertir celda 2 a fecha si es de tipo fecha
+                Date fechaCelda2 = null;
+                if (cell2 != null && cell2.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell2)) {
+                    fechaCelda2 = cell2.getDateCellValue();
+                }
+
+                // Obtener el valor de celda 1 como cadena de texto
+                String valorCelda1 = (cell1 != null && cell1.getCellType() == CellType.STRING) ? cell1.getStringCellValue() : "";
+
+                if (fechaCelda2 != null &&
+                        valorCelda1.compareTo(String.valueOf(valorInicio1)) >= 0 && valorCelda1.compareTo(String.valueOf(valorFin1)) <= 0 &&
                         fechaCelda2.compareTo(valorInicio2) >= 0 && fechaCelda2.compareTo(valorFin2) <= 0) {
                     Map<String, String> rowData = new HashMap<>();
                     for (int cellIndex = 0; cellIndex < headers.size(); cellIndex++) {
@@ -1095,77 +1215,220 @@ public class FunctionsApachePoi {
         return data;
     }
 
-    public static Map<String, String> calcularSumaPorValoresUnicos(String filePath, String firstHeader, String secondHeader, int percent) throws IOException {
-        List<Map<String, String>> data = leerExcel(filePath);
-        Map<String, Double> sumaPorValorUnico = new HashMap<>();
+    public static class functions {
+        public static Map<String, String> calcularSumaPorValoresUnicos(String filePath, String firstHeader, String secondHeader, int percent) throws IOException {
+            List<Map<String, String>> data = leerExcel(filePath);
+            Map<String, Double> sumaPorValorUnico = new HashMap<>();
 
-        for (Map<String, String> row : data) {
-            String firstHeaderValue = row.get(firstHeader);
-            String secondHeaderValue = row.get(secondHeader);
+            for (Map<String, String> row : data) {
+                String firstHeaderValue = row.get(firstHeader);
+                String secondHeaderValue = row.get(secondHeader);
 
-            if (firstHeaderValue != null && secondHeaderValue != null) {
-                try {
-                    double secondValue = Double.parseDouble(secondHeaderValue);
-                    double porcentaje = (double) percent / 100;
-                    double secondValueP = secondValue * porcentaje;
+                if (firstHeaderValue != null && secondHeaderValue != null) {
+                    try {
+                        double secondValue = Double.parseDouble(secondHeaderValue);
+                        double porcentaje = (double) percent / 100;
+                        double secondValueP = secondValue * porcentaje;
 
-                    if (sumaPorValorUnico.containsKey(firstHeaderValue)) {
-                        sumaPorValorUnico.put(firstHeaderValue, sumaPorValorUnico.get(firstHeaderValue) + (secondValueP));
-                    } else {
-                        sumaPorValorUnico.put(firstHeaderValue, secondValueP);
+                        if (sumaPorValorUnico.containsKey(firstHeaderValue)) {
+                            sumaPorValorUnico.put(firstHeaderValue, sumaPorValorUnico.get(firstHeaderValue) + (secondValueP));
+                        } else {
+                            sumaPorValorUnico.put(firstHeaderValue, secondValueP);
+                        }
+                    } catch (NumberFormatException e) {
+                        // Ignora las filas que no tienen valores numéricos en el segundo encabezado
                     }
-                } catch (NumberFormatException e) {
-                    // Ignora las filas que no tienen valores numéricos en el segundo encabezado
                 }
             }
+
+            // Redondea los valores a dos decimales
+            Map<String, String> resultadoFormateado = new HashMap<>();
+            DecimalFormat df = new DecimalFormat("0.00");
+            for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
+                double valor = entry.getValue();
+                String valorFormateado = df.format(valor);
+                resultadoFormateado.put(entry.getKey(), valorFormateado);
+            }
+
+            return resultadoFormateado;
         }
 
-        // Redondea los valores a dos decimales
-        Map<String, String> resultadoFormateado = new HashMap<>();
-        DecimalFormat df = new DecimalFormat("0.00");
-        for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
-            double valor = entry.getValue();
-            String valorFormateado = df.format(valor);
-            resultadoFormateado.put(entry.getKey(), valorFormateado);
-        }
+        public static Map<String, String> calcularSumaPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException {
+            List<Map<String, String>> data = leerExcel(filePath);
+            Map<String, Double> sumaPorValorUnico = new HashMap<>();
 
-        return resultadoFormateado;
-    }
+            for (Map<String, String> row : data) {
+                String firstHeaderValue = row.get(firstHeader);
+                String secondHeaderValue = row.get(secondHeader);
 
-    public static Map<String, String> calcularSumaPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException {
-        List<Map<String, String>> data = leerExcel(filePath);
-        Map<String, Double> sumaPorValorUnico = new HashMap<>();
+                if (firstHeaderValue != null && secondHeaderValue != null) {
+                    try {
+                        double secondValue = Double.parseDouble(secondHeaderValue);
 
-        for (Map<String, String> row : data) {
-            String firstHeaderValue = row.get(firstHeader);
-            String secondHeaderValue = row.get(secondHeader);
-
-            if (firstHeaderValue != null && secondHeaderValue != null) {
-                try {
-                    double secondValue = Double.parseDouble(secondHeaderValue);
-
-                    if (sumaPorValorUnico.containsKey(firstHeaderValue)) {
-                        sumaPorValorUnico.put(firstHeaderValue, sumaPorValorUnico.get(firstHeaderValue) + (secondValue));
-                    } else {
-                        sumaPorValorUnico.put(firstHeaderValue, secondValue);
+                        if (sumaPorValorUnico.containsKey(firstHeaderValue)) {
+                            sumaPorValorUnico.put(firstHeaderValue, sumaPorValorUnico.get(firstHeaderValue) + (secondValue));
+                        } else {
+                            sumaPorValorUnico.put(firstHeaderValue, secondValue);
+                        }
+                    } catch (NumberFormatException e) {
+                        // Ignora las filas que no tienen valores numéricos en el segundo encabezado
                     }
-                } catch (NumberFormatException e) {
-                    // Ignora las filas que no tienen valores numéricos en el segundo encabezado
                 }
             }
+
+            // Redondea los valores a dos decimales
+            Map<String, String> resultadoFormateado = new HashMap<>();
+            DecimalFormat df = new DecimalFormat("0.00");
+            for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
+                double valor = entry.getValue();
+                String valorFormateado = df.format(valor);
+                resultadoFormateado.put(entry.getKey(), valorFormateado);
+            }
+
+            return resultadoFormateado;
         }
 
-        // Redondea los valores a dos decimales
-        Map<String, String> resultadoFormateado = new HashMap<>();
-        DecimalFormat df = new DecimalFormat("0.00");
-        for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
-            double valor = entry.getValue();
-            String valorFormateado = df.format(valor);
-            resultadoFormateado.put(entry.getKey(), valorFormateado);
+        public static Map<String, String> calcularConteoPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException {
+            List<Map<String, String>> data = leerExcel(filePath);
+            Map<String, Integer> conteoPorValorUnico = new HashMap<>();
+
+            for (Map<String, String> row : data) {
+                String firstHeaderValue = row.get(firstHeader);
+
+                if (firstHeaderValue != null) {
+                    if (conteoPorValorUnico.containsKey(firstHeaderValue)) {
+                        conteoPorValorUnico.put(firstHeaderValue, conteoPorValorUnico.get(firstHeaderValue) + 1);
+                    } else {
+                        conteoPorValorUnico.put(firstHeaderValue, 1);
+                    }
+                }
+            }
+
+            // Convertir el conteo a String para devolver un Map<String, String>
+            Map<String, String> resultadoFormateado = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : conteoPorValorUnico.entrySet()) {
+                resultadoFormateado.put(entry.getKey(), String.valueOf(entry.getValue()));
+            }
+
+            return resultadoFormateado;
         }
 
-        return resultadoFormateado;
+        public static Map<String, String> calcularPromedioPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException {
+            List<Map<String, String>> data = leerExcel(filePath);
+            Map<String, Double> sumaPorValorUnico = new HashMap<>();
+            Map<String, Integer> contadorPorValorUnico = new HashMap<>();
+
+            for (Map<String, String> row : data) {
+                String firstHeaderValue = row.get(firstHeader);
+                String secondHeaderValue = row.get(secondHeader);
+
+                if (firstHeaderValue != null && secondHeaderValue != null) {
+                    try {
+                        double secondValue = Double.parseDouble(secondHeaderValue);
+
+                        if (sumaPorValorUnico.containsKey(firstHeaderValue)) {
+                            sumaPorValorUnico.put(firstHeaderValue, sumaPorValorUnico.get(firstHeaderValue) + secondValue);
+                            contadorPorValorUnico.put(firstHeaderValue, contadorPorValorUnico.get(firstHeaderValue) + 1);
+                        } else {
+                            sumaPorValorUnico.put(firstHeaderValue, secondValue);
+                            contadorPorValorUnico.put(firstHeaderValue, 1);
+                        }
+                    } catch (NumberFormatException e) {
+                        // Ignora las filas que no tienen valores numéricos en el segundo encabezado
+                    }
+                }
+            }
+
+            Map<String, String> promedioPorValorUnico = new HashMap<>();
+            DecimalFormat df = new DecimalFormat("0.00");
+
+            for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
+                String key = entry.getKey();
+                double suma = entry.getValue();
+                int contador = contadorPorValorUnico.get(key);
+                double promedio = suma / contador;
+
+                promedioPorValorUnico.put(key, df.format(promedio));
+            }
+
+            return promedioPorValorUnico;
+        }
+
+        public static Map<String, String> calcularMinimoPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException {
+            List<Map<String, String>> data = leerExcel(filePath);
+            Map<String, Double> minimoPorValorUnico = new HashMap<>();
+
+            for (Map<String, String> row : data) {
+                String firstHeaderValue = row.get(firstHeader);
+                String secondHeaderValue = row.get(secondHeader);
+
+                if (firstHeaderValue != null && secondHeaderValue != null) {
+                    try {
+                        double secondValue = Double.parseDouble(secondHeaderValue);
+
+                        if (minimoPorValorUnico.containsKey(firstHeaderValue)) {
+                            double currentMin = minimoPorValorUnico.get(firstHeaderValue);
+                            if (secondValue < currentMin) {
+                                minimoPorValorUnico.put(firstHeaderValue, secondValue);
+                            }
+                        } else {
+                            minimoPorValorUnico.put(firstHeaderValue, secondValue);
+                        }
+                    } catch (NumberFormatException e) {
+                        // Ignora las filas que no tienen valores numéricos en el segundo encabezado
+                    }
+                }
+            }
+
+            Map<String, String> minimoFormateado = new HashMap<>();
+            DecimalFormat df = new DecimalFormat("0.00");
+
+            for (Map.Entry<String, Double> entry : minimoPorValorUnico.entrySet()) {
+                minimoFormateado.put(entry.getKey(), df.format(entry.getValue()));
+            }
+
+            return minimoFormateado;
+        }
+
+        public static Map<String, String> calcularMaximoPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException {
+            List<Map<String, String>> data = leerExcel(filePath);
+            Map<String, Double> maximoPorValorUnico = new HashMap<>();
+
+            for (Map<String, String> row : data) {
+                String firstHeaderValue = row.get(firstHeader);
+                String secondHeaderValue = row.get(secondHeader);
+
+                if (firstHeaderValue != null && secondHeaderValue != null) {
+                    try {
+                        double secondValue = Double.parseDouble(secondHeaderValue);
+
+                        if (maximoPorValorUnico.containsKey(firstHeaderValue)) {
+                            double currentMax = maximoPorValorUnico.get(firstHeaderValue);
+                            if (secondValue > currentMax) {
+                                maximoPorValorUnico.put(firstHeaderValue, secondValue);
+                            }
+                        } else {
+                            maximoPorValorUnico.put(firstHeaderValue, secondValue);
+                        }
+                    } catch (NumberFormatException e) {
+                        // Ignora las filas que no tienen valores numéricos en el segundo encabezado
+                    }
+                }
+            }
+
+            Map<String, String> maximoFormateado = new HashMap<>();
+            DecimalFormat df = new DecimalFormat("0.00");
+
+            for (Map.Entry<String, Double> entry : maximoPorValorUnico.entrySet()) {
+                maximoFormateado.put(entry.getKey(), df.format(entry.getValue()));
+            }
+
+            return maximoFormateado;
+        }
+
     }
+
+
 
     /*------------------------------------------------------------------------------------------------------------------------------*/
     /*LECTURA DEL ARCHIVO MAESTRO PARA ANALISIS*/
@@ -1227,14 +1490,14 @@ public class FunctionsApachePoi {
                     }
                 }
 
-                if (!sheetFound) {
+                /*if (!sheetFound) {
                     System.out.print("Analizando datos");
                     for (int j = 0; j < 3; j++) {
                         System.out.print(".");
                         waitSeconds(2);
                     }
                     System.out.println();
-                }
+                }*/
             }
 
             sheet2 = workbook2.getSheetAt(indexF2);
