@@ -58,11 +58,14 @@ public class Start {
                 HistoricoCarteraMicrocreditoPorOF.configuracion(masterFile);
             } else if (fileName.contains("historico cartera por lc")) {
                 HistoricoCarteraPorLC.configuracion(masterFile);
-            } else if (fileName.contains("historico cartera seg monto_coloc por lc")) {
-                HistoricoCarteraSegMonto_ColocPorLC.configuracion(masterFile);
-            }else if (fileName.contains("historico cartera seg monto_coloc por of")) {
-                HistoricoCarteraSegMonto_ColocPorOF.configuracion(masterFile);
-            }else if (fileName.contains("historico cartera por of")) {
+            }else if (fileName.contains("seg")) {
+                if (fileName.contains("lc")){
+                    HistoricoCarteraSegMonto_ColocPorLC.configuracion(masterFile);
+                } else if (fileName.contains("of")) {
+                    HistoricoCarteraSegMonto_ColocPorOF.configuracion(masterFile);
+                }
+
+            } else if (fileName.contains("historico cartera por of")) {
                 HistoricoCarteraPorOF.configuracion(masterFile);
             }else if (fileName.contains("historico cartera bruta por of _ lc")) {
                 HistoricoCarteraBrutaPorOF_LC.configuracion(masterFile);
