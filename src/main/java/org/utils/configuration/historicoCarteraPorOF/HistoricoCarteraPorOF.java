@@ -42,9 +42,9 @@ public class HistoricoCarteraPorOF {
             JOptionPane.showMessageDialog(null, "Espere un momento el análisis puede ser demorado...");
             waitMinutes(5);
 
-            waitMinutes(8);
+            //waitMinutes(8);
 
-            //colocacion(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Cartera Bruta", tempFile);
+            carteraBruta(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Cartera Bruta", tempFile);
 
 
 
@@ -54,11 +54,15 @@ public class HistoricoCarteraPorOF {
             deleteTempFile(tempFile);
         } catch (HeadlessException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
 
-    public static void colocacion(String okCarteraFile, String masterFile, String azureFile,String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile,String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
         //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
         //String filePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
@@ -141,9 +145,9 @@ public class HistoricoCarteraPorOF {
                 }
                 System.out.println();
             }
-            Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
