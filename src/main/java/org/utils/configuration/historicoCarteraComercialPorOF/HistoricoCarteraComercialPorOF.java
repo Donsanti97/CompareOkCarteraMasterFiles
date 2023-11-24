@@ -184,7 +184,11 @@ public class HistoricoCarteraComercialPorOF {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+
         List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
 
         List<String> headers = null;
         List<Map<String, String>> datosFiltrados = null;
