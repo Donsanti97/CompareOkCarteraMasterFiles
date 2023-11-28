@@ -1380,7 +1380,7 @@ public class HistoricoCarteraPorLC {
             int valorFin = 5000; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, 1, 1, "cuota_desde_mora", 1, 1);
+            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, 1, valorFin, "cuota_desde_mora", 1, 1);
 
             // Especifica los campos que deseas obtener
             //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
@@ -1491,7 +1491,7 @@ public class HistoricoCarteraPorLC {
             int valorFin = 5000; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, 1, 1, "cuota_desde_mora", 1, 1);
+            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, 1, valorFin, "cuota_desde_mora", 1, 1);
 
             // Especifica los campos que deseas obtener
             //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
