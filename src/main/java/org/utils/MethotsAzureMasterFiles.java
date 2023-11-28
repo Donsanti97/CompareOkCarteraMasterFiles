@@ -271,8 +271,8 @@ public class MethotsAzureMasterFiles {
         String headerFirstFile1 = headers1.get(0);
         List<String> headers2 = getHeaders(sheet2);
         String headerSecondFile = headers2.get(0);
-        JOptionPane.showMessageDialog(null, "Seleccione el PRIMER encabezado en el archivo Maestro de la hoja [" + sheet2.getSheetName() + "]");
-        String seleccion2 = FunctionsApachePoi.mostrarMenu(headers1);
+        /*JOptionPane.showMessageDialog(null, "Seleccione el PRIMER encabezado en el archivo Maestro de la hoja [" + sheet2.getSheetName() + "]");
+        String seleccion2 = FunctionsApachePoi.mostrarMenu(headers1);*/
 
         if (!headerFirstFile1.equals(headerSecondFile)) {
             headers2 = findValueInColumn(sheet1, 0, headers1.get(0));

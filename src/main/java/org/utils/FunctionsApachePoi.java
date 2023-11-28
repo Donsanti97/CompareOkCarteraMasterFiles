@@ -1543,15 +1543,20 @@ public class FunctionsApachePoi {
                     if (sheetName2.equals(hoja)) {
                         System.out.println("ENTRA A " + hoja);
                         System.out.println("SHEETNAME2: " + sheetName2);
-                        /*JOptionPane.showMessageDialog(null, "Tomando en cuenta la información mostrada anteriormente en consola " +
-                                "\n Digite por favor el nombre del campo del que se tomará el código:");
-                        String campoCodigo = mostrarCuadroDeTexto();*/
-                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, seleccion2);
-                        mapList = createMapList(valoresEncabezados2, seleccion, seleccion2);
-                        for (Map<String, String> map : mapList) {
-                            System.out.println("Analizando valores... ");
-                            for (Map.Entry<String, String> entry : map.entrySet()) {
-                                System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
+                        if (!fechaCorte.equals(seleccion2)){
+                            JOptionPane.showMessageDialog(null, "Por favor verifique que los encabezados correspondientes a las fechas" +
+                                    "\n tengan un formato tipo FECHA identica a " + fechaCorte);
+
+                            JOptionPane.showMessageDialog(null, "No es posible completar el análisis de la hoja [" + hoja +
+                                    "\n el formato de fecha no es el correcto");
+                        }else {
+                            valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, seleccion2);
+                            mapList = createMapList(valoresEncabezados2, seleccion, seleccion2);
+                            for (Map<String, String> map : mapList) {
+                                System.out.println("Analizando valores... ");
+                                for (Map.Entry<String, String> entry : map.entrySet()) {
+                                    System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
+                                }
                             }
                         }
                         System.out.println("AQUI TERMINA TOOODO");
@@ -1590,6 +1595,9 @@ public class FunctionsApachePoi {
 
 
     public static String mostrarMenu(List<String> opciones) {
+
+        opciones.add(0, "Ninguno");
+
         JFrame frame = new JFrame("Menú de Opciones");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
