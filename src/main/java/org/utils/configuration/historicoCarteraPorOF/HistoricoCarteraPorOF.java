@@ -32,7 +32,7 @@ public class HistoricoCarteraPorOF {
         String fechaCorte = mostrarCuadroDeTexto();
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
-        String tempFile = getDirecotry() + "\\TemporalFile.xlsx";
+        String tempFile = getDirectory() + "\\TemporalFile.xlsx";
 
         try {
             waitSeconds(10);

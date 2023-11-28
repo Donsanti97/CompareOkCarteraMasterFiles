@@ -12,7 +12,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -65,7 +64,7 @@ public class MethotsAzureMasterFiles {
         }
     }
 
-    public static String getDirecotry() {
+    public static String getDirectory() {
         // Crea un objeto JFileChooser
         JFileChooser fileChooser = new JFileChooser();
 

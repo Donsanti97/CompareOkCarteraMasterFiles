@@ -1,13 +1,7 @@
 package org.utils.configuration.historicoCarteraSegMonto_ColocPorLC;
 
-import org.apache.poi.util.IOUtils;
-
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import static org.utils.FunctionsApachePoi.*;
 import static org.utils.MethotsAzureMasterFiles.*;
@@ -28,7 +22,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         String fechaCorte = mostrarCuadroDeTexto();
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
-        String tempFile = getDirecotry() + "\\TemporalFile.xlsx";
+        String tempFile = getDirectory() + "\\TemporalFile.xlsx";
 
         try {
             waitSeconds(10);

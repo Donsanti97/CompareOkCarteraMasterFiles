@@ -3,7 +3,6 @@ package org.utils.configuration.historicoCarteraMicrocreditoPorOF;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +30,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         String fechaCorte = mostrarCuadroDeTexto();
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
-        String tempFile = getDirecotry() + "\\TemporalFile.xlsx";
+        String tempFile = getDirectory() + "\\TemporalFile.xlsx";
 
 
 

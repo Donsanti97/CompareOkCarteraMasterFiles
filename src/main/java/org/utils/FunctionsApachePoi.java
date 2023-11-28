@@ -22,8 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+
 import static org.utils.MethotsAzureMasterFiles.*;
-//import static org.utils.MethotsAzureMasterFiles.*;
+import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
 
 public class FunctionsApachePoi {
 
@@ -1544,10 +1547,10 @@ public class FunctionsApachePoi {
                         System.out.println("ENTRA A " + hoja);
                         System.out.println("SHEETNAME2: " + sheetName2);
                         if (!fechaCorte.equals(seleccion2)){
-                            JOptionPane.showMessageDialog(null, "Por favor verifique que los encabezados correspondientes a las fechas" +
+                            errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
                                     "\n tengan un formato tipo FECHA identica a " + fechaCorte);
 
-                            JOptionPane.showMessageDialog(null, "No es posible completar el análisis de la hoja [" + hoja +
+                            errorMessage( "No es posible completar el análisis de la hoja [" + hoja +
                                     "\n el formato de fecha no es el correcto");
                         }else {
                             valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, seleccion2);
@@ -1581,7 +1584,7 @@ public class FunctionsApachePoi {
 
             //moveDocument(file2, destino);
 
-            JOptionPane.showMessageDialog(null, "Archivos analizados correctamente sin errores");
+            System.out.println("Archivos analizados correctamente sin errores");
 
 
         } catch (FileNotFoundException e) {
@@ -1591,6 +1594,14 @@ public class FunctionsApachePoi {
         }
 
         return mapList;
+    }
+
+
+    public static void errorMessage(String mensaje) {
+        JLabel label = new JLabel("<html><font color='red'>" + mensaje + "</font></html>");
+        label.setFont(new Font("Arial", Font.PLAIN, 14)); // Puedes ajustar la fuente según tus preferencias
+
+        JOptionPane.showMessageDialog(null, label, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
 
