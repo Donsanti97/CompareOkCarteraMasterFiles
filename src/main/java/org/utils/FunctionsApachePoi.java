@@ -1508,26 +1508,9 @@ public class FunctionsApachePoi {
 
             List<Map<String, String>> valoresEncabezados1 = null;
 
-            /*System.out.println("Analizando archivo Azure");
-            for (String sheets : nameSheets1) {
-                System.out.print("Analizando: ");
-                System.out.println(sheets);
-                encabezados1 = MethotsAzureMasterFiles.getHeaders(file1, sheets);
-                //System.out.println("Headers: ");
-                for (String headers : encabezados1) {
-                    //System.out.print(headers + "||");
-                    valoresEncabezados1 = getValuebyHeader(file1, sheets);
-                }
-            }*/
             System.out.println("------------------------------------------------------------------------------------------");
 
-            /*valoresEncabezados1 = obtenerValoresPorFilas(sheet1, encabezados1);
-            for (Map<String, String> map : valoresEncabezados1) {
-                System.out.println("Analizando valores... ");
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    System.out.println("Headers1: " + entry.getKey() + ", value: " + entry.getValue());
-                }
-            }*/
+
 
             System.out.println("------------------------------------------------------");
             System.out.println("Analizando archivo Maestro");
@@ -1550,6 +1533,9 @@ public class FunctionsApachePoi {
                     "\n Seleccione por favor el encabezado \"Codigo\" que será usado para el análisis de los valores");
             assert encabezados2 != null;
             String seleccion = mostrarMenu(encabezados2);
+            JOptionPane.showMessageDialog(null, "Seleccione la fecha de corte o columna correspondiente para análisis de los valores " +
+                    "\n y que concuerde con la fecha de corte que ingresó al comienzo");
+            String seleccion2 = mostrarMenu(encabezados2);
             for (String sheetName1 : nameSheets1) {
                 for (String sheetName2 : nameSheets2) {
                     sheetName2.toLowerCase();
@@ -1560,8 +1546,8 @@ public class FunctionsApachePoi {
                         /*JOptionPane.showMessageDialog(null, "Tomando en cuenta la información mostrada anteriormente en consola " +
                                 "\n Digite por favor el nombre del campo del que se tomará el código:");
                         String campoCodigo = mostrarCuadroDeTexto();*/
-                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, fechaCorte);
-                        mapList = createMapList(valoresEncabezados2, seleccion, fechaCorte);
+                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, seleccion2);
+                        mapList = createMapList(valoresEncabezados2, seleccion, seleccion2);
                         for (Map<String, String> map : mapList) {
                             System.out.println("Analizando valores... ");
                             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -1570,7 +1556,9 @@ public class FunctionsApachePoi {
                         }
                         System.out.println("AQUI TERMINA TOOODO");
                         //break;
-                    }
+                    }/*else {
+                        System.err.println("La hoja a analizar no concuerda con la hoja seleccionada");
+                    }*/
                 }
                 break;
             }

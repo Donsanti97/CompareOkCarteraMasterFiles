@@ -25,8 +25,6 @@ public class HistoricoCarteraComercialPorOF {
 
         JOptionPane.showMessageDialog(null, "Seleccione el archivo Azure");
         String azureFile = getDocument();
-        /*JOptionPane.showMessageDialog(null, "Seleccione el archivo Maestro");
-        masterFile = getDocument();*/
         JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
@@ -45,7 +43,7 @@ public class HistoricoCarteraComercialPorOF {
             System.out.println("Espere el proceso de análisis va a comenzar...");
             waitSeconds(5);
 
-            JOptionPane.showMessageDialog(null, "Espere un momento el análisis puede ser demorado...");
+            System.out.println("Espere un momento el análisis puede ser demorado...");
             waitMinutes(5);
 
             carteraBruta(okCartera, masterFile, azureFile, fechaCorte, "Cartera Bruta", tempFile);

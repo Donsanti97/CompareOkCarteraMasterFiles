@@ -39,7 +39,7 @@ public class HistoricoCarteraPorLC {
             System.out.println("Espere el proceso de análisis va a comenzar...");
             waitSeconds(5);
 
-            JOptionPane.showMessageDialog(null, "Espere un momento el análisis puede ser demorado...");
+            System.out.println("Espere un momento el análisis puede ser demorado...");
             waitMinutes(5);
 
             carteraTotal(okCartera, masterFile, azureFile, fechaCorte, "Cartera Total", tempFile);

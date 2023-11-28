@@ -18,17 +18,11 @@ import static org.utils.FunctionsApachePoi.*;
 public class HistoricoCarteraMicrocreditoPorOF {
     //34 Hojas
 
-    public static void deleteTempFile(String tempFile) {
-        eliminarExcel(tempFile, 5);
-    }
-
 
     public static void configuracion(String masterFile) {
 
         JOptionPane.showMessageDialog(null, "Seleccione el archivo Azure");
         String azureFile = getDocument();
-        /*JOptionPane.showMessageDialog(null, "Seleccione el archivo Maestro");
-        String masterFile = getDocument();*/
         JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
@@ -47,7 +41,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
             System.out.println("Espere el proceso de análisis va a comenzar...");
             waitSeconds(5);
 
-            JOptionPane.showMessageDialog(null, "Espere un momento el análisis puede ser demorado...");
+            System.out.println("Espere un momento el análisis puede ser demorado...");
             waitMinutes(5);
 
             carteraBruta(okCartera, masterFile, azureFile, fechaCorte, "Cartera Bruta", tempFile);
@@ -181,12 +175,13 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
     public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
 
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+
         List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
 
         List<String> headers = null;
         List<Map<String, String>> datosFiltrados = null;
@@ -530,7 +525,6 @@ public class HistoricoCarteraMicrocreditoPorOF {
         List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
         String reEstCapital = "re_est";
-        String diasDeMora = "dias_de_mora";
 
         List<String> headers = null;
         List<Map<String, String>> datosFiltrados = null;
@@ -876,7 +870,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
         List<String> headers = null;
         List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "Cliente");
+        List<String> camposDeseados = Arrays.asList("linea", "Cliente");
         for (String sheetName : sheetNames) {
             System.out.println("Contenido de la hoja: " + sheetName);
             headers = obtenerEncabezados(okCarteraFile, sheetName);
@@ -1007,8 +1001,6 @@ public class HistoricoCarteraMicrocreditoPorOF {
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
 
             // Imprimir datos filtrados
             System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");

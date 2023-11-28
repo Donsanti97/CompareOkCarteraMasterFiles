@@ -256,7 +256,7 @@ public class MethotsAzureMasterFiles {
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
             Cell cell = row.getCell(columnaBuscada);
-            String valorCelda = obtenerValorCelda(cell);
+            String valorCelda = obtenerValorVisibleCelda(cell);
 
             if (valorBuscado.equals(valorCelda)) {
                 return obtenerValoresFila(row);
@@ -271,6 +271,8 @@ public class MethotsAzureMasterFiles {
         String headerFirstFile1 = headers1.get(0);
         List<String> headers2 = getHeaders(sheet2);
         String headerSecondFile = headers2.get(0);
+        JOptionPane.showMessageDialog(null, "Seleccione el PRIMER encabezado en el archivo Maestro de la hoja [" + sheet2.getSheetName() + "]");
+        String seleccion2 = FunctionsApachePoi.mostrarMenu(headers1);
 
         if (!headerFirstFile1.equals(headerSecondFile)) {
             headers2 = findValueInColumn(sheet1, 0, headers1.get(0));
@@ -376,7 +378,8 @@ public class MethotsAzureMasterFiles {
                     break;
                 case BLANK:
                 case _NONE:
-                    valor = "0";
+                case ERROR:
+                    valor = "0.00";
                     break;
 
                 default:
@@ -491,9 +494,16 @@ public class MethotsAzureMasterFiles {
             List<String> valoresFila = obtenerValoresFila(row);
 
             Map<String, String> fila = new HashMap<>();
+
             try {
-                fila.put(header1, valoresFila.get(indexHeader1));
-                fila.put(header2, valoresFila.get(indexHeader2));
+                if (indexHeader1 >= 0 && indexHeader1 < valoresFila.size() &&
+                        indexHeader2 >= 0 && indexHeader2 < valoresFila.size()) {
+                    fila.put(header1, valoresFila.get(indexHeader1));
+                    fila.put(header2, valoresFila.get(indexHeader2));
+                } else {
+                    System.err.println("En la fila [" + row.getRowNum() + "] no se encuentran los datos completos. " +
+                            "\n Por favor rellene con [0] o con [NA] según el campo que falte numérico o caracteres respectivamente");
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -617,8 +627,8 @@ public class MethotsAzureMasterFiles {
 
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
-            String codCiudad = obtenerValorCelda(row.getCell(columnaCodCiudad));
-            String valorFecha = obtenerValorCelda(row.getCell(columnaFecha));
+            String codCiudad = obtenerValorVisibleCelda(row.getCell(columnaCodCiudad));
+            String valorFecha = obtenerValorVisibleCelda(row.getCell(columnaFecha));
             valoresPorCodCiudad.put(codCiudad, valorFecha);
         }
 
