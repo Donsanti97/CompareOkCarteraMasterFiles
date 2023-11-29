@@ -199,8 +199,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
@@ -218,6 +218,7 @@ public class HistoricoCarteraConsumoPorOF {
                 }
                 System.out.println();
             }
+            waitSeconds(10);
             runtime();
 
             System.out.println("----------------------");
@@ -228,6 +229,7 @@ public class HistoricoCarteraConsumoPorOF {
         crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
 
         System.out.println("Analisis archivo temporal----------------------");
+        System.out.println("Por favor espere el proceso sigue en análisis");
 
         sheetNames = obtenerNombresDeHojas(tempFile);
 
@@ -254,6 +256,8 @@ public class HistoricoCarteraConsumoPorOF {
                 }
                 System.out.println();
             }
+            runtime();
+            waitSeconds(2);
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
@@ -284,6 +288,7 @@ public class HistoricoCarteraConsumoPorOF {
 
             }
             runtime();
+            waitSeconds(2);
 
         }
     }
@@ -313,8 +318,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             //int rangoDesde = 361;
             //int rangoHasta = 5000L;
 
@@ -335,6 +340,7 @@ public class HistoricoCarteraConsumoPorOF {
                 System.out.println();
             }
             runtime();
+            waitSeconds(2);
 
             System.out.println("----------------------");
         }
@@ -370,6 +376,8 @@ public class HistoricoCarteraConsumoPorOF {
                 }
                 System.out.println();
             }
+            runtime();
+            waitSeconds(2);
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
@@ -400,6 +408,7 @@ public class HistoricoCarteraConsumoPorOF {
 
             }
             runtime();
+            waitSeconds(2);
         }
     }
 
@@ -428,8 +437,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, campoCalificacion, calificacion, calificacion);
@@ -448,6 +457,7 @@ public class HistoricoCarteraConsumoPorOF {
                 System.out.println();
             }
             runtime();
+            waitSeconds(2);
 
             System.out.println("----------------------");
         }
@@ -483,6 +493,8 @@ public class HistoricoCarteraConsumoPorOF {
                 }
                 System.out.println();
             }
+            runtime();
+            waitSeconds(2);
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
@@ -513,6 +525,7 @@ public class HistoricoCarteraConsumoPorOF {
 
             }
             runtime();
+            waitSeconds(2);
 
         }
     }
@@ -543,8 +556,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, reEstCapital, 1, 1);
@@ -563,6 +576,7 @@ public class HistoricoCarteraConsumoPorOF {
                 System.out.println();
             }
             runtime();
+            waitSeconds(2);
 
             System.out.println("----------------------");
         }
@@ -598,6 +612,8 @@ public class HistoricoCarteraConsumoPorOF {
                 }
                 System.out.println();
             }
+            runtime();
+            waitSeconds(2);
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
@@ -622,6 +638,8 @@ public class HistoricoCarteraConsumoPorOF {
 
                             }
                         }
+                        waitSeconds(5);
+                        runtime();
                         /*-------------------------------------------------------------------*/
                     }
                 }
@@ -655,11 +673,13 @@ public class HistoricoCarteraConsumoPorOF {
             for (String header : headers) {
                 System.out.println(header);
             }
+            runtime();
+            waitSeconds(2);
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
@@ -680,6 +700,7 @@ public class HistoricoCarteraConsumoPorOF {
                 System.out.println();
             }
             runtime();
+            waitSeconds(2);
 
             System.out.println("----------------------");
         }
@@ -773,8 +794,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
@@ -886,8 +907,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
@@ -998,8 +1019,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
             datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
@@ -1110,8 +1131,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
@@ -1228,8 +1249,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
@@ -1345,8 +1366,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
@@ -1463,8 +1484,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
@@ -1585,8 +1606,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
@@ -1707,8 +1728,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
@@ -1827,8 +1848,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
@@ -1950,8 +1971,8 @@ public class HistoricoCarteraConsumoPorOF {
 
             // Especifica el campo en el que deseas aplicar el filtro
             String campoFiltrar = "modalidad";
-            String valorInicio = "CONCUMO"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "CONCUMO"; // Reemplaza con el valor de fin del rango
+            String valorInicio = "CONSUMO"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "CONSUMO"; // Reemplaza con el valor de fin del rango
             String fechaInicio = "01/" + mesAnoCorte;
             String fechafin = "31/" + mesAnoCorte;
             Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);

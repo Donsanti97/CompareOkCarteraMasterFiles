@@ -150,9 +150,6 @@ public class HistoricoCarteraPorOF {
 
     public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
 
         List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
@@ -192,6 +189,7 @@ public class HistoricoCarteraPorOF {
                 }
                 System.out.println();
             }
+            waitSeconds(5);
             runtime();
 
             System.out.println("-----------CREACION TEMPORAL-----------");
@@ -228,6 +226,8 @@ public class HistoricoCarteraPorOF {
                 }
                 System.out.println();
             }
+            waitSeconds(5);
+            runtime();
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
@@ -256,6 +256,8 @@ public class HistoricoCarteraPorOF {
                         }
                         /*-------------------------------------------------------------------*/
                     }
+                    waitSeconds(5);
+                    runtime();
                 }
 
             }
@@ -307,6 +309,7 @@ public class HistoricoCarteraPorOF {
                 }
                 System.out.println();
             }
+            waitSeconds(5);
             runtime();
 
             System.out.println("----------------------");
@@ -342,6 +345,9 @@ public class HistoricoCarteraPorOF {
                 }
                 System.out.println();
             }
+            waitSeconds(5);
+            runtime();
+
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
@@ -368,6 +374,8 @@ public class HistoricoCarteraPorOF {
                         }
                         /*-------------------------------------------------------------------*/
                     }
+                    waitSeconds(5);
+                    runtime();
                 }
 
             }
