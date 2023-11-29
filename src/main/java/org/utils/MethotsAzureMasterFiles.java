@@ -123,7 +123,7 @@ public class MethotsAzureMasterFiles {
 
     public static void runtime() {
         Runtime runtime = Runtime.getRuntime();
-        long minRunningMemory = (1024 * 1024);
+        long minRunningMemory = (8L * 1024L * 1024L * 1024L);
         if (runtime.freeMemory() < minRunningMemory) {
             System.gc();
         }

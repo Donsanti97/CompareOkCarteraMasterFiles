@@ -314,6 +314,8 @@ public class FunctionsApachePoi {
 
             FileInputStream fis = new FileInputStream(excelFilePath);
             Workbook workbook = new XSSFWorkbook(fis);
+            runtime();
+            waitSeconds(2);
             int numberOfSheets = workbook.getNumberOfSheets();
             for (int i = 0; i < numberOfSheets; i++) {
                 Sheet sheet = workbook.getSheetAt(i);
@@ -626,6 +628,8 @@ public class FunctionsApachePoi {
             int campoFiltrarIndex2 = headers.indexOf(campoFiltrar2);
             if (campoFiltrarIndex1 == -1 || campoFiltrarIndex2 == -1) {
                 System.err.println("Alguno de los campos especificados para el filtro no existe.");
+                System.gc();
+                waitSeconds(2);
                 return datosFiltrados;
             }
 
@@ -654,6 +658,8 @@ public class FunctionsApachePoi {
                     }
                     datosFiltrados.add(rowData);
                 }
+                System.gc();
+                waitSeconds(2);
             }
             workbook.close();
             fis.close();
@@ -732,7 +738,9 @@ public class FunctionsApachePoi {
                 System.err.println("Alguno de los campos especificados para el filtro no existe.");
                 return datosFiltrados;
             }
-
+            
+            runtime();
+            waitSeconds(2);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
@@ -760,6 +768,8 @@ public class FunctionsApachePoi {
                     }
                     datosFiltrados.add(rowData);
                 }
+                runtime();
+                waitSeconds(2);
             }
             workbook.close();
             fis.close();
@@ -782,6 +792,8 @@ public class FunctionsApachePoi {
                 System.err.println("Alguno de los campos especificados para el filtro no existe.");
                 return datosFiltrados;
             }
+            runtime();
+            waitSeconds(2);
 
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -795,6 +807,8 @@ public class FunctionsApachePoi {
                 if (cell2 != null && cell2.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell2)) {
                     fechaCelda2 = cell2.getDateCellValue();
                 }
+                runtime();
+            waitSeconds(2);
 
                 // Obtener el valor de celda 1 como cadena de texto
                 String valorCelda1 = (cell1 != null && cell1.getCellType() == CellType.STRING) ? cell1.getStringCellValue() : "";
@@ -823,6 +837,8 @@ public class FunctionsApachePoi {
                     }
                     datosFiltrados.add(rowData);
                 }
+                runtime();
+            waitSeconds(2);
             }
             workbook.close();
             fis.close();
@@ -849,6 +865,8 @@ public class FunctionsApachePoi {
                 System.err.println("Alguno de los campos especificados para el filtro no existe.");
                 return datosFiltrados;
             }
+            runtime();
+            waitSeconds(2);
 
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -862,6 +880,8 @@ public class FunctionsApachePoi {
                 if (cell2 != null && cell2.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell2)) {
                     fechaCelda2 = cell2.getDateCellValue();
                 }
+                runtime();
+            waitSeconds(2);
 
                 // Obtener el valor de celda 1 como cadena de texto
                 String valorCelda1 = (cell1 != null && cell1.getCellType() == CellType.STRING) ? cell1.getStringCellValue() : "";
@@ -890,6 +910,8 @@ public class FunctionsApachePoi {
                     }
                     datosFiltrados.add(rowData);
                 }
+                runtime();
+            waitSeconds(2);
             }
             workbook.close();
             fis.close();
@@ -999,7 +1021,7 @@ public class FunctionsApachePoi {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    encabezados.add(obtenerValorCelda(cell));
+                    encabezados.add(obtenerValorVisibleCelda(cell));
                 }
                 break; // Terminamos de buscar encabezados una vez que los encontramos
             }
@@ -1020,6 +1042,8 @@ public class FunctionsApachePoi {
             }
             workbook.close();
             fis.close();
+            runtime();
+            waitSeconds(2);
         } catch (IOException e) {
             logger.error("Error al procesar el archivo Excel", e);
         }
@@ -1039,13 +1063,16 @@ public class FunctionsApachePoi {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    encabezados.add(obtenerValorCelda(cell));
+                    encabezados.add(obtenerValorVisibleCelda(cell));
                 }
                 break; // Terminamos de buscar encabezados una vez que los encontramos
             }
         }
+        waitSeconds(5);
+        runtime();
 
         return encabezados;
+
     }
 
     public static List<String> encontrarEncabezadosSegundoArchivo(Sheet sheet, Workbook workbook2) {
@@ -1053,14 +1080,14 @@ public class FunctionsApachePoi {
 
         // Busca el primer encabezado del primer archivo en la misma columna en el segundo archivo
         for (int columnIndex = 0; columnIndex < sheet.getRow(0).getLastCellNum(); columnIndex++) {
-            String primerEncabezado = obtenerValorCelda(sheet.getRow(0).getCell(columnIndex));
+            String primerEncabezado = obtenerValorVisibleCelda(sheet.getRow(0).getCell(columnIndex));
             if (buscarEncabezadoEnColumna(primerEncabezado, columnIndex, workbook2)) {
                 Sheet segundoSheet = workbook2.getSheetAt(3); // Puedes especificar el índice de la hoja del segundo archivo
                 Iterator<Row> rowIterator = segundoSheet.iterator();
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
                     Cell cell = row.getCell(columnIndex);
-                    encabezadosSegundoArchivo.add(obtenerValorCelda(cell));
+                    encabezadosSegundoArchivo.add(obtenerValorVisibleCelda(cell));
                 }
                 break; // Terminamos de buscar encabezados en el segundo archivo
             }
@@ -1075,7 +1102,7 @@ public class FunctionsApachePoi {
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
             Cell cell = row.getCell(columnIndex);
-            String valor = obtenerValorCelda(cell);
+            String valor = obtenerValorVisibleCelda(cell);
             if (!valor.equals(null) || !valor.isEmpty()) {
                 valor = "0";
             }
@@ -1092,7 +1119,7 @@ public class FunctionsApachePoi {
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
             Cell cell = row.getCell(columnaBuscada);
-            String valorCelda = obtenerValorCelda(cell);
+            String valorCelda = obtenerValorVisibleCelda(cell);
 
             if (valorBuscado.equals(valorCelda)) {
                 return obtenerValoresFila(row);
@@ -1138,8 +1165,9 @@ public class FunctionsApachePoi {
         Iterator<Cell> cellIterator = row.cellIterator();
         while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
-            valoresFila.add(obtenerValorCelda(cell));
+            valoresFila.add(obtenerValorVisibleCelda(cell));
         }
+        runtime();
         return valoresFila;
     }
     /*-----------------------------------------------------------------------------------------------*/
@@ -1444,7 +1472,7 @@ public class FunctionsApachePoi {
             Sheet sheet = workbook.getSheet(sheetName);
             Row headerRow = sheet.getRow(168);
             for (Cell cell : headerRow) {
-                headers.add(obtenerValorCelda(cell));
+                headers.add(obtenerValorVisibleCelda(cell));
             }
             workbook.close();
             fis.close();
@@ -1462,11 +1490,14 @@ public class FunctionsApachePoi {
         try {
 
             if (file1 != null && file2 != null) {
-                System.out.println("Ruta del archivo Excel seleccionado: " + file1);
-                System.out.println("Ruta del archivo Excel seleccionado: " + file2);
+                /*System.out.println("Ruta del archivo Excel seleccionado: " + file1);
+                System.out.println("Ruta del archivo Excel seleccionado: " + file2);*/
+                System.out.println("Archivos válidos, el análisis comenzará en breve...");
             } else {
                 System.out.println("No se seleccionó ningún archivo.");
             }
+            System.gc();
+            waitSeconds(2);
 
 
             FileInputStream fis = new FileInputStream(file1);
@@ -1474,7 +1505,10 @@ public class FunctionsApachePoi {
             FileInputStream fis2 = new FileInputStream(file2);
             Workbook workbook2 = new XSSFWorkbook(fis2);
             Sheet sheet1 = workbook.getSheetAt(0);
-
+            
+            runtime();
+            waitSeconds(2);
+            
             int indexF2 = 0;
             List<String> nameSheets1 = getWorkSheet(file1, 0);
             Sheet sheet2 = workbook2.getSheetAt(0);
@@ -1492,17 +1526,11 @@ public class FunctionsApachePoi {
                         break;
                     }
                 }
-
-                /*if (!sheetFound) {
-                    System.out.print("Analizando datos");
-                    for (int j = 0; j < 3; j++) {
-                        System.out.print(".");
-                        waitSeconds(2);
-                    }
-                    System.out.println();
-                }*/
             }
-
+            
+            runtime();
+            waitSeconds(2);
+            
             sheet2 = workbook2.getSheetAt(indexF2);
             nameSheets2 = getWorkSheet(file2, indexF2);
 
@@ -1523,12 +1551,22 @@ public class FunctionsApachePoi {
                 for (String headers : encabezados2) {
                     sheets2.toLowerCase();
                     hoja.toLowerCase();
-                    if (sheets2.equals(hoja)) {
+                    if (!sheets2.equals(hoja)) {
+                        errorMessage("La hoja [" + hoja + "] no fue encontrada." +
+                                "\n busque una hoja en la siguiente lista que se asemeje al nombre <" + hoja + ">");
+                        hoja = mostrarMenu(nameSheets2);
+                        if (hoja.equals("Ninguno")){
+                            errorMessage("La hoja no fue encontrada. proceso finalizado");
+                        }
+                    }else {
                         System.out.println("Headers2: " + headers);
                     }
                 }
             }
-
+            
+            runtime();
+            waitSeconds(5);
+            
             System.out.println("-------------------------------------------------------------------------------------");
             System.out.println("ANALISIS DE DATOS MASTERFILE");
 
@@ -1551,7 +1589,7 @@ public class FunctionsApachePoi {
                                     "\n tengan un formato tipo FECHA identica a " + fechaCorte);
 
                             errorMessage( "No es posible completar el análisis de la hoja [" + hoja +
-                                    "\n el formato de fecha no es el correcto");
+                                    "]\n el formato de fecha no es el correcto");
                         }else {
                             valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, seleccion2);
                             mapList = createMapList(valoresEncabezados2, seleccion, seleccion2);
@@ -1562,12 +1600,16 @@ public class FunctionsApachePoi {
                                 }
                             }
                         }
+                        
+                        runtime();
+                        waitSeconds(2);
                         System.out.println("AQUI TERMINA TOOODO");
-                        //break;
-                    }/*else {
-                        System.err.println("La hoja a analizar no concuerda con la hoja seleccionada");
-                    }*/
+                    }else {
+                        System.err.println("La hoja [" + hoja + "] no fue encontrada");
+                    }
                 }
+                System.gc();
+                waitSeconds(2);
                 break;
             }
 
@@ -1580,6 +1622,8 @@ public class FunctionsApachePoi {
             workbook2.close();
             fis.close();
             fis2.close();
+            runtime();
+            waitSeconds(2);
 
 
             //moveDocument(file2, destino);
