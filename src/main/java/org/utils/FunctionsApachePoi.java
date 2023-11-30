@@ -1551,15 +1551,15 @@ public class FunctionsApachePoi {
                 for (String headers : encabezados2) {
                     sheets2.toLowerCase();
                     hoja.toLowerCase();
-                    if (!sheets2.equals(hoja)) {
+                    if (sheets2.equals(hoja)) {
+                        System.out.println("Headers2: " + headers);
+                    }else {
                         errorMessage("La hoja [" + hoja + "] no fue encontrada." +
                                 "\n busque una hoja en la siguiente lista que se asemeje al nombre <" + hoja + ">");
                         hoja = mostrarMenu(nameSheets2);
                         if (hoja.equals("Ninguno")){
                             errorMessage("La hoja no fue encontrada. proceso finalizado");
                         }
-                    }else {
-                        System.out.println("Headers2: " + headers);
                     }
                 }
             }
