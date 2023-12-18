@@ -133,16 +133,14 @@ public class MethotsAzureMasterFiles {
     public static List<String> getWorkSheet(String filePath, int i) {
         List<String> shetNames = new ArrayList<>();
         try {
-            FileInputStream fis = new FileInputStream(filePath);
-            Workbook workbook = new XSSFWorkbook(fis);
+            Workbook workbook = WorkbookFactory.create(new File(filePath));
             int numberOfSheets = workbook.getNumberOfSheets();
-            ;
+
             for (int index = i; index < numberOfSheets; index++) {
                 Sheet sheet = workbook.getSheetAt(index);
                 shetNames.add(sheet.getSheetName());
             }
             workbook.close();
-            fis.close();
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -150,29 +148,6 @@ public class MethotsAzureMasterFiles {
             throw new RuntimeException(e);
         }
         return shetNames;
-    }
-
-    public static List<String> getHeadersMF(String excelFilePath, String sheetName) {
-        List<String> headers = new ArrayList<>();
-        try {
-            FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = new XSSFWorkbook(fis);
-            Sheet sheet = workbook.getSheet(sheetName);
-            Row headerRow = sheet.getRow(168 );
-            for (int i = 0; i < headerRow.getRowNum(); i++) {
-                System.out.println("ROW: " + headerRow.getCell(i));
-            }
-
-            for (Cell cell : headerRow) {
-                headers.add(obtenerValorVisibleCelda(cell));//obtenerValorCelda(cell)
-
-            }
-            workbook.close();
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return headers;
     }
 
     public static List<Map<String, String>> getValuebyHeader(String excelFilePath, String sheetName) {
@@ -265,16 +240,27 @@ public class MethotsAzureMasterFiles {
         return null; // Valor no encontrado en la columna especificada
     }
 
+    public static List<String> getHeadersMasterfile(Sheet sheet1, Sheet sheet2, String seleccion) throws IOException {
+        List<String> headers1 = getHeaders(sheet1);
+        String headerFirstFile1 = headers1.get(0);
+        List<String> headers2 = getHeaders(sheet2);
+        String headerSecondFile = headers2.get(0);
+
+        if (!headerFirstFile1.equals(headerSecondFile)) {
+            headers2 = findValueInColumn(sheet1, 0, seleccion);
+        }
+
+        return headers2;
+    }
+
     public static List<String> getHeadersMasterfile(Sheet sheet1, Sheet sheet2) throws IOException {
         List<String> headers1 = getHeaders(sheet1);
         String headerFirstFile1 = headers1.get(0);
         List<String> headers2 = getHeaders(sheet2);
         String headerSecondFile = headers2.get(0);
-        /*JOptionPane.showMessageDialog(null, "Seleccione el PRIMER encabezado en el archivo Maestro de la hoja [" + sheet2.getSheetName() + "]");
-        String seleccion2 = FunctionsApachePoi.mostrarMenu(headers1);*/
 
         if (!headerFirstFile1.equals(headerSecondFile)) {
-            headers2 = findValueInColumn(sheet1, 0, headers1.get(0));
+            headers2 = findValueInColumn(sheet1, 0, headerFirstFile1);
         }
 
         return headers2;
@@ -365,7 +351,12 @@ public class MethotsAzureMasterFiles {
                                 valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
 
                             }else {
-                                valor = String.format("%.2f%%", numericValue * 100);
+                                boolean isTwoDigitsOrLess = Math.abs(numericValue) < 100 && Math.abs(numericValue) % 1 !=0;
+                                if (isTwoDigitsOrLess) {
+                                    valor = String.format("%.2f%%", numericValue/* / 100*/);
+                                }else {
+                                    valor = String.valueOf(numericValue);
+                                }
                             }
                         }else {
                             valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
@@ -378,11 +369,8 @@ public class MethotsAzureMasterFiles {
                 case BLANK:
                 case _NONE:
                 case ERROR:
-                    valor = "0.00";
-                    break;
-
                 default:
-                    valor = dataFormatter.formatCellValue(cell);
+                    valor = /*dataFormatter.formatCellValue(cell)*/"0";
             }
 
             return valor;
@@ -476,6 +464,9 @@ public class MethotsAzureMasterFiles {
         int indexHeader1 = encabezados.indexOf(header1);
         int indexHeader2 = encabezados.indexOf(header2);
 
+        int count = 0;
+        int rowsPerBatch = 5000;
+
         if (indexHeader1 == -1 || indexHeader2 == -1) {
             // Los encabezados especificados no se encontraron en la lista de encabezados
             // Puedes manejar esta situación como desees, por ejemplo, lanzando una excepción
@@ -499,9 +490,14 @@ public class MethotsAzureMasterFiles {
                         indexHeader2 >= 0 && indexHeader2 < valoresFila.size()) {
                     fila.put(header1, valoresFila.get(indexHeader1));
                     fila.put(header2, valoresFila.get(indexHeader2));
+                    count++;
                 } else {
-                    System.err.println("En la fila [" + row.getRowNum() + "] no se encuentran los datos completos. " +
+                    System.err.println("En la fila [" + row.getRowNum() + "] no se encuentran los datos completos. El valor no puede ser nulo" +
                             "\n Por favor rellene con [0] o con [NA] según el campo que falte numérico o caracteres respectivamente");
+                }
+                if (count % rowsPerBatch == 0) {
+                    runtime();
+                    Thread.sleep(200);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
