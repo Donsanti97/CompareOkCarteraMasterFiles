@@ -1,18 +1,20 @@
 package org.utils.configuration.historicoCarteraSegMonto_ColocPorLC;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static org.utils.FunctionsApachePoi.*;
 import static org.utils.MethotsAzureMasterFiles.*;
@@ -222,12 +224,78 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+            java.util.List<String> camposDeseados = Arrays.asList("linea", "capital");
+
+            String campoFiltrar = "tipo_cliente";
+            String valorInicio = "Nuevo"; // Reemplaza con el valor de inicio del rango
+            String valorFin = "Nuevo"; // Reemplaza con el valor de fin del rango
+
+            // Filtrar los datos por el campo y el rango especificados
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
         java.util.List<String> headers = null;
         java.util.List<Map<String, String>> datosFiltrados = null;
-        java.util.List<String> camposDeseados = Arrays.asList("linea", "capital");
         for (String sheetName : sheetNames) {
             System.out.println("Contenido de la hoja: " + sheetName);
             headers = obtenerEncabezados(okCarteraFile, sheetName);
@@ -238,13 +306,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                 System.out.println(header);
             }
             // Especifica el campo en el que deseas aplicar el filtro
-            String campoFiltrar = "tipo_cliente";
-            String valorInicio = "Nuevo"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "Nuevo"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
-
+            
 
             // Especifica los campos que deseas obtener
 
@@ -340,6 +402,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void nuevosMay30Lineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -461,6 +583,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void nuevosLineasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -580,6 +762,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void renovadoLineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -698,6 +940,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void renovadoMay30Lineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -816,6 +1118,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void renovadoLineasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -935,6 +1297,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void lMontoColoc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -1053,6 +1475,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void lMontoColocMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -1170,6 +1652,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void lMontoColocBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String calificacion, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -1295,6 +1837,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void reestLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -1420,6 +2022,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void clientesLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -1545,6 +2207,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void operacionesLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
@@ -1670,6 +2392,66 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     public static void colocacion(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String mesAnoCorte, String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+
+
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+
+
+
+
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+            workbook = WorkbookFactory.create(new File(tempFile));
+
+            sheet = workbook.getSheetAt(0);
+
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+
+            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                for (Map<String, String> datoMF : datosMasterFile) {
+                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        /*------------------------------------------------------------*/
+                        if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                            System.out.println("CODIGO ENCONTRADO");
+
+
+                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                            } else {
+
+                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
+                            }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                        }
+                        /*-------------------------------------------------------------------*/
+                    }
+                }
+
+            }
+            workbook.close();
+            runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         java.util.List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 

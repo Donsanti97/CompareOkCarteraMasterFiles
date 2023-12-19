@@ -1,8 +1,12 @@
 package org.utils.configuration.historicoCarteraComercialPorOF;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -158,7 +162,7 @@ public class HistoricoCarteraComercialPorOF {
             waitSeconds(5);
 
             JOptionPane.showMessageDialog(null, "Espere un momento la última hoja está siendo analizada. \n Por favor de clic en Ok para continuar...");
-            waitMinutes(5);
+            waitSeconds(5);
 
             comercialPzoPerc08(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Comercial_Pzo_Perc_0.8", tempFile);
             waitSeconds(5);
@@ -177,91 +181,41 @@ public class HistoricoCarteraComercialPorOF {
 
     public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
-
+        
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        System.setProperty("org.apache.poi.ooxml.strict", "true");
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            Sheet sheet = workbook.getSheetAt(0);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            List<String> headers = getHeadersN(sheet);
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
 
-            // Especifica los campos que deseas obtener
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -280,41 +234,43 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void diasDeMoraDias(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangoDesde, int rangoHasta, String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
 
-        String campoDiasDeMora = "dias_de_mora";
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+            String campoDiasDeMora = "dias_de_mora";
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -322,62 +278,20 @@ public class HistoricoCarteraComercialPorOF {
             //int rangoHasta = 5000L;
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, campoDiasDeMora, rangoDesde, rangoHasta);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, campoDiasDeMora, rangoDesde, rangoHasta);
 
-            // Especifica los campos que deseas obtener
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -396,101 +310,61 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void calificacion(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        String campoCalificacion = "calificacion";
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            Sheet sheet = workbook.getSheetAt(0);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            List<String> headers = getHeadersN(sheet);
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+            String campoCalificacion = "calificacion";
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, campoCalificacion, calificacion, calificacion);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSS(sheet, headers, campoFiltrar, valorInicio, valorFin, campoCalificacion, calificacion, calificacion);
 
-            // Especifica los campos que deseas obtener
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -509,102 +383,61 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void reEstCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        String reEstCapital = "re_est";
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            Sheet sheet = workbook.getSheetAt(0);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            List<String> headers = getHeadersN(sheet);
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
+            String reEstCapital = "re_est";
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, reEstCapital, 1, 1);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, reEstCapital, 1, 1);
 
-            // Especifica los campos que deseas obtener
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -623,105 +456,58 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void reEstCapital(String okCarteraFile, int diasMoradesde, int diasMoraHasta, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        String reEstCapital = "re_est";
-        String diasDeMora = "dias_de_mora";
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            Sheet sheet = workbook.getSheetAt(0);
 
-            // Especifica el campo en el que deseas aplicar el filtro
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
-
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, reEstCapital, 1, 1, diasDeMora, diasMoradesde, diasMoraHasta);
-
-            // Especifica los campos que deseas obtener
+            List<String> headers = getHeadersN(sheet);
             List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            String reEstCapital = "re_est";
+            String diasDeMora = "dias_de_mora";
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNNN(sheet, headers, reEstCapital, 1, 1, diasDeMora, diasMoradesde, diasMoraHasta);
 
-            System.out.println("----------------------");
-        }
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-        System.out.println("Analisis archivo temporal----------------------");
+            sheet = workbook.getSheetAt(0);
 
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -740,101 +526,59 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void reEstNCreditos(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String filePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            Sheet sheet = workbook.getSheetAt(0);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            List<String> headers = getHeadersN(sheet);
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -853,100 +597,62 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
+            waitSeconds(2);
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void nCreditosVigentes(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String filePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("linea", "Cliente");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            List<String> camposDeseados = Arrays.asList("linea", "Cliente");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -965,98 +671,62 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
+            waitSeconds(2);
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void clientesComercial(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String filePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            IOUtils.setByteArrayMaxOverride(20000000);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin);
-            
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            sheet = workbook.getSheetAt(0);
 
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1075,40 +745,41 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void colocacionComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String filePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1119,62 +790,20 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1193,40 +822,41 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void nCreditoComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String filePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1237,61 +867,20 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1310,40 +899,41 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void colocacionPromComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String filePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1354,62 +944,19 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            sheet = workbook.getSheetAt(0);
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
-
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1428,40 +975,41 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     public static void comercialPercentil05(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String okCarteraFile = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1472,64 +1020,20 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-
-            System.out.println("AQUÍ COMIENZA SUMA DE CAMPOS");
-            System.out.println(camposDeseados.get(0) + ": " + camposDeseados.get(1));
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1548,42 +1052,42 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
-
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
 
     public static void comercialPercentil08(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String okCarteraFile = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1594,64 +1098,20 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-
-            System.out.println("AQUÍ COMIENZA SUMA DE CAMPOS");
-            System.out.println(camposDeseados.get(0) + ": " + camposDeseados.get(1));
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1670,42 +1130,42 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
-
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     /*---------------------------------------------------------------------------------------------------------------------*/
     public static void comercialPzoProm(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String okCarteraFile = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1716,61 +1176,20 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (Map.Entry<String, String> entry : rowData.entrySet()) {
-                    System.out.println("KEY: " + entry.getKey() + " VALUE: " + entry.getValue());
-                }
-                System.out.println();
-            }
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1789,43 +1208,43 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
-
-
+            workbook.close();
             runtime();
+            waitSeconds(2);
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     //Mertodos a los que hay que hacerle un método aparte en la tabla dinámica para hallar el porcentaje 50%
     public static void comercialPzoPerc05(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String okCarteraFile = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1836,64 +1255,21 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
-
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
 
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados, 50);
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("AQUÍ COMIENZA SUMA DE CAMPOS");
-            System.out.println(camposDeseados.get(0) + ": " + camposDeseados.get(1));
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1912,43 +1288,42 @@ public class HistoricoCarteraComercialPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
 
             }
-
+            workbook.close();
             runtime();
-
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
     //Mertodos a los que hay que hacerle un método aparte en la tabla dinámica para hallar el porcentaje 80%
     public static void comercialPzoPerc08(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
 
-        //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
-        //String okCarteraFile = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
-
         IOUtils.setByteArrayMaxOverride(300000000);
+        
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
 
-        List<String> sheetNames = obtenerNombresDeHojas(okCarteraFile);
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-        List<String> headers = null;
-        List<Map<String, String>> datosFiltrados = null;
-        List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-            headers = obtenerEncabezados(okCarteraFile, sheetName);
 
-            // Listar campos disponibles
-            System.out.println("Campos disponibles:");
-            for (String header : headers) {
-                System.out.println(header);
-            }
+            IOUtils.setByteArrayMaxOverride(20000000);
 
-            // Especifica el campo en el que deseas aplicar el filtro
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<String> headers = getHeadersN(sheet);
+            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
+
             String campoFiltrar = "modalidad";
             String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
             String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
@@ -1959,93 +1334,53 @@ public class HistoricoCarteraComercialPorOF {
 
 
             // Filtrar los datos por el campo y el rango especificados
-            datosFiltrados = obtenerValoresDeEncabezados(okCarteraFile, sheetName, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
-            // Especifica los campos que deseas obtener
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println();
+            System.out.println("CREANDO ARCHIVO TEMPORAL");
+            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-            // Imprimir datos filtrados
-            System.out.println("Datos filtrados por " + campoFiltrar + " en el rango [" + valorInicio + ", " + valorFin + "]");
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
+            workbook = WorkbookFactory.create(new File(tempFile));
 
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-            runtime();
+            sheet = workbook.getSheetAt(0);
 
-            System.out.println("----------------------");
-        }
-        //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
-        // Crear una nueva hoja Excel con los datos filtrados
-        crearNuevaHojaExcel(tempFile, camposDeseados, datosFiltrados);
-
-        System.out.println("Analisis archivo temporal----------------------");
-
-        sheetNames = obtenerNombresDeHojas(tempFile);
-
-        for (String sheetName : sheetNames) {
-            System.out.println("Contenido de la hoja: " + sheetName);
-
-            headers = obtenerEncabezados(tempFile, sheetName);
-
-            System.out.println("Campos disponibles " + headers);
-
-            for (String header : headers) {
-                System.out.println(header);
-            }
-
-
-            //List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            datosFiltrados = obtenerValoresDeEncabezados(tempFile, sheetName, camposDeseados, 80);
-
-
-            for (Map<String, String> rowData : datosFiltrados) {
-                for (String campoDeseado : camposDeseados) {
-                    String valorCampo = rowData.get(campoDeseado);
-                    System.out.println(campoDeseado + ": " + valorCampo);
-                }
-                System.out.println();
-            }
-
-            System.out.println("AQUÍ COMIENZA SUMA DE CAMPOS");
-            System.out.println(camposDeseados.get(0) + ": " + camposDeseados.get(1));
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
-
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
-
+            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        /*-------------------------------------------------------------*/
+                        /*------------------------------------------------------------*/
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
 
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
                                 System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
                             } else {
+
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+
                             }
+                        }else {
+                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
                 }
+
             }
-
-            //System.out.println("---------------------- CREACION TABLA DINAMICA comercialPzoPerc08");
-
-
-            //tablasDinamicasApachePoi(tempFile, camposDeseados.get(0), camposDeseados.get(1), "SUMA");
-
+            workbook.close();
             runtime();
-
+            waitSeconds(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
 

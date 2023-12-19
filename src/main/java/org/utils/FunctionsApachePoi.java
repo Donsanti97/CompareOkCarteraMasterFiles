@@ -2363,6 +2363,73 @@ workbook.close();
         return datosFiltrados;
     }
 
+    public static List<Map<String, Object>> getHeaderFilterValuesNSD(Sheet sheet, List<String> headers, String campoFiltrar1, String valorIni1, String valorFin1, String campoFiltrar2, Date valorIni2, Date valorFin2) {
+        List<Map<String, Object>> datosFiltrados = new ArrayList<>();
+
+        Row row = sheet.getRow(0);
+
+        Iterator<Row> rowIterator = sheet.iterator();
+
+        int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+
+        try {
+            int currentRow = 0;
+            int rowsPerBatch = 5000;
+            System.out.println("PROCESANDO VALORES");
+            while (rowIterator.hasNext()) {
+
+                row = rowIterator.next();
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
+
+                int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
+                int campoFiltrarIndex2 = headers.indexOf(campoFiltrar2);
+                if (campoFiltrarIndex1 == -1 || campoFiltrarIndex2 == -1) {
+                    System.err.println("Al menos uno de los campos especificados para el filtro no existe");
+                    return datosFiltrados;
+                }
+
+                String valueCampoFiltrar1 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1));
+                Date valueCampoFiltrar2 = parseDate(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2)));
+
+                if ((valueCampoFiltrar1.compareTo(valorIni1) >= 0 && valueCampoFiltrar1.compareTo(valorFin1) <= 0) &&
+                        (valueCampoFiltrar2.compareTo(valorIni2) >= 0 && valueCampoFiltrar2.compareTo(valorFin2) <= 0)) {
+
+                    Iterator<String> columnNameIterator = headers.iterator();
+                    Iterator<Cell> cellIterator = row.cellIterator();
+
+                    Map<String, Object> rowData = new HashMap<>();
+
+                    while (cellIterator.hasNext()) {
+                        Cell cell = cellIterator.next();
+                        String columnName = columnNameIterator.next();
+                        String value = "";
+                        if (cell != null) {
+                            value = obtenerValorVisibleCelda(cell);
+                            rowData.put(columnName, value);
+                        }
+                    }
+                    datosFiltrados.add(rowData);
+                    currentRow++;
+                    if (currentRow % rowsPerBatch == 0){
+                        runtime();
+                        Thread.sleep(200);
+                    }
+
+
+                    showProgressBarPerQuantity(currentRow, totalRows);
+
+                    Thread.sleep(50);
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return datosFiltrados;
+    }
+
     public static List<Map<String, Object>> getHeaderFilterValuesNNN(Sheet sheet, List<String> headers, String campoFiltrar1, double valorIni1, double valorFin1, String campoFiltrar2, double valorIni2, double valorFin2) {
         List<Map<String, Object>> datosFiltrados = new ArrayList<>();
 
@@ -2432,6 +2499,84 @@ workbook.close();
         return datosFiltrados;
     }
 
+    public static List<Map<String, Object>> getHeaderFilterValuesNND(Sheet sheet, List<String> headers, String campoFiltrar1, double valorIni1, double valorFin1, String campoFiltrar2, Date valorIni2, Date valorFin2) {
+
+        List<Map<String, Object>> datosFiltrados = new ArrayList<>();
+
+        Row row = sheet.getRow(0);
+        Iterator<Row> rowIterator = sheet.iterator();
+
+        int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+
+        try {
+            int currentRow = 0;
+            int rowsPerBatch = 5000;
+            System.out.println("PROCESANDO VALORES");
+            while (rowIterator.hasNext()) {
+
+                row = rowIterator.next();
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
+
+                int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
+                int campoFiltrarIndex2 = headers.indexOf(campoFiltrar2);
+
+                if (campoFiltrarIndex1 == -1 || campoFiltrarIndex2 == -1) {
+                    System.err.println("El campo especificado para el filtro no existe");
+                    return datosFiltrados;
+                }
+
+                double valueCampoFiltrar1 = Double.parseDouble(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1)));
+                Date valueCampoFiltrar2 = parseDate(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2)));
+
+                if ((valueCampoFiltrar1 >= valorIni1 && valueCampoFiltrar1 <= valorFin1) &&
+                        (valueCampoFiltrar2.after(valorIni2) || valueCampoFiltrar2.equals(valorIni2)) &&
+                        (valueCampoFiltrar2.before(valorFin2) || valueCampoFiltrar2.equals(valorFin2))) {
+
+                    Iterator<String> columnNameIterator = headers.iterator();
+                    Iterator<Cell> cellIterator = row.cellIterator();
+
+                    Map<String, Object> rowData = new HashMap<>();
+
+                    while (cellIterator.hasNext()) {
+                        Cell cell = cellIterator.next();
+                        String columnName = columnNameIterator.next();
+                        String value = "";
+                        if (cell != null) {
+                            value = obtenerValorVisibleCelda(cell);
+                            rowData.put(columnName, value);
+                        }
+                    }
+                    datosFiltrados.add(rowData);
+                    currentRow++;
+
+                    if (currentRow % rowsPerBatch == 0) {
+                        runtime();
+                        Thread.sleep(200);
+                    }
+
+                    showProgressBarPerQuantity(currentRow, totalRows);
+
+                    Thread.sleep(50);
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return datosFiltrados;
+    }
+
+    private static Date parseDate(String dateStr) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            return dateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            System.err.println("Error parsing date: " + e.getMessage());
+            return null;
+        }
+    }
     public static List<Map<String, Object>> getHeaderFilterValuesNNS(Sheet sheet, List<String> headers, String campoFiltrar1, double valorIni1, double valorFin1, String campoFiltrar2, String valorIni2, String valorFin2) {
         List<Map<String, Object>> datosFiltrados = new ArrayList<>();
 
