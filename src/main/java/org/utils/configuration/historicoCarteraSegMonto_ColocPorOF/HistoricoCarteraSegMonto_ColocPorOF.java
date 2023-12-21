@@ -24,6 +24,15 @@ import static org.utils.MethotsAzureMasterFiles.*;
 public class HistoricoCarteraSegMonto_ColocPorOF {
     //110 hojas
 
+    public static boolean isEqual(String azureFile){
+        boolean isEqual = false;
+        File aFile = new File(azureFile);
+        if (aFile.getName().toLowerCase().contains("monto_col_oficina")){
+            isEqual = true;
+        }
+        return isEqual;
+    }
+
     private static String menu(List<String> opciones) {
 
         JFrame frame = new JFrame("Menú de Opciones");
@@ -66,8 +75,11 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
         JOptionPane.showMessageDialog(null, "Seleccione el archivo Azure");
         String azureFile = getDocument();
-        /*JOptionPane.showMessageDialog(null, "Seleccione el archivo Maestro");
-        masterFile = getDocument();*/
+        while (!isEqual(azureFile)){
+            errorMessage("El archivo AZURE no es el indicado para el análisis." +
+                    "\n \n Por favor seleccione el archivo correspondiente a: " + new File(masterFile).getName());
+            azureFile = getDocument();
+        }
         JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
@@ -200,8 +212,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
             colocacionOF(okCartera, masterFile, azureFile, fechaCorte, "Colocación_25-50 M", 250, 500, mesAnoCorte, tempFile);
             colocacionOF(okCartera, masterFile, azureFile, fechaCorte, "Colocación_50-100 M", 500, 1000, mesAnoCorte, tempFile);
             colocacionOF(okCartera, masterFile, azureFile, fechaCorte, "Colocación_> 100 M", 1000, 10000, mesAnoCorte, tempFile);
-            
-            
+
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
             waitSeconds(10);
@@ -219,11 +230,10 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     }
 
 
-
     public static void nuevosOficinas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -269,7 +279,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
@@ -289,28 +299,28 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     }
 
 
-    public static void nuevosOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException, InterruptedException {
+    public static void nuevosOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
-        
+
         try {
             Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
-            
+
             IOUtils.setByteArrayMaxOverride(20000000);
 
             Sheet sheet = workbook.getSheetAt(0);
 
             List<String> headers = getHeadersN(sheet);
-            
+
             List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
             System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
             String campoFiltrar = "tipo_cliente";
             String valorInicio = "Nuevo"; // Reemplaza con el valor de inicio del rango
             String valorFin = "Nuevo"; // Reemplaza con el valor de fin del rango
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, "dias_de_mora", 31, 5000);
-            
+
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             // Crear una nueva hoja Excel con los datos filtrados
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -343,7 +353,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
@@ -363,7 +373,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void nuevosOficinasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -416,7 +426,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
@@ -433,10 +443,10 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void renovadoOficinas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException, InterruptedException {
+    public static void renovadoOficinas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -489,7 +499,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
@@ -507,10 +517,10 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void renovadoOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja , String tempFile) throws IOException, InterruptedException {
+    public static void renovadoOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
         try {
             Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
@@ -562,7 +572,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
@@ -583,7 +593,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void renovadoOficinasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -636,7 +646,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
@@ -658,7 +668,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void oficinasMontoColoc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -710,7 +720,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                     }
@@ -731,7 +741,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void oficinasMontoColocMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -782,7 +792,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                     }
@@ -801,7 +811,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void oficinasMontoColocBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String calificacion, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -852,7 +862,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                     }
@@ -872,7 +882,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void reestOF(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -924,7 +934,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                     }
@@ -944,7 +954,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void clientesOF(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -995,7 +1005,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                     }
@@ -1015,7 +1025,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void operacionesOF(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
@@ -1067,7 +1077,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                                 System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
 
                             }
-                        }else {
+                        } else {
                             System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                     }
@@ -1086,7 +1096,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     public static void colocacionOF(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String mesAnoCorte, String tempFile) throws IOException, ParseException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
-        
+
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {

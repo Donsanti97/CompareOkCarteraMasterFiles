@@ -1,20 +1,19 @@
 package org.utils;
 
 import org.utils.configuration.historicoCarteraBrutaPorOF_LC.HistoricoCarteraBrutaPorOF_LC;
-import org.utils.configuration.historicoCarteraConsumoPorOF.HistoricoCarteraConsumoPorOF;
 import org.utils.configuration.historicoCarteraComercialPorOF.HistoricoCarteraComercialPorOF;
+import org.utils.configuration.historicoCarteraConsumoPorOF.HistoricoCarteraConsumoPorOF;
 import org.utils.configuration.historicoCarteraMicrocreditoPorOF.HistoricoCarteraMicrocreditoPorOF;
 import org.utils.configuration.historicoCarteraPorLC.HistoricoCarteraPorLC;
 import org.utils.configuration.historicoCarteraPorOF.HistoricoCarteraPorOF;
 import org.utils.configuration.historicoCarteraSegMonto_ColocPorLC.HistoricoCarteraSegMonto_ColocPorLC;
 import org.utils.configuration.historicoCarteraSegMonto_ColocPorOF.HistoricoCarteraSegMonto_ColocPorOF;
 
-
 import javax.swing.*;
 import java.io.File;
 
 import static org.utils.MethotsAzureMasterFiles.getDocument;
-import static org.utils.MethotsAzureMasterFiles.*;
+import static org.utils.MethotsAzureMasterFiles.runtime;
 
 public class Start {
 
@@ -40,7 +39,8 @@ public class Start {
             System.out.println(e);
         }
     }
-    public static void excecution(){
+
+    public static void excecution() {
         JOptionPane.showMessageDialog(null, "Seleccione el archivo Maestro");
         String masterFile = getDocument();
 
@@ -50,7 +50,7 @@ public class Start {
             System.out.println(file.getName());
             String fileName = file.getName().toLowerCase();
             System.out.println(fileName);
-            if (fileName.contains("comercial")){
+            if (fileName.contains("comercial")) {
                 HistoricoCarteraComercialPorOF.configuracion(masterFile);
             } else if (fileName.contains("consumo")) {
                 HistoricoCarteraConsumoPorOF.configuracion(masterFile);
@@ -58,8 +58,8 @@ public class Start {
                 HistoricoCarteraMicrocreditoPorOF.configuracion(masterFile);
             } else if (fileName.contains("historico cartera por lc")) {
                 HistoricoCarteraPorLC.configuracion(masterFile);
-            }else if (fileName.contains("seg")) {
-                if (fileName.contains("lc")){
+            } else if (fileName.contains("seg")) {
+                if (fileName.contains("lc")) {
                     HistoricoCarteraSegMonto_ColocPorLC.configuracion(masterFile);
                 } else if (fileName.contains("of")) {
                     HistoricoCarteraSegMonto_ColocPorOF.configuracion(masterFile);
@@ -67,9 +67,9 @@ public class Start {
 
             } else if (fileName.contains("historico cartera por of")) {
                 HistoricoCarteraPorOF.configuracion(masterFile);
-            }else if (fileName.contains("historico cartera bruta por of _ lc")) {
+            } else if (fileName.contains("historico cartera bruta por of _ lc")) {
                 HistoricoCarteraBrutaPorOF_LC.configuracion(masterFile);
-            }else {
+            } else {
                 System.out.println("EL ARCHIVO SELECCIONADO NO TIENE ANÁLISIS ASIGNADO");
             }
         } catch (Exception e) {

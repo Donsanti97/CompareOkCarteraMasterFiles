@@ -296,7 +296,7 @@ public class MethotsAzureMasterFiles {
                             //valor = formatoSalida.format(date);
                             valor = cell.toString();
                             System.out.println("VALOR1 " + valor);
-                        }else {
+                        } else {
                             //valor = Date.toString(cell.getDateCellValue()/*NumericCellValue()*/);
                             System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getNumericCellValue() + ", CELL: " + cell);
                             valor = cell.getStringCellValue();
@@ -308,7 +308,7 @@ public class MethotsAzureMasterFiles {
                         valor = Boolean.toString(cell.getBooleanCellValue());
                         break;
                     case FORMULA:
-                            System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getCellFormula().toString() + ", CELL: " + cell + " CELLADD: " + cell.getAddress());
+                        System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getCellFormula().toString() + ", CELL: " + cell + " CELLADD: " + cell.getAddress());
                         /*System.err.println("Formato fecha no valido."+ cell.getCellFormula() +" Encabezado "+ cell.getSheet().getSheetName() +" Posición: "+ cell.getAddress() +" puede contener formula o valor cadena de caracteres");
                         valor = evaluarFormula(cell);
                         System.out.println("VALORF: " + valor);
@@ -347,18 +347,18 @@ public class MethotsAzureMasterFiles {
                         String dataFormatString = cell.getCellStyle().getDataFormatString();
 
                         if (numericValue >= -99.99 && numericValue <= 99.99) {
-                            if (numericValue == 0){
+                            if (numericValue == 0) {
                                 valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
 
-                            }else {
-                                boolean isTwoDigitsOrLess = Math.abs(numericValue) < 100 && Math.abs(numericValue) % 1 !=0;
+                            } else {
+                                boolean isTwoDigitsOrLess = Math.abs(numericValue) < 100 && Math.abs(numericValue) % 1 != 0;
                                 if (isTwoDigitsOrLess) {
                                     valor = String.format("%.2f%%", numericValue/* / 100*/);
-                                }else {
+                                } else {
                                     valor = String.valueOf(numericValue);
                                 }
                             }
-                        }else {
+                        } else {
                             valor = dataFormatter.formatRawCellContents(cell.getNumericCellValue(), cell.getCellStyle().getDataFormat(), cell.getCellStyle().getDataFormatString());
                         }
                     }
@@ -392,7 +392,7 @@ public class MethotsAzureMasterFiles {
                 String valor = cellValue.getStringValue();
                 //System.out.println("El valor de la fórmula en A5 es: " + valor);
                 return valor;
-            }else {
+            } else {
                 return cellValue.formatAsString();
             }
         } catch (Exception e) {
@@ -539,6 +539,7 @@ public class MethotsAzureMasterFiles {
 
         return valoresPorFilas;
     }
+
     public static List<Map<String, String>> obtenerValoresPorFilas(Sheet sheet, Sheet sheet2) throws IOException {
         List<Map<String, String>> valoresPorFilas = new ArrayList<>();
         List<String> encabezados = getHeadersMasterfile(sheet, sheet2);

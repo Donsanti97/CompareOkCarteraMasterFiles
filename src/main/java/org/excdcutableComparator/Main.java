@@ -3,12 +3,6 @@ package org.excdcutableComparator;
 
 import org.utils.Start;
 
-import javax.swing.*;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
-import static org.utils.MethotsAzureMasterFiles.*;
-
 public class Main {
     public static void main(String[] args) {
 

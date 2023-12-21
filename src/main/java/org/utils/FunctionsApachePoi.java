@@ -13,8 +13,8 @@ import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -41,7 +41,8 @@ public class FunctionsApachePoi {
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -68,7 +69,8 @@ public class FunctionsApachePoi {
 
     public static void convertirExcel(String archivo) throws IOException {
         FileInputStream fis = new FileInputStream(archivo);
-        Workbook workbook = WorkbookFactory.create(new File(archivo));;
+        Workbook workbook = WorkbookFactory.create(new File(archivo));
+        ;
 
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             Sheet sheet = workbook.getSheetAt(i);
@@ -197,7 +199,8 @@ public class FunctionsApachePoi {
 
     public static Map<String, Integer> extractPivotTableData(String filePath, String filterColumnName, String valueColumnName) throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
-        Workbook workbook = WorkbookFactory.create(new File(filePath));;
+        Workbook workbook = WorkbookFactory.create(new File(filePath));
+        ;
         Sheet sheet = workbook.getSheetAt(0);
         System.out.println("Hoja: " + sheet.getSheetName());
         List<XSSFTable> tables = ((XSSFSheet) sheet).getTables();
@@ -229,7 +232,8 @@ public class FunctionsApachePoi {
 
     public static Map<String, Integer> processExcelFile(String filePath) throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
-        Workbook workbook = WorkbookFactory.create(new File(filePath));;
+        Workbook workbook = WorkbookFactory.create(new File(filePath));
+        ;
         Sheet sheet = workbook.getSheetAt(0); // Suponiendo que estás trabajando en la primera hoja del archivo
 
         Map<String, Integer> resultMap = new HashMap<>();
@@ -304,7 +308,8 @@ public class FunctionsApachePoi {
             }
         }
     }
-/*------------------------------------------------------------------------------------------------------------------------------------------*/
+
+    /*------------------------------------------------------------------------------------------------------------------------------------------*/
 /*public static List<String> obtenerEncabezados(String excelFilePath, String sheetName) {
     List<String> headers = new ArrayList<>();
 
@@ -413,7 +418,8 @@ public class FunctionsApachePoi {
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -446,13 +452,13 @@ public class FunctionsApachePoi {
     }
 
 
-
     public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados, String header) {
         List<Map<String, String>> data = new ArrayList<>();
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -491,7 +497,8 @@ public class FunctionsApachePoi {
             convertirExcel(excelFilePath);
 
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -530,7 +537,8 @@ public class FunctionsApachePoi {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex = headers.indexOf(campoFiltrar);
@@ -629,7 +637,8 @@ workbook.close();
         Map<String, String> resultado;
         try {
             crearNuevaHojaExcel(tempFile, headers, datosFiltrados);
-            /*Map<String, String> */resultado = functions.calcularSumaPorValoresUnicos(tempFile, headers.get(0), headers.get(1));
+            /*Map<String, String> */
+            resultado = functions.calcularSumaPorValoresUnicos(tempFile, headers.get(0), headers.get(1));
             if (datosFiltrados.size() % BATCH_SIZE == 0) {
                 System.out.println("Procesando lote de filas: " + datosFiltrados.size());
                 for (String header : headers) {
@@ -674,7 +683,8 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             //FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex = headers.indexOf(campoFiltrar);
@@ -715,7 +725,8 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -768,7 +779,8 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -820,7 +832,8 @@ workbook.close();
             IOUtils.setByteArrayMaxOverride(300000000);
 
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -868,7 +881,8 @@ workbook.close();
             IOUtils.setByteArrayMaxOverride(300000000);
 
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -877,7 +891,7 @@ workbook.close();
                 System.err.println("Alguno de los campos especificados para el filtro no existe.");
                 return datosFiltrados;
             }
-            
+
             runtime();
             waitSeconds(2);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
@@ -918,7 +932,8 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -943,7 +958,7 @@ workbook.close();
                     fechaCelda2 = cell2.getDateCellValue();
                 }
                 runtime();
-            waitSeconds(2);
+                waitSeconds(2);
 
                 // Obtener el valor de celda 1 como cadena de texto
                 String valorCelda1 = (cell1 != null && cell1.getCellType() == CellType.STRING) ? cell1.getStringCellValue() : "";
@@ -973,7 +988,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                 }
                 runtime();
-            waitSeconds(2);
+                waitSeconds(2);
             }
             workbook.close();
             fis.close();
@@ -991,7 +1006,8 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -1016,7 +1032,7 @@ workbook.close();
                     fechaCelda2 = cell2.getDateCellValue();
                 }
                 runtime();
-            waitSeconds(2);
+                waitSeconds(2);
 
                 // Obtener el valor de celda 1 como cadena de texto
                 String valorCelda1 = (cell1 != null && cell1.getCellType() == CellType.STRING) ? cell1.getStringCellValue() : "";
@@ -1046,7 +1062,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                 }
                 runtime();
-            waitSeconds(2);
+                waitSeconds(2);
             }
             workbook.close();
             fis.close();
@@ -1217,7 +1233,8 @@ workbook.close();
         List<String> sheetNames = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             int numberOfSheets = workbook.getNumberOfSheets();
             for (int i = indexFrom; i < numberOfSheets; i++) {
                 Sheet sheet = workbook.getSheetAt(i);
@@ -1427,7 +1444,7 @@ workbook.close();
                 }
                 countRows++;
 
-                if (countRows % rowsPerBatch == 0){
+                if (countRows % rowsPerBatch == 0) {
                     runtime();
                     Thread.sleep(200);
                 }
@@ -1742,7 +1759,8 @@ workbook.close();
     public static List<String> getHeaders(String excelFilePath, String sheetName) {
         List<String> headers = new ArrayList<>();
         try {
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            ;
             Sheet sheet = workbook.getSheet(sheetName);
             Row headerRow = sheet.getRow(0);
             for (Cell cell : headerRow) {
@@ -1757,6 +1775,9 @@ workbook.close();
 
 
     public static List<Map<String, String>> obtenerValoresEncabezados2(String azureFile, String masterFile, String hoja, String fechaCorte) {
+        IOUtils.setByteArrayMaxOverride(300000000);
+        System.setProperty("org.apache.poi.ooxml.strict", "false");
+
         List<Map<String, String>> valoresEncabezados2;
         List<Map<String, String>> valoresEncabezados1;
         List<Map<String, String>> mapList = new ArrayList<>();
@@ -1776,8 +1797,8 @@ workbook.close();
             Workbook workbook = WorkbookFactory.create(new File(azureFile));
             Workbook workbook2 = WorkbookFactory.create(new File(masterFile));
             Sheet sheet1 = null;
-            Sheet sheet2;
-            
+            Sheet sheet2 = null;
+
             int indexF2 = 0;
 
 
@@ -1785,159 +1806,66 @@ workbook.close();
                 sheet1 = workbook.getSheetAt(i);
                 nameSheets1.add(sheet1.getSheetName());
             }
-            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+            for (int i = 0; i < workbook2.getNumberOfSheets(); i++) {
                 sheet2 = workbook2.getSheetAt(i);
                 nameSheets2.add(sheet2.getSheetName());
             }
 
+            String sht1 = "";
+            String sht2 = "";
             List<String> dataList = createDualDropDownListsAndReturnSelectedValues(nameSheets1, nameSheets2);
             List<String> encabezados1 = null;
             List<String> encabezados2 = null;
             String encabezado = "";
 
-            for (String seleccion : dataList){
+            for (String seleccion : dataList) {
                 String[] elementos = seleccion.split(" - ");
 
-                String sht1 = elementos[0];
-                String sht2 = elementos[1];
+                sht1 = elementos[0];
+                sht2 = elementos[1];
                 System.out.println("ELEMENTOS SELECCIONADOS: " + sht1 + ", " + sht2);
                 sheet1 = workbook.getSheet(sht1);
                 sheet2 = workbook2.getSheet(sht2);
 
-                for (String sheets : nameSheets1) {
-                    System.out.println("HOJA ELEGIDA: " + sheet1.getSheetName());
-                    encabezados1 = getHeadersN(sheet1/*azureFile, sheets*/);
-                }
+                System.out.println("HOJA ELEGIDA: " + sheet1.getSheetName());
+                encabezados1 = getHeadersN(sheet1);
 
-                JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubucado en las hojas del archivo Maestro");
-                assert encabezados1 != null;
-                encabezado = mostrarMenu(encabezados1);
+            }
 
-                encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
+            JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubucado en las hojas del archivo Maestro");
+            assert encabezados1 != null;
+            encabezado = mostrarMenu(encabezados1);
 
-
-                //valoresEncabezados1 = obtenerValoresPorFilas(sheet1, encabezados1);
-                //valoresEncabezados2 = obtenerValoresPorFilas(sheet2, encabezados2);
+            encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
 
 
-                JOptionPane.showMessageDialog(null,"Seleccione el encabezado que corresponda al \"Código\" que será analizado");
+            for (String seleccion : dataList) {
+                JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
                 String codigo = mostrarMenu(encabezados2);
-                JOptionPane.showMessageDialog(null,"Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
+                JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
                 String fechaCorteMF = mostrarMenu(encabezados2);
 
-                if (!fechaCorte.equals(fechaCorteMF)){
-                    errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
-                            "\n tengan un formato tipo FECHA idéntica a " + fechaCorte);
+                if (sht2.equals(hoja)) {
+                    if (!fechaCorte.equals(fechaCorteMF)) {
+                        errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
+                                "\n tengan un formato tipo FECHA idéntica a " + fechaCorte);
 
-                    errorMessage( "No es posible completar el análisis de la hoja [" + hoja +
-                            "]\n el formato de fecha no es el correcto");
-                }else {
-                    valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sht2, codigo, fechaCorteMF);
-                    mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
-                    for (Map<String, String> map : mapList) {
-                        System.out.println("Analizando valores... ");
-                        for (Map.Entry<String, String> entry : map.entrySet()) {
-                            System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
-                        }
-                    }
-                }
-            }
-
-            /*for (String s2 : nameSheets2) {
-                String sheetName = s2.replaceAll("\\s", "");
-
-                for (int i = 0; i < workbook2.getNumberOfSheets(); i++) {
-                    if (nameSheets1.get(0).equals(sheetName)) {
-                        indexF2 = i;
-                        System.out.println("La hoja de trabajo se encontró en Excel B en el índice: " + indexF2);
-                        break;
-                    }
-                }
-            }
-            
-            runtime();
-            waitSeconds(2);
-            
-            sheet2 = workbook2.getSheetAt(indexF2);
-            nameSheets2 = getWorkSheet(masterFile, indexF2);
-
-            System.out.println("------------------------------------------------------------------------------------------");
-
-
-
-            System.out.println("------------------------------------------------------");
-            System.out.println("Analizando archivo Maestro");
-            for (String sheets2 : nameSheets2) {
-                System.out.println("Analizando: " + sheets2);
-                encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
-                for (String headers : encabezados2) {
-                    sheets2.toLowerCase();
-                    hoja.toLowerCase();
-                    if (!sheets2.equals(hoja)) {
-                        errorMessage("La hoja [" + hoja + "] no fue encontrada." +
-                                "\n busque una hoja en la siguiente lista que se asemeje al nombre <" + hoja + ">");
-                        hoja = mostrarMenu(nameSheets2);
-                        if (hoja.equals("Ninguno")){
-                            errorMessage("La hoja no fue encontrada. proceso finalizado");
-                        }
-                    }else {
-                        System.out.println("Headers2: " + headers);
-                    }
-                }
-            }
-            
-            runtime();
-            waitSeconds(5);
-            
-            System.out.println("-------------------------------------------------------------------------------------");
-            System.out.println("ANÁLISIS DE DATOS MASTER_FILE");
-
-            JOptionPane.showMessageDialog(null, "Tomando en cuenta la información mostrada anteriormente en consola " +
-                    "\n Seleccione por favor el encabezado \"Código\" que será usado para el análisis de los valores");
-            assert encabezados2 != null;
-            String seleccion = mostrarMenu(encabezados2);
-            JOptionPane.showMessageDialog(null, "Seleccione la fecha de corte o columna correspondiente para análisis de los valores " +
-                    "\n y que concuerde con la fecha de corte que ingresó al comienzo");
-            String seleccion2 = mostrarMenu(encabezados2);
-            for (String sheetName1 : nameSheets1) {
-                for (String sheetName2 : nameSheets2) {
-                    sheetName2.toLowerCase();
-                    hoja.toLowerCase();
-                    if (sheetName2.equals(hoja)) {
-                        System.out.println("ENTRA A " + hoja);
-                        System.out.println("SHEET_NAME2: " + sheetName2);
-                        if (!fechaCorte.equals(seleccion2)){
-                            errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
-                                    "\n tengan un formato tipo FECHA idéntica a " + fechaCorte);
-
-                            errorMessage( "No es posible completar el análisis de la hoja [" + hoja +
-                                    "]\n el formato de fecha no es el correcto");
-                        }else {
-                            valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sheetName1, sheetName2, seleccion, seleccion2);
-                            mapList = createMapList(valoresEncabezados2, seleccion, seleccion2);
-                            for (Map<String, String> map : mapList) {
-                                System.out.println("Analizando valores... ");
-                                for (Map.Entry<String, String> entry : map.entrySet()) {
-                                    System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
-                                }
+                        errorMessage("No es posible completar el análisis de la hoja [" + hoja +
+                                "]\n el formato de fecha no es el correcto");
+                    } else {
+                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sht2, codigo, fechaCorteMF);
+                        mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
+                        for (Map<String, String> map : mapList) {
+                            System.out.println("Analizando valores... ");
+                            for (Map.Entry<String, String> entry : map.entrySet()) {
+                                System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
                             }
                         }
-                        
-                        runtime();
-                        waitSeconds(2);
-                        System.out.println("HA FINALIZADO EL ANÁLISIS DEL ARCHIVO MAESTRO");
-                    }else {
-                        System.err.println("La hoja [" + hoja + "] no fue encontrada");
                     }
                 }
-                System.gc();
-                waitSeconds(2);
-                break;
-            }*/
-
-
-
+            }
             System.out.println("---------------------------------------------------------------------------------------");
+            System.setProperty("org.apache.poi.ooxml.strict", "true");
 
             System.out.println("Análisis completado...");
             workbook.close();
@@ -1955,7 +1883,7 @@ workbook.close();
 
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
-    public static  List<String> getHeadersN(Sheet sheet){
+    public static List<String> getHeadersN(Sheet sheet) {
         List<String> columnNames = new ArrayList<>();
         Row row = sheet.getRow(0);
         try {
@@ -1972,10 +1900,10 @@ workbook.close();
         return columnNames;
     }
 
-    public static  List<String> getHeadersN(String filePath, String sheetName){
+    public static List<String> getHeadersN(String filePath, String sheetName) {
         List<String> columnNames = new ArrayList<>();
 
-        try /*(Workbook workbook = WorkbookFactory.create(new File(filePath)))*/{
+        try /*(Workbook workbook = WorkbookFactory.create(new File(filePath)))*/ {
             System.out.println("AQUI ESTOY");
             Workbook workbook = WorkbookFactory.create(new File(filePath));
             Sheet sheet = workbook.getSheet(sheetName);
@@ -2075,7 +2003,7 @@ workbook.close();
                 dataList.add(rowData);
                 currentRow++;
 
-                if (currentRow % rowsPerBatch == 0){
+                if (currentRow % rowsPerBatch == 0) {
                     runtime();
                     Thread.sleep(200);
                 }
@@ -2092,7 +2020,7 @@ workbook.close();
     }
 
 
-    public static List<Map<String, Object>> getHeaderFilterValuesNS(Sheet sheet, List<String> headers, String campoFiltrar, String valorIni, String valorFin){
+    public static List<Map<String, Object>> getHeaderFilterValuesNS(Sheet sheet, List<String> headers, String campoFiltrar, String valorIni, String valorFin) {
         List<Map<String, Object>> datosFiltrados = new ArrayList<>();
 
         Row row = sheet.getRow(0);
@@ -2114,7 +2042,7 @@ workbook.close();
                 int campoFiltrarIndex = headers.indexOf(campoFiltrar);
                 if (campoFiltrarIndex == -1) {
                     System.err.println("El campo especificado para el filtro no existe");
-                    return  datosFiltrados;
+                    return datosFiltrados;
                 }
 
                 String valueCampoFiltrar = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex));
@@ -2137,7 +2065,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0){
+                    if (currentRow % rowsPerBatch == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2278,7 +2206,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0){
+                    if (currentRow % rowsPerBatch == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2345,7 +2273,7 @@ workbook.close();
                     }
                     datosFiltrados.add(rowData);
                     currentRow++;
-                    if (currentRow % rowsPerBatch == 0){
+                    if (currentRow % rowsPerBatch == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2412,7 +2340,7 @@ workbook.close();
                     }
                     datosFiltrados.add(rowData);
                     currentRow++;
-                    if (currentRow % rowsPerBatch == 0){
+                    if (currentRow % rowsPerBatch == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2481,7 +2409,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0){
+                    if (currentRow % rowsPerBatch == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2577,6 +2505,7 @@ workbook.close();
             return null;
         }
     }
+
     public static List<Map<String, Object>> getHeaderFilterValuesNNS(Sheet sheet, List<String> headers, String campoFiltrar1, double valorIni1, double valorFin1, String campoFiltrar2, String valorIni2, String valorFin2) {
         List<Map<String, Object>> datosFiltrados = new ArrayList<>();
 
@@ -2628,7 +2557,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0){
+                    if (currentRow % rowsPerBatch == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
