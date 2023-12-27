@@ -4,16 +4,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
+import org.utils.configuration.GetMasterAnalasis;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.utils.FunctionsApachePoi.*;
 import static org.utils.MethotsAzureMasterFiles.*;
@@ -31,6 +29,9 @@ public class HistoricoCarteraComercialPorOF {
         return isEqual;
     }
 
+    public static GetMasterAnalasis data = new GetMasterAnalasis();
+    public static List<Map<String, String>> dataMaster;
+
     public static void configuracion(String masterFile) {
 
         JOptionPane.showMessageDialog(null, "Seleccione el archivo Azure");
@@ -43,23 +44,37 @@ public class HistoricoCarteraComercialPorOF {
         JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
-        String mesAnoCorte = mostrarCuadroDeTexto();
+        String mesAnoCorte = showMonthYearChooser()/*mostrarCuadroDeTexto()*/;
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
-        String fechaCorte = mostrarCuadroDeTexto();
+        String fechaCorte = showDateChooser()/*mostrarCuadroDeTexto()*/;
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
         String tempFile = getDirectory() + "\\TemporalFile.xlsx";
 
 
         try {
+            String hoja = "";
 
             System.out.println("Espere el proceso de análisis va a comenzar...");
             waitSeconds(5);
 
             System.out.println("Espere un momento el análisis puede ser demorado...");
-            waitMinutes(5);
+            waitSeconds(5);
 
-            carteraBruta(okCartera, masterFile, azureFile, fechaCorte, "Cartera Bruta", tempFile);
+            //dataMaster = GetMasterAnalasis.getInfo(azureFile, masterFile, hoja, fechaCorte);
+            /*switch (hoja){
+                case "Cartera Bruta":
+                    dataMaster = GetMasterAnalasis.getInfo(azureFile, masterFile, hoja, fechaCorte);
+                    carteraBruta(okCartera, masterFile, *//*azureFile, fechaCorte,*//* hoja, tempFile, dataMaster);
+                    waitSeconds(5);
+                case "0 Dias":
+                    dataMaster = GetMasterAnalasis.getInfo(azureFile, masterFile, hoja, fechaCorte);
+                    diasDeMoraDias(okCartera, masterFile, azureFile, fechaCorte, "0 Dias", 0, 0, tempFile);
+                    waitSeconds(5);
+            }*/
+
+
+            carteraBruta(okCartera, masterFile, azureFile, fechaCorte, hoja, tempFile/*, dataMaster*/);
             waitSeconds(5);
 
             diasDeMoraDias(okCartera, masterFile, azureFile, fechaCorte, "0 Dias", 0, 0, tempFile);
@@ -173,11 +188,7 @@ public class HistoricoCarteraComercialPorOF {
 
     }
 
-    private static List<Map<String, String>> datosMFile(String azureFile, String masterFile, String hoja, String fechaCorte){
-        return obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
-    }
-
-    public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile/*, List<Map<String, String>> datosMasterFile*/) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -211,6 +222,8 @@ public class HistoricoCarteraComercialPorOF {
             sheet = workbook.getSheetAt(0);
 
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+            List<String> errores = new ArrayList<>();
+            List<String> coincidencias = new ArrayList<>();
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
@@ -226,10 +239,15 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
@@ -240,6 +258,8 @@ public class HistoricoCarteraComercialPorOF {
                 }
 
             }
+            logWinsToFile(masterFile, coincidencias);
+            logErrorsToFile(masterFile, errores);
             workbook.close();
             runtime();
             waitSeconds(2);

@@ -1,7 +1,11 @@
 package org.utils;
 
+import com.toedter.calendar.JDateChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.AreaReference;
@@ -1505,7 +1509,7 @@ workbook.close();
             int count = 0;
             int count2 = 0;
             int rowsPerBatch = 5000;
-            System.out.println("CALCULANDO SUMATORIA DE VALORES");
+            System.out.println("\n CALCULANDO SUMATORIA DE VALORES");
             for (Map<String, String> row : data) {
                 String firstHeaderValue = row.get(firstHeader);
                 String secondHeaderValue = row.get(secondHeader);
@@ -1532,7 +1536,7 @@ workbook.close();
                 Thread.sleep(200);
             }
 
-            System.out.println("TERMINANDO PROCESO DE SUMATORIA DE VALORES");
+            System.out.println("\n TERMINANDO PROCESO DE SUMATORIA DE VALORES");
             // Redondea los valores a dos decimales
             Map<String, String> resultadoFormateado = new HashMap<>();
             DecimalFormat df = new DecimalFormat("0.00");
@@ -1819,32 +1823,30 @@ workbook.close();
             String encabezado = "";
 
             for (String seleccion : dataList) {
-                String[] elementos = seleccion.split(" - ");
+                String[] elementos = seleccion.split(SPECIAL_CHAR);
 
                 sht1 = elementos[0];
                 sht2 = elementos[1];
                 System.out.println("ELEMENTOS SELECCIONADOS: " + sht1 + ", " + sht2);
-                sheet1 = workbook.getSheet(sht1);
+
                 sheet2 = workbook2.getSheet(sht2);
-
-                System.out.println("HOJA ELEGIDA: " + sheet1.getSheetName());
-                encabezados1 = getHeadersN(sheet1);
-
             }
+            sheet1 = workbook.getSheet(sht1);
+            encabezados1 = getHeadersN(sheet1);
 
-            JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubucado en las hojas del archivo Maestro");
+            JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
             assert encabezados1 != null;
             encabezado = mostrarMenu(encabezados1);
 
             encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
 
+            JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
+            String codigo = mostrarMenu(encabezados2);
+            JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
+            String fechaCorteMF = mostrarMenu(encabezados2);
+
 
             for (String seleccion : dataList) {
-                JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
-                String codigo = mostrarMenu(encabezados2);
-                JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
-                String fechaCorteMF = mostrarMenu(encabezados2);
-
                 if (sht2.equals(hoja)) {
                     if (!fechaCorte.equals(fechaCorteMF)) {
                         errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
@@ -2590,11 +2592,54 @@ workbook.close();
         System.out.print("\r" + progressBar.toString());
     }
 
+    public static void logWinsToFile(String filePath, List<String> messages) {
+        logToPdf(filePath, messages, "messages");
+    }
+
+    public static void logErrorsToFile(String filePath, List<String> errors) {
+        logToPdf(filePath, errors, "errors");
+    }
+
+    private static void logToPdf(String filePath, List<String> messages, String folderName) {
+        // Obtener el nombre del archivo sin la extensión
+        String fileName = new File(filePath).getName();
+        String folderPath = filePath.replace(fileName, folderName);
+
+        // Crear la carpeta si no existe
+        File folder = new File(folderPath);
+        folder.mkdirs();
+
+        // Agregar "-estatus" al nombre del archivo
+        String logFilePath = folderPath + File.separator + fileName.replace(".pdf", "-" + folderName + ".pdf");
+
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                for (String message : messages) {
+                    // Escribir cada mensaje en una nueva línea
+                    contentStream.newLineAtOffset(10, 700);
+                    contentStream.showText(message);
+                }
+            }
+
+            document.save(logFilePath);
+            System.out.println("Mensajes registrados en: " + logFilePath);
+        } catch (IOException e) {
+            // Manejar cualquier excepción de IO, por ejemplo, imprimir en la consola
+            e.printStackTrace();
+        }
+    }
+
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
+    public static final String SPECIAL_CHAR = " -X- ";
+    
+    
     public static List<String> createDualDropDownListsAndReturnSelectedValues(List<String> list1, List<String> list2) {
         List<String> selectedValues = new ArrayList<>();
 
-        JFrame frame = new JFrame("DualDropDownList Example");
+        JFrame frame = new JFrame("SELECCIÓN DE HOJAS");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 200);
         frame.setLayout(new FlowLayout());
@@ -2620,12 +2665,20 @@ workbook.close();
                 String selectedValue2 = (String) dropdown2.getSelectedItem();
 
                 if (selectedValue1 != null && selectedValue2 != null) {
-                    String combinedSelection = selectedValue1 + " - " + selectedValue2;
+                    String combinedSelection = selectedValue1 + SPECIAL_CHAR + selectedValue2;
                     selectedValues.add(combinedSelection);
 
                     // Crear checkbox para la selección recién agregada
                     JCheckBox checkBox = new JCheckBox(combinedSelection);
                     selectionsPanel.add(checkBox);
+
+                    // Eliminar elementos seleccionados de los desplegables
+                    list1.remove(selectedValue1);
+                    list2.remove(selectedValue2);
+
+                    // Actualizar los modelos de los desplegables
+                    dropdown1.setModel(new DefaultComboBoxModel<>(list1.toArray(new String[0])));
+                    dropdown2.setModel(new DefaultComboBoxModel<>(list2.toArray(new String[0])));
 
                     System.out.println("Elementos agregados: " + combinedSelection);
 
@@ -2651,6 +2704,20 @@ workbook.close();
                         JCheckBox checkBox = (JCheckBox) component;
                         if (checkBox.isSelected()) {
                             selectedValues.remove(checkBox.getText());
+
+                            // Recuperar elementos eliminados a los desplegables
+                            String[] parts = checkBox.getText().split(SPECIAL_CHAR);
+                            if (!list1.contains(parts[0])) {
+                                list1.add(parts[0]);
+                            }
+                            if (!list2.contains(parts[1])) {
+                                list2.add(parts[1]);
+                            }
+
+                            // Actualizar los modelos de los desplegables
+                            dropdown1.setModel(new DefaultComboBoxModel<>(list1.toArray(new String[0])));
+                            dropdown2.setModel(new DefaultComboBoxModel<>(list2.toArray(new String[0])));
+
                             selectionsPanel.remove(checkBox);
                         }
                     }
@@ -2684,12 +2751,11 @@ workbook.close();
             }
         }
 
-        runtime();
-        waitSeconds(2);
+        //runtime();
+        //waitSeconds(2);
 
         return selectedValues;
     }
-
 
     public static void errorMessage(String mensaje) {
         JLabel label = new JLabel("<html><font color='red'>" + mensaje + "</font></html>");
@@ -2780,6 +2846,79 @@ workbook.close();
         }
 
         return textoIngresado.get();
+    }
+
+    private static final int FRAME_WIDTH = 320;
+    private static final int FRAME_HEIGHT = 100;
+    public static String showDateChooser() {
+        JFrame frame = new JFrame("Seleccionar Fecha");
+        frame.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setFont(new Font("Arial", Font.PLAIN, 18));
+        JButton okButton = new JButton("Aceptar");
+
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Cerrar la ventana después de hacer clic en "Aceptar"
+            }
+        });
+
+        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.add(dateChooser);
+        frame.add(okButton);
+
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        // Esperar hasta que se cierre la ventana
+        while (frame.isVisible()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(dateChooser.getDate());
+    }
+
+    public static String showMonthYearChooser() {
+        JFrame frame = new JFrame("Seleccionar Mes y Año");
+        frame.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setFont(new Font("Arial", Font.PLAIN, 18));
+        dateChooser.setDateFormatString("MM/yyyy"); // Establecer el formato para mostrar solo mes y año
+        JButton okButton = new JButton("Aceptar");
+
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Cerrar la ventana después de hacer clic en "Aceptar"
+            }
+        });
+
+        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.add(dateChooser);
+        frame.add(okButton);
+
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        // Esperar hasta que se cierre la ventana
+        while (frame.isVisible()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/yyyy");
+        return sdf.format(dateChooser.getDate());
     }
 
     public static void showProgressBarPercent(int current, int total) {
