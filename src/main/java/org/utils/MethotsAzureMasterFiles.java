@@ -506,11 +506,12 @@ public class MethotsAzureMasterFiles {
                 throw new RuntimeException(e);
             }
             valoresPorFilas.add(fila);
-            int total = count + i;
-            System.err.println("NUMERO DE FILAS VALIDADAS: " + total +
-                    "\n NUMERO DE FILAS NO ANALIZADAS: " + i +
-                    "\n NUMERO DE FILAS ANALIZADAS: " + count);
+
         }
+        int total = count + i;
+        System.err.println("NUMERO DE FILAS VALIDADAS: " + total +
+                "\n NUMERO DE FILAS NO ANALIZADAS: " + i +
+                "\n NUMERO DE FILAS ANALIZADAS: " + count);
 
         return valoresPorFilas;
     }
