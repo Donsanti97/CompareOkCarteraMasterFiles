@@ -42,9 +42,27 @@ public class HistoricoCarteraBrutaPorOF_LC {
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
         String fechaCorte = showMonthYearChooser();
+
+        while (azureFile == null || okCartera == null || fechaCorte == null){
+            errorMessage("Alguno de los items requeridos anteriormente no fue seleccionado." +
+                    "\n Por favor seleccione nuevamente los items requeridos.");
+            JOptionPane.showMessageDialog(null, "Seleccione el archivo Azure");
+            azureFile = getDocument();
+            while (!isEqual(azureFile)){
+                errorMessage("El archivo AZURE no es el indicado para el análisis." +
+                        "\n \n Por favor seleccione el archivo correspondiente a: " + new File(masterFile).getName());
+                azureFile = getDocument();
+            }
+            JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
+            okCartera = getDocument();
+            JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
+            fechaCorte = showMonthYearChooser();
+        }
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
         String tempFile = getDirectory() + "\\TemporalFile.xlsx";
+
+
 
         try {
             waitSeconds(3);
