@@ -49,6 +49,8 @@ public class HistoricoCarteraComercialPorOF {
         String tempFile = getDirectory() + "\\TemporalFile.xlsx";
 
         while (azureFile == null || okCartera == null || mesAnoCorte == null || fechaCorte == null){
+            errorMessage("Alguno de los items requeridos anteriormente no fue seleccionado." +
+                    "\n Por favor seleccione nuevamente los items requeridos.");
             JOptionPane.showMessageDialog(null, "Seleccione el archivo Azure");
             azureFile = getDocument();
             while (!isEqual(masterFile, azureFile)){

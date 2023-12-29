@@ -41,7 +41,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
         JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
-        String fechaCorte = showMonthYearChooser();
+        String fechaCorte = showDateChooser();
 
         while (azureFile == null || okCartera == null || fechaCorte == null){
             errorMessage("Alguno de los items requeridos anteriormente no fue seleccionado." +
@@ -56,7 +56,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
             JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
             okCartera = getDocument();
             JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
-            fechaCorte = showMonthYearChooser();
+            fechaCorte = showDateChooser();
         }
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
