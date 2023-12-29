@@ -18,6 +18,8 @@ import java.util.Map;
 
 import static org.utils.FunctionsApachePoi.*;
 import static org.utils.MethotsAzureMasterFiles.*;
+import static org.utils.configuration.GetMasterAnalisis.*;
+
 
 public class HistoricoCarteraPorOF {
     //64 Hojas
@@ -43,9 +45,9 @@ public class HistoricoCarteraPorOF {
         JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
-        String mesAnoCorte = mostrarCuadroDeTexto();
+        String mesAnoCorte = showMonthYearChooser();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
-        String fechaCorte = mostrarCuadroDeTexto();
+        String fechaCorte = showMonthYearChooser();
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
         String tempFile = getDirectory() + "\\TemporalFile.xlsx";
@@ -56,99 +58,101 @@ public class HistoricoCarteraPorOF {
             waitSeconds(5);
 
             System.out.println("Espere un momento el análisis puede ser demorado...");
-            waitMinutes(5);
+            waitSeconds(5);
+
+            List<String> machSheets = machSheets(azureFile, masterFile);
 
             //waitMinutes(8);
 
-            carteraBruta(okCartera, masterFile, azureFile, fechaCorte, "Cartera Bruta", tempFile);
+            carteraBruta(okCartera, masterFile, azureFile, fechaCorte, "Cartera Bruta", tempFile, machSheets);
 
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "0 Dias", 0, 0, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "1 - 7 Dias", 1, 7, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "8 - 15 Dias", 8, 15, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "16 - 30 Dias", 16, 30, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "31 - 60 Dias", 31, 60, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "61 - 90 Dias", 61, 90, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "91 - 120 Dias", 91, 120, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "121 - 150 Dias", 121, 150, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "151 - 180 Dias", 151, 180, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "181 - 360 Dias", 181, 360, tempFile);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "> 361 Dias", 361, 5000, tempFile);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "0 Dias", 0, 0, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "1 - 7 Dias", 1, 7, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "8 - 15 Dias", 8, 15, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "16 - 30 Dias", 16, 30, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "31 - 60 Dias", 31, 60, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "61 - 90 Dias", 61, 90, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "91 - 120 Dias", 91, 120, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "121 - 150 Dias", 121, 150, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "151 - 180 Dias", 151, 180, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "181 - 360 Dias", 181, 360, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "> 361 Dias", 361, 5000, tempFile, machSheets);
 
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "A", "A", "A");
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "B", "B", "B");
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "C", "C", "C");
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "D", "D", "D");
+            calificacion(okCartera, masterFile, azureFile, fechaCorte, "A", "A", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, fechaCorte, "B", "B", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, fechaCorte, "C", "C", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, fechaCorte, "D", "D", tempFile, machSheets);
 
-            reEstCapital(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital", tempFile);
+            reEstCapital(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital", tempFile, machSheets);
 
-            reEstCapital(okCartera, 0, 30, masterFile, azureFile, fechaCorte, "Re_Est Capital < = 30", tempFile);
-            reEstCapital(okCartera, 31, 5000, masterFile, azureFile, fechaCorte, "Re_Est Capítal > 31", tempFile);
+            reEstCapital(okCartera, 0, 30, masterFile, azureFile, fechaCorte, "Re_Est Capital < = 30", tempFile, machSheets);
+            reEstCapital(okCartera, 31, 5000, masterFile, azureFile, fechaCorte, "Re_Est Capítal > 31", tempFile, machSheets);
 
-            reEstNCreditos(okCartera, masterFile, azureFile, fechaCorte, "Re_Est N° Creditos", tempFile);
-            nCreditosVigentes(okCartera, masterFile, azureFile, fechaCorte, "N° Creditos Vigentes", tempFile);
+            reEstNCreditos(okCartera, masterFile, azureFile, fechaCorte, "Re_Est N° Creditos", tempFile, machSheets);
+            nCreditosVigentes(okCartera, masterFile, azureFile, fechaCorte, "N° Creditos Vigentes", tempFile, machSheets);
 
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-A", "A", tempFile);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-B", "B", tempFile);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-C", "C", tempFile);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-D", "D", tempFile);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-E", "E", tempFile);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-A", "A", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-B", "B", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-C", "C", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-D", "D", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital-E", "E", tempFile, machSheets);
 
-            reestructuradosCapitalOfcPlazosProm(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_Plazos_Prom", tempFile);
+            reestructuradosCapitalOfcPlazosProm(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_Plazos_Prom", tempFile, machSheets);
 
-            reestructuradosCapitalOfcPlazosMin(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_Plazos_Min", tempFile);
+            reestructuradosCapitalOfcPlazosMin(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_Plazos_Min", tempFile, machSheets);
 
-            reestructuradosCapitalOfcPlazosMax(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_Plazos_Max", tempFile);
+            reestructuradosCapitalOfcPlazosMax(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_Plazos_Max", tempFile, machSheets);
 
-            mora1raCuotaMontoOfc(okCartera, masterFile, azureFile, fechaCorte, "Mora-1raCuota_Monto_Ofc", tempFile);
+            mora1raCuotaMontoOfc(okCartera, masterFile, azureFile, fechaCorte, "Mora-1raCuota_Monto_Ofc", tempFile, machSheets);
 
-            mora1raCuotaCantOfc(okCartera, masterFile, azureFile, fechaCorte, "Mora-1raCuota_Ofc_Cant", tempFile);
+            mora1raCuotaCantOfc(okCartera, masterFile, azureFile, fechaCorte, "Mora-1raCuota_Ofc_Cant", tempFile, machSheets);
 
-            provisiones(okCartera, masterFile, azureFile, fechaCorte, "Provisiones", tempFile);
+            provisiones(okCartera, masterFile, azureFile, fechaCorte, "Provisiones", tempFile, machSheets);
 
-            clientes(okCartera, masterFile, azureFile, fechaCorte, "Clientes", tempFile);
+            clientes(okCartera, masterFile, azureFile, fechaCorte, "Clientes", tempFile, machSheets);
 
-            colocacion(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Colocación", tempFile);
+            colocacion(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Colocación", tempFile, machSheets);
 
-            credPromColocacion(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Cred Prom Colocación", tempFile);
+            credPromColocacion(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Cred Prom Colocación", tempFile, machSheets);
 
-            colocacionPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, fechaCorte, "Colocación Percentil 0.5", tempFile);
+            colocacionPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, fechaCorte, "Colocación Percentil 0.5", tempFile, machSheets);
 
-            colocacionPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, fechaCorte, "Colocación Percentil 0.8", tempFile);
+            colocacionPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, fechaCorte, "Colocación Percentil 0.8", tempFile, machSheets);
 
-            cartera(okCartera, masterFile, azureFile, fechaCorte, "Cartera >=1", 1, 5000, tempFile);
-            cartera(okCartera, masterFile, azureFile, fechaCorte, "Cartera >30", 31, 5000, tempFile);
+            cartera(okCartera, masterFile, azureFile, fechaCorte, "Cartera >=1", 1, 5000, tempFile, machSheets);
+            cartera(okCartera, masterFile, azureFile, fechaCorte, "Cartera >30", 31, 5000, tempFile, machSheets);
 
-            carteraBE(okCartera, masterFile, azureFile, fechaCorte, "Cartera B-E", "B", tempFile);
+            carteraBE(okCartera, masterFile, azureFile, fechaCorte, "Cartera B-E", "B", tempFile, machSheets);
 
-            plazoPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, fechaCorte, "Plazo Percentil 0.5", tempFile);
+            plazoPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, fechaCorte, "Plazo Percentil 0.5", tempFile, machSheets);
 
-            plazoPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, fechaCorte, "Plazo Percentil 0.8", tempFile);
+            plazoPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, fechaCorte, "Plazo Percentil 0.8", tempFile, machSheets);
 
-            pzoPromOfc(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Pzo_Prom_Oficinas", tempFile);
+            pzoPromOfc(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Pzo_Prom_Oficinas", tempFile, machSheets);
 
-            carteraMoraCronograma(okCartera, masterFile, azureFile, fechaCorte, "Cartera Mora Cronograma >8", 9, 5000, tempFile);
-            carteraMoraCronograma(okCartera, masterFile, azureFile, fechaCorte, "Cartera Mora Cronograma =0", 0, 0, tempFile);
+            carteraMoraCronograma(okCartera, masterFile, azureFile, fechaCorte, "Cartera Mora Cronograma >8", 9, 5000, tempFile, machSheets);
+            carteraMoraCronograma(okCartera, masterFile, azureFile, fechaCorte, "Cartera Mora Cronograma =0", 0, 0, tempFile, machSheets);
 
-            clientesMoraCronograma(okCartera, masterFile, azureFile, fechaCorte, "Clientes Mora Cronograma =0", 9, 5000, tempFile);
+            clientesMoraCronograma(okCartera, masterFile, azureFile, fechaCorte, "Clientes Mora Cronograma =0", 9, 5000, tempFile, machSheets);
 
-            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital", tempFile);
+            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital", tempFile, machSheets);
 
-            modificados(okCartera, masterFile, azureFile, fechaCorte, "Modificados < = 30", 0, 30, tempFile);
-            modificados(okCartera, masterFile, azureFile, fechaCorte, "Modificados > 30", 31, 5000, tempFile);
+            modificados(okCartera, masterFile, azureFile, fechaCorte, "Modificados < = 30", 0, 30, tempFile, machSheets);
+            modificados(okCartera, masterFile, azureFile, fechaCorte, "Modificados > 30", 31, 5000, tempFile, machSheets);
 
-            modificadosNCreditos(okCartera, masterFile, azureFile, fechaCorte, "Modificados N° Créditos", tempFile);
+            modificadosNCreditos(okCartera, masterFile, azureFile, fechaCorte, "Modificados N° Créditos", tempFile, machSheets);
 
-            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-A", "A", tempFile);
-            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-B", "B", tempFile);
-            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-C", "C", tempFile);
-            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-D", "D", tempFile);
-            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-E", "E", tempFile);
+            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-A", "A", tempFile, machSheets);
+            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-B", "B", tempFile, machSheets);
+            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-C", "C", tempFile, machSheets);
+            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-D", "D", tempFile, machSheets);
+            modificadosCapital(okCartera, masterFile, azureFile, fechaCorte, "Modificados Capital-E", "E", tempFile, machSheets);
 
-            modificadoCapitalOfcPlazosProm(okCartera, masterFile, azureFile, fechaCorte, "Modificado Capital_Plazos_Prom", tempFile);
+            modificadoCapitalOfcPlazosProm(okCartera, masterFile, azureFile, fechaCorte, "Modificado Capital_Plazos_Prom", tempFile, machSheets);
 
-            modificadoCapitalOfcPlazosMin(okCartera, masterFile, azureFile, fechaCorte, "Modificado Capital_Plazos_Min", tempFile);
+            modificadoCapitalOfcPlazosMin(okCartera, masterFile, azureFile, fechaCorte, "Modificado Capital_Plazos_Min", tempFile, machSheets);
 
-            modificadoCapitalOfcPlazosMax(okCartera, masterFile, azureFile, fechaCorte, "Modificado Capital_Plazos_Max", tempFile);
+            modificadoCapitalOfcPlazosMax(okCartera, masterFile, azureFile, fechaCorte, "Modificado Capital_Plazos_Max", tempFile, machSheets);
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
             waitSeconds(10);
@@ -164,7 +168,7 @@ public class HistoricoCarteraPorOF {
     }
 
 
-    public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -198,7 +202,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -234,7 +238,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void carteraDias(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin, String tempFile) throws IOException {
+    public static void carteraDias(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -267,7 +271,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -303,7 +307,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void calificacion(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
+    public static void calificacion(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -336,7 +340,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -372,7 +376,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void reEstCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -403,7 +407,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -441,7 +445,7 @@ public class HistoricoCarteraPorOF {
     }
 
 
-    public static void reEstCapital(String okCarteraFile, int diasMoradesde, int diasMoraHasta, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void reEstCapital(String okCarteraFile, int diasMoradesde, int diasMoraHasta, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -479,7 +483,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -515,7 +519,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstNCreditos(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void reEstNCreditos(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -550,7 +554,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -587,7 +591,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void nCreditosVigentes(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void nCreditosVigentes(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -622,7 +626,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -659,7 +663,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalLc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
+    public static void reestructuradosCapitalLc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -690,7 +694,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -726,7 +730,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalOfcPlazosProm(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void reestructuradosCapitalOfcPlazosProm(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -756,7 +760,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularPromedioPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -793,7 +797,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalOfcPlazosMin(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void reestructuradosCapitalOfcPlazosMin(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -823,7 +827,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularMinimoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -859,7 +863,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalOfcPlazosMax(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void reestructuradosCapitalOfcPlazosMax(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -889,7 +893,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularMaximoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -925,7 +929,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void mora1raCuotaMontoOfc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void mora1raCuotaMontoOfc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -960,7 +964,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -996,7 +1000,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void mora1raCuotaCantOfc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void mora1raCuotaCantOfc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1031,7 +1035,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1067,7 +1071,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void provisiones(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void provisiones(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1102,7 +1106,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1139,7 +1143,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void clientes(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void clientes(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -1175,7 +1179,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1211,7 +1215,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void colocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void colocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1251,7 +1255,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1288,7 +1292,7 @@ public class HistoricoCarteraPorOF {
     }
 
 
-    public static void credPromColocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void credPromColocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -1329,7 +1333,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularPromedioPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1365,7 +1369,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void colocacionPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void colocacionPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -1406,7 +1410,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), percent);
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1442,7 +1446,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void cartera(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin, String tempFile) throws IOException {
+    public static void cartera(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1475,7 +1479,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1511,7 +1515,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void carteraBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
+    public static void carteraBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1544,7 +1548,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1581,7 +1585,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void pzoPromOfc(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void pzoPromOfc(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -1622,7 +1626,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1659,7 +1663,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void plazoPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void plazoPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1699,7 +1703,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), percent);
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1735,7 +1739,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void carteraMoraCronograma(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin, String tempFile) throws IOException {
+    public static void carteraMoraCronograma(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1768,7 +1772,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1804,7 +1808,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void clientesMoraCronograma(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin, String tempFile) throws IOException {
+    public static void clientesMoraCronograma(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1837,7 +1841,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1874,7 +1878,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void modificadosCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void modificadosCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1910,7 +1914,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1946,7 +1950,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void modificados(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin, String tempFile) throws IOException, ParseException {
+    public static void modificados(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -1983,7 +1987,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -2019,7 +2023,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void modificadosNCreditos(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException, ParseException {
+    public static void modificadosNCreditos(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -2054,7 +2058,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -2090,7 +2094,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void modificadosCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException, ParseException {
+    public static void modificadosCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -2125,7 +2129,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -2162,7 +2166,7 @@ public class HistoricoCarteraPorOF {
     }
 
 
-    public static void modificadoCapitalOfcPlazosProm(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void modificadoCapitalOfcPlazosProm(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -2197,7 +2201,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -2233,7 +2237,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void modificadoCapitalOfcPlazosMin(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void modificadoCapitalOfcPlazosMin(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -2269,7 +2273,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularMinimoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -2305,7 +2309,7 @@ public class HistoricoCarteraPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void modificadoCapitalOfcPlazosMax(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void modificadoCapitalOfcPlazosMax(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -2340,7 +2344,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularMaximoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {

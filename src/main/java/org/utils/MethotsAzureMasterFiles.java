@@ -465,6 +465,7 @@ public class MethotsAzureMasterFiles {
         int indexHeader2 = encabezados.indexOf(header2);
 
         int count = 0;
+        int i = 0;
         int rowsPerBatch = 5000;
 
         if (indexHeader1 == -1 || indexHeader2 == -1) {
@@ -494,17 +495,21 @@ public class MethotsAzureMasterFiles {
                 } else {
                     System.err.println("En la fila [" + row.getRowNum() + "] no se encuentran los datos completos. El valor no puede ser nulo" +
                             "\n Por favor rellene con [0] o con [NA] según el campo que falte numérico o caracteres respectivamente");
+                    i++;
                 }
                 if (count % rowsPerBatch == 0) {
                     runtime();
                     Thread.sleep(200);
                 }
+                System.err.println();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
-
             valoresPorFilas.add(fila);
+            int total = count + i;
+            System.err.println("NUMERO DE FILAS VALIDADAS: " + total +
+                    "\n NUMERO DE FILAS NO ANALIZADAS: " + i +
+                    "\n NUMERO DE FILAS ANALIZADAS: " + count);
         }
 
         return valoresPorFilas;

@@ -20,6 +20,8 @@ import java.util.Map;
 
 import static org.utils.FunctionsApachePoi.*;
 import static org.utils.MethotsAzureMasterFiles.*;
+import static org.utils.configuration.GetMasterAnalisis.*;
+
 
 public class HistoricoCarteraSegMonto_ColocPorLC {
     //110 hojas
@@ -82,9 +84,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         JOptionPane.showMessageDialog(null, "Seleccione el archivo OkCartera");
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
-        String mesAnoCorte = mostrarCuadroDeTexto();
+        String mesAnoCorte = showMonthYearChooser();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
-        String fechaCorte = mostrarCuadroDeTexto();
+        String fechaCorte = showMonthYearChooser();
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");
         String tempFile = getDirectory() + "\\TemporalFile.xlsx";
@@ -97,121 +99,126 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("Espere un momento el análisis puede ser demorado...");
             waitSeconds(5);
 
+            List<String> machSheets = machSheets(azureFile, masterFile);
+            
+
             JOptionPane.showMessageDialog(null, "Para los análisis de algunas de las hojas a continuación es necesario que" +
                     "\n Digite a continuación un tipo de calificación entre [B] y [E]");
             List<String> opciones = Arrays.asList("B", "C", "D", "E");
             String calificacion = menu(opciones);
+            
+            
 
 
-            nuevosLineas(okCartera, masterFile, azureFile, fechaCorte, "Nuevos_Lineas", tempFile);
+            nuevosLineas(okCartera, masterFile, azureFile, fechaCorte, "Nuevos_Lineas", tempFile, machSheets);
 
-            nuevosMay30Lineas(okCartera, masterFile, azureFile, fechaCorte, "Nuevos_> 30_Lineas", tempFile);
+            nuevosMay30Lineas(okCartera, masterFile, azureFile, fechaCorte, "Nuevos_> 30_Lineas", tempFile, machSheets);
 
-            nuevosLineasBE(okCartera, masterFile, azureFile, fechaCorte, "Nuevos_Lineas_B_E", calificacion, tempFile);
+            nuevosLineasBE(okCartera, masterFile, azureFile, fechaCorte, "Nuevos_Lineas_B_E", calificacion, tempFile, machSheets);
 
-            renovadoLineas(okCartera, masterFile, azureFile, fechaCorte, "Renovado_Lineas", tempFile);
+            renovadoLineas(okCartera, masterFile, azureFile, fechaCorte, "Renovado_Lineas", tempFile, machSheets);
 
-            renovadoMay30Lineas(okCartera, masterFile, azureFile, fechaCorte, "Renovado_>30_Lineas", tempFile);
+            renovadoMay30Lineas(okCartera, masterFile, azureFile, fechaCorte, "Renovado_>30_Lineas", tempFile, machSheets);
 
-            renovadoLineasBE(okCartera, masterFile, azureFile, fechaCorte, "Renovado_Lineas_B_E", calificacion, tempFile);
+            renovadoLineasBE(okCartera, masterFile, azureFile, fechaCorte, "Renovado_Lineas_B_E", calificacion, tempFile, machSheets);
 
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_'0-0.5 M", 0, 5, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_0.5-1 M", 5, 10, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_1-2 M", 10, 20, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_2-3 M", 20, 30, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_3-4 M", 30, 40, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_4-5 M", 40, 50, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_5-10 M", 50, 100, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_10-15 M", 100, 150, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_15-20 M", 150, 200, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_20-25 M", 200, 250, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_25-50 M", 250, 500, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_50-100 M", 500, 1000, tempFile);
-            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_> 100 M", 1000, 10000, tempFile);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_'0-0.5 M", 0, 5, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_0.5-1 M", 5, 10, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_1-2 M", 10, 20, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_2-3 M", 20, 30, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_3-4 M", 30, 40, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_4-5 M", 40, 50, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_5-10 M", 50, 100, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_10-15 M", 100, 150, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_15-20 M", 150, 200, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_20-25 M", 200, 250, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_25-50 M", 250, 500, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_50-100 M", 500, 1000, tempFile, machSheets);
+            lMontoColoc(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_> 100 M", 1000, 10000, tempFile, machSheets);
 
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_'0-0.5 M >30", 0, 5, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_0.5-1 M >30", 5, 10, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_1-2 M >30", 10, 20, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_2-3 M >30", 20, 30, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_3-4 M >30", 30, 40, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_4-5 M >30", 40, 50, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_5-10 M >30", 50, 100, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_10-15 M >30", 100, 150, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_15-20 M >30", 150, 200, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_20-25 M >30", 200, 250, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_25-50 M >30", 250, 500, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_50-100 M >30", 500, 1000, tempFile);
-            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_>100 M >30", 1000, 10000, tempFile);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_'0-0.5 M >30", 0, 5, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_0.5-1 M >30", 5, 10, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_1-2 M >30", 10, 20, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_2-3 M >30", 20, 30, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_3-4 M >30", 30, 40, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_4-5 M >30", 40, 50, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_5-10 M >30", 50, 100, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_10-15 M >30", 100, 150, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_15-20 M >30", 150, 200, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_20-25 M >30", 200, 250, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_25-50 M >30", 250, 500, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_50-100 M >30", 500, 1000, tempFile, machSheets);
+            lMontoColocMay30(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_>100 M >30", 1000, 10000, tempFile, machSheets);
 
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_'0-0.5 M B_E", 0, 5, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_0.5-1 M B_E", 5, 10, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_1-2 M B_E", 10, 20, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_2-3 M B_E", 20, 30, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_3-4 M B_E", 30, 40, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_4-5 M B_E", 40, 50, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_5-10 M B_E", 50, 100, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_10-15 M B_E", 100, 150, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_15-20 M B_E", 150, 200, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_20-25 M B_E", 200, 250, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_25-50 M B_E", 250, 500, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_50-100 M B_E", 500, 1000, calificacion, tempFile);
-            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_> 100 M B_E", 1000, 10000, calificacion, tempFile);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_'0-0.5 M B_E", 0, 5, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_0.5-1 M B_E", 5, 10, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_1-2 M B_E", 10, 20, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_2-3 M B_E", 20, 30, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_3-4 M B_E", 30, 40, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_4-5 M B_E", 40, 50, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_5-10 M B_E", 50, 100, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_10-15 M B_E", 100, 150, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_15-20 M B_E", 150, 200, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_20-25 M B_E", 200, 250, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_25-50 M B_E", 250, 500, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_50-100 M B_E", 500, 1000, calificacion, tempFile, machSheets);
+            lMontoColocBE(okCartera, masterFile, azureFile, fechaCorte, "L_Monto_Coloc_> 100 M B_E", 1000, 10000, calificacion, tempFile, machSheets);
 
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_'0-0.5 M OF", 0, 5, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_0.5-1 M OF", 5, 10, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_1-2M M OF", 10, 20, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_2-3M M OF", 20, 30, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_3-4M M OF", 30, 40, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_4-5M M OF", 40, 50, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_5-10M M OF", 50, 100, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_10-15 M OF", 100, 150, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_15-20 M OF", 150, 200, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_20-25 M OF", 200, 250, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_25-50 M OF", 250, 500, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_50-100 M OF", 500, 1000, tempFile);
-            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_> 100 M OF", 1000, 10000, tempFile);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_'0-0.5 M OF", 0, 5, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_0.5-1 M OF", 5, 10, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_1-2M M OF", 10, 20, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_2-3M M OF", 20, 30, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_3-4M M OF", 30, 40, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_4-5M M OF", 40, 50, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_5-10M M OF", 50, 100, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_10-15 M OF", 100, 150, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_15-20 M OF", 150, 200, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_20-25 M OF", 200, 250, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_25-50 M OF", 250, 500, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_50-100 M OF", 500, 1000, tempFile, machSheets);
+            reestLC(okCartera, masterFile, azureFile, fechaCorte, "Reest_> 100 M OF", 1000, 10000, tempFile, machSheets);
 
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_'0-0.5 M OF", 0, 5, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_0.5-1 M OF", 5, 10, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_1-2M M OF", 10, 20, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_2-3M M OF", 20, 30, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_3-4M M OF", 30, 40, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_4-5M M OF", 40, 50, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_5-10M M OF", 50, 100, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_10-15 M OF", 100, 150, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_15-20 M OF", 150, 200, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_20-25 M OF", 200, 250, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_25-50 M OF", 250, 500, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_50-100 M OF", 500, 1000, tempFile);
-            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_> 100 M OF", 1000, 10000, tempFile);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_'0-0.5 M OF", 0, 5, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_0.5-1 M OF", 5, 10, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_1-2M M OF", 10, 20, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_2-3M M OF", 20, 30, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_3-4M M OF", 30, 40, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_4-5M M OF", 40, 50, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_5-10M M OF", 50, 100, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_10-15 M OF", 100, 150, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_15-20 M OF", 150, 200, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_20-25 M OF", 200, 250, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_25-50 M OF", 250, 500, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_50-100 M OF", 500, 1000, tempFile, machSheets);
+            clientesLC(okCartera, masterFile, azureFile, fechaCorte, "Clientes_> 100 M OF", 1000, 10000, tempFile, machSheets);
 
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_'0-0.5 M OF", 0, 5, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_0.5-1 M OF", 5, 10, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_1-2M M OF", 10, 20, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_2-3M M OF", 20, 30, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_3-4M M OF", 30, 40, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_4-5M M OF", 40, 50, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_5-10M M OF", 50, 100, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_10-15 M OF", 100, 150, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_15-20 M OF", 150, 200, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_20-25 M OF", 200, 250, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_25-50 M OF", 250, 500, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_50-100 M OF", 500, 1000, tempFile);
-            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_> 100 M OF", 1000, 10000, tempFile);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_'0-0.5 M OF", 0, 5, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_0.5-1 M OF", 5, 10, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_1-2M M OF", 10, 20, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_2-3M M OF", 20, 30, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_3-4M M OF", 30, 40, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_4-5M M OF", 40, 50, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_5-10M M OF", 50, 100, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_10-15 M OF", 100, 150, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_15-20 M OF", 150, 200, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_20-25 M OF", 200, 250, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_25-50 M OF", 250, 500, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_50-100 M OF", 500, 1000, tempFile, machSheets);
+            operacionesLC(okCartera, masterFile, azureFile, fechaCorte, "Operaciones_> 100 M OF", 1000, 10000, tempFile, machSheets);
 
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_'0-0.5 M OF", 0, 5, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_0.5-1 M OF", 5, 10, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_1-2M M OF", 10, 20, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_2-3M M OF", 20, 30, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_3-4M M OF", 30, 40, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_4-5M M OF", 40, 50, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_5-10M M OF", 50, 100, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_10-15 M OF", 100, 150, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_15-20 M OF", 150, 200, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_20-25 M OF", 200, 250, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_25-50 M OF", 250, 500, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_50-100 M OF", 500, 1000, mesAnoCorte, tempFile);
-            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_> 100 M OF", 1000, 10000, mesAnoCorte, tempFile);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_'0-0.5 M OF", 0, 5, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_0.5-1 M OF", 5, 10, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_1-2M M OF", 10, 20, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_2-3M M OF", 20, 30, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_3-4M M OF", 30, 40, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_4-5M M OF", 40, 50, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_5-10M M OF", 50, 100, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_10-15 M OF", 100, 150, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_15-20 M OF", 150, 200, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_20-25 M OF", 200, 250, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_25-50 M OF", 250, 500, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_50-100 M OF", 500, 1000, mesAnoCorte, tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, fechaCorte, "Colocación_> 100 M OF", 1000, 10000, mesAnoCorte, tempFile, machSheets);
 
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
@@ -228,7 +235,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
     }
 
 
-    public static void nuevosLineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void nuevosLineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\TablaDinamica.xlsx"; // Reemplaza con la ruta de tu archivo Excel
         //String excelFilePath = System.getProperty("user.dir") + "\\documents\\procesedDocuments\\MiddleTestData.xlsx";
@@ -266,7 +273,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -302,7 +309,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void nuevosMay30Lineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void nuevosMay30Lineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -338,7 +345,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -374,7 +381,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void nuevosLineasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
+    public static void nuevosLineasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -410,7 +417,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -446,7 +453,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void renovadoLineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void renovadoLineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -482,7 +489,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -518,7 +525,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void renovadoMay30Lineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String tempFile) throws IOException {
+    public static void renovadoMay30Lineas(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -554,7 +561,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -590,7 +597,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void renovadoLineasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion, String tempFile) throws IOException {
+    public static void renovadoLineasBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -627,7 +634,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -663,7 +670,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void lMontoColoc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
+    public static void lMontoColoc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -699,7 +706,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -735,7 +742,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void lMontoColocMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
+    public static void lMontoColocMay30(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -772,7 +779,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -808,7 +815,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void lMontoColocBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String calificacion, String tempFile) throws IOException {
+    public static void lMontoColocBE(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -844,7 +851,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -880,7 +887,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
+    public static void reestLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -915,7 +922,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -951,7 +958,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void clientesLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
+    public static void clientesLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -986,7 +993,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1022,7 +1029,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void operacionesLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException {
+    public static void operacionesLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1057,7 +1064,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
@@ -1093,7 +1100,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void colocacion(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String mesAnoCorte, String tempFile) throws IOException, ParseException {
+    public static void colocacion(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int valorInic, int valorFinal, String mesAnoCorte,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1132,7 +1139,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
             Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
                 for (Map<String, String> datoMF : datosMasterFile) {
