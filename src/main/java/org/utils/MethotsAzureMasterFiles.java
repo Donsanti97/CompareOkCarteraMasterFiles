@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.utils.FunctionsApachePoi.errorMessage;
+
 public class MethotsAzureMasterFiles {
 
     public static void buscarYListarArchivos(String ubicacion) throws IOException {
@@ -271,7 +273,11 @@ public class MethotsAzureMasterFiles {
         Iterator<Cell> cellIterator = row.cellIterator();
         while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
-            valoresFila.add(obtenerValorVisibleCelda(cell));//obtenerValorCelda()
+            if (cell == null){
+                valoresFila.add("0");
+            }else {
+                valoresFila.add(obtenerValorVisibleCelda(cell));//obtenerValorCelda()
+            }
         }
         return valoresFila;
     }
@@ -512,7 +518,10 @@ public class MethotsAzureMasterFiles {
         System.err.println("NUMERO DE FILAS VALIDADAS: " + total +
                 "\n NUMERO DE FILAS NO ANALIZADAS: " + i +
                 "\n NUMERO DE FILAS ANALIZADAS: " + count);
-
+        if (total == i){
+            errorMessage("No es posible continuar con el análisis, la cantidad de información incompleta es demasiada." +
+                    "\n Por favor verifique las indicaciones anteriores.");
+        }
         return valoresPorFilas;
     }
 

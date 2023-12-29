@@ -90,7 +90,7 @@ public class GetMasterAnalisis {
                 String[] elementos = seleccion.split(SPECIAL_CHAR);
                 sht1 = elementos[0];
                 sht2.add(elementos[1]);
-                System.out.println("ELEMENTOS SELECCIONADOS: " + sht1 + ", " + sht2);
+                //System.out.println("ELEMENTOS SELECCIONADOS: " + sht1 + ", " + sht2);
             }
 
             for (String sheet : sht2) {
@@ -117,12 +117,17 @@ public class GetMasterAnalisis {
                                 "]\n el formato de fecha no es el correcto");
                     } else {
                         valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
-                        mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
-                        for (Map<String, String> map : mapList) {
-                            System.out.println("Analizando valores... ");
-                            for (Map.Entry<String, String> entry : map.entrySet()) {
-                                System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
-                                i++;
+                        if (valoresEncabezados2.contains(null)){
+                            errorMessage("No es posible analizar los valores ya que los campos están incompletos." +
+                                    "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores.");
+                        }else {
+                            mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
+                            for (Map<String, String> map : mapList) {
+                                System.out.println("Analizando valores... ");
+                                for (Map.Entry<String, String> entry : map.entrySet()) {
+                                    System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
+                                    i++;
+                                }
                             }
                         }
                     }
