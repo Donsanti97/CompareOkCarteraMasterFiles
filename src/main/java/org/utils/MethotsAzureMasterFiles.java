@@ -447,23 +447,26 @@ public class MethotsAzureMasterFiles {
     public static List<Map<String, String>> createMapList(List<Map<String, String>> originalList, String keyHeader, String valueHeader) {
         List<Map<String, String>> mapList = new ArrayList<>();
 
-        for (Map<String, String> originalMap : originalList) {
-            String key = originalMap.get(keyHeader);
-            String value = originalMap.get(valueHeader);
+        try {
+            for (Map<String, String> originalMap : originalList) {
+                String key = originalMap.get(keyHeader);
+                String value = originalMap.get(valueHeader);
 
-            System.out.println("AQUÍ LLENA EL MAP_LIST");
-            Map<String, String> newMap = new HashMap<>();
-            if (key.contains(null) || key.isEmpty() || value.contains("null") || value.isEmpty()){
+                System.out.println("AQUÍ LLENA EL MAP_LIST");
+                Map<String, String> newMap = new HashMap<>();
+            /*if (key.contains(null) || key.isBlank() || key.isEmpty() || value.isBlank() || value.contains(null) || value.isEmpty()){
                 System.out.println("KEY MAPLIST: " + key + ", VALUE MAPLIST: " + value);
-                key.replace(null, "--");
-                value.replace(null, "--");
+                key.replaceAll(null, "--");
+                value.replaceAll(null, "--");
+            }*/
+
+                newMap.put(key, value);
+
+                mapList.add(newMap);
             }
-
-            newMap.put(key, value);
-
-            mapList.add(newMap);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
         return mapList;
     }
 
