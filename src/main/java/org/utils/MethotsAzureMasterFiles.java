@@ -451,7 +451,14 @@ public class MethotsAzureMasterFiles {
             String key = originalMap.get(keyHeader);
             String value = originalMap.get(valueHeader);
 
+            System.out.println("AQUÍ LLENA EL MAP_LIST");
             Map<String, String> newMap = new HashMap<>();
+            if (key.contains(null) || key.isEmpty() || value.contains("null") || value.isEmpty()){
+                System.out.println("KEY MAPLIST: " + key + ", VALUE MAPLIST: " + value);
+                key.replace(null, "--");
+                value.replace(null, "--");
+            }
+
             newMap.put(key, value);
 
             mapList.add(newMap);

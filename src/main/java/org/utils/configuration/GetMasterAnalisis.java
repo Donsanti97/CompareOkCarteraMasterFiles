@@ -121,12 +121,12 @@ public class GetMasterAnalisis {
                             errorMessage("No es posible analizar los valores ya que los campos están incompletos." +
                                     "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores.");
                         }else {
+                            System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                             mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
                             for (Map<String, String> map : mapList) {
                                 System.out.println("Analizando valores... ");
                                 for (Map.Entry<String, String> entry : map.entrySet()) {
                                     System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
-                                    i++;
                                 }
                             }
                         }

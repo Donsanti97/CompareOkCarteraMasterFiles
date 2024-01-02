@@ -217,6 +217,7 @@ public class HistoricoCarteraComercialPorOF {
 
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+            workbook.close();
 
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
@@ -234,9 +235,16 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+                if (entryOkCartera.getKey().contains(null) || entryOkCartera.getValue().contains(null)){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
                         /*------------------------------------------------------------*/
+                        if (entry.getKey().contains(null) || entry.getValue().contains(null)){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+                        System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
