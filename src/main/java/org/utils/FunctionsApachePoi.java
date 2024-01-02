@@ -6,6 +6,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDMMType1Font;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.AreaReference;
@@ -25,6 +28,8 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -2602,15 +2607,35 @@ workbook.close();
 
     private static void logToPdf(String filePath, List<String> messages, String folderName) {
         // Obtener el nombre del archivo sin la extensión
-        String fileName = new File(filePath).getName();
-        String folderPath = filePath.replace(fileName, folderName);
+        System.out.println("FILENAME");
+        String fileName;
+        String fileNewName;
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+
+
+            fileName = cambiarExtensionPDF(new File(filePath).getName());
+            fileNewName = new File(filePath).getName();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("FILENAME: "+ fileName);
+        System.out.println("FOLDERNAME: " + folderName);
+        System.out.println("FILEPATH: " + filePath);
+
+
+
+        String folderPath = filePath.replace(fileNewName, folderName);
+        System.out.println("FOLDERPATH: " + folderPath);
 
         // Crear la carpeta si no existe
         File folder = new File(folderPath);
         folder.mkdirs();
 
         // Agregar "-estatus" al nombre del archivo
-        String logFilePath = folderPath + File.separator + fileName.replace(".pdf", "-" + folderName + ".pdf");
+        String logFilePath = folderPath + File.separator + fileName;
 
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
@@ -2619,8 +2644,12 @@ workbook.close();
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                 for (String message : messages) {
                     // Escribir cada mensaje en una nueva línea
+
+                    contentStream.beginText();
+                    contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 14);
                     contentStream.newLineAtOffset(10, 700);
                     contentStream.showText(message);
+                    contentStream.endText();
                 }
             }
 
@@ -2630,6 +2659,20 @@ workbook.close();
             // Manejar cualquier excepción de IO, por ejemplo, imprimir en la consola
             e.printStackTrace();
         }
+    }
+
+    public static String cambiarExtensionPDF(String nombreArchivoXlsx) {
+        // Obtén la fecha actual
+        LocalDate fechaActual = LocalDate.now();
+
+        // Formatea la fecha como parte del nuevo nombre
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String fechaFormateada = fechaActual.format(formatter);
+
+        // Cambia la extensión a ".pdf"
+        String nuevoNombrePdf = nombreArchivoXlsx.replaceFirst("\\.xlsx$", "_" + fechaFormateada + ".pdf");
+
+        return nuevoNombrePdf;
     }
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/

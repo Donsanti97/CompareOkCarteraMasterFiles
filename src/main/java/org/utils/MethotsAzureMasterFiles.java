@@ -452,15 +452,24 @@ public class MethotsAzureMasterFiles {
                 String key = originalMap.get(keyHeader);
                 String value = originalMap.get(valueHeader);
 
-                System.out.println("AQUÍ LLENA EL MAP_LIST. \n KEY: " + key + ", VALUE: " + value);
+                //System.out.println("AQUÍ LLENA EL MAP_LIST. \n KEY: " + key + ", VALUE: " + value);
                 Map<String, String> newMap = new HashMap<>();
+                Map<String, String> errorMap = new HashMap<>();
             /*if (key.contains(null) || key.isBlank() || key.isEmpty() || value.isBlank() || value.contains(null) || value.isEmpty()){
                 System.out.println("KEY MAPLIST: " + key + ", VALUE MAPLIST: " + value);
                 key.replaceAll(null, "--");
                 value.replaceAll(null, "--");
             }*/
+                //System.out.println( key );
+                if (key == "null" ){
+                    //System.out.println("ENTRA AL CONDICIONAL NULL");
+                    errorMap.put(key, value);
+                }else {
+                    //System.out.println("ENTRA AL CONDICIONAL NO NULL");
+                    newMap.put(key, value);
+                }
 
-                newMap.put(key, value);
+
 
                 mapList.add(newMap);
             }

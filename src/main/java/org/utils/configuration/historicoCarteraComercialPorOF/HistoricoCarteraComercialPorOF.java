@@ -235,16 +235,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
-                if (entryOkCartera.getKey().contains(null) || entryOkCartera.getValue().contains(null)){
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
-                        if (entry.getKey().contains(null) || entry.getValue().contains(null)){
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
                             errorMessage("Los datos del Maestro contienen null");
                         }
-                        System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");

@@ -137,11 +137,12 @@ public class GetMasterAnalisis {
             System.setProperty("org.apache.poi.ooxml.strict", "true");
 
             System.out.println();
-            System.out.println("Análisis completado...");
             workbook.close();
             workbook2.close();
             runtime();
             waitSeconds(2);
+            System.out.println("Análisis completado...");
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
