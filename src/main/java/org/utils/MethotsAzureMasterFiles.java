@@ -452,7 +452,7 @@ public class MethotsAzureMasterFiles {
                 String key = originalMap.get(keyHeader);
                 String value = originalMap.get(valueHeader);
 
-                System.out.println("AQUÍ LLENA EL MAP_LIST");
+                System.out.println("AQUÍ LLENA EL MAP_LIST. \n KEY: " + key + ", VALUE: " + value);
                 Map<String, String> newMap = new HashMap<>();
             /*if (key.contains(null) || key.isBlank() || key.isEmpty() || value.isBlank() || value.contains(null) || value.isEmpty()){
                 System.out.println("KEY MAPLIST: " + key + ", VALUE MAPLIST: " + value);
