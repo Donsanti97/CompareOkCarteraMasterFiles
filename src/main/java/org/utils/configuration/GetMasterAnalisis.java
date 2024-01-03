@@ -16,6 +16,9 @@ import static org.utils.FunctionsApachePoi.*;
 import static org.utils.MethotsAzureMasterFiles.*;
 
 public class GetMasterAnalisis {
+
+    public static List<String> errores = new ArrayList<>();
+    public  static List<String> coincidencias = new ArrayList<>();
     /**
      * Función: este método retorna una lista que corresponde al match entre las hojas de los archivos maestro y azure
      *

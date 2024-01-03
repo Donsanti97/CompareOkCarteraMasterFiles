@@ -2650,8 +2650,10 @@ workbook.close();
                     contentStream.newLineAtOffset(10, 700);
                     contentStream.showText(message);
                     contentStream.endText();
+                    contentStream.close();
                 }
             }
+
 
             document.save(logFilePath);
             System.out.println("Mensajes registrados en: " + logFilePath);
