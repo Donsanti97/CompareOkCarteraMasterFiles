@@ -332,8 +332,6 @@ public class HistoricoCarteraComercialPorOF {
             sheet = workbook.getSheetAt(0);
 
             System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-            List<String> errores = new ArrayList<>();
-            List<String> coincidencias = new ArrayList<>();
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);

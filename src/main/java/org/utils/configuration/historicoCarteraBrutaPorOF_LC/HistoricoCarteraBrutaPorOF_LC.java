@@ -698,9 +698,21 @@ public class HistoricoCarteraBrutaPorOF_LC {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -708,14 +720,19 @@ public class HistoricoCarteraBrutaPorOF_LC {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
