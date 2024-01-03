@@ -183,6 +183,9 @@ public class HistoricoCarteraComercialPorOF {
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
             waitSeconds(10);
+            
+            logWinsToFile(masterFile, coincidencias);
+            logErrorsToFile(masterFile, errores);
 
             deleteTempFile(tempFile);
 
@@ -219,6 +222,7 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
             workbook.close();
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -276,8 +280,8 @@ public class HistoricoCarteraComercialPorOF {
                 }
 
             }
-            logWinsToFile(masterFile, coincidencias);
-            logErrorsToFile(masterFile, errores);
+            //logWinsToFile(masterFile, coincidencias);
+            //logErrorsToFile(masterFile, errores);
             workbook.close();
             runtime();
             waitSeconds(2);
@@ -318,6 +322,7 @@ public class HistoricoCarteraComercialPorOF {
 
             workbook.close();
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -375,8 +380,8 @@ public class HistoricoCarteraComercialPorOF {
                 }
 
             }
-            logWinsToFile(masterFile, coincidencias);
-            logErrorsToFile(masterFile, errores);
+            //logWinsToFile(masterFile, coincidencias);
+            //logErrorsToFile(masterFile, errores);
             workbook.close();
             runtime();
             waitSeconds(2);
@@ -413,6 +418,7 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSS(sheet, headers, campoFiltrar, valorInicio, valorFin, campoCalificacion, calificacion, calificacion);
             workbook.close();
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -427,9 +433,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -437,14 +455,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -485,7 +508,9 @@ public class HistoricoCarteraComercialPorOF {
 
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, reEstCapital, 1, 1);
-
+            workbook.close();
+            
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -500,9 +525,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -510,14 +547,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -555,7 +597,9 @@ public class HistoricoCarteraComercialPorOF {
             String diasDeMora = "dias_de_mora";
 
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNNN(sheet, headers, reEstCapital, 1, 1, diasDeMora, diasMoradesde, diasMoraHasta);
+            workbook.close();
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -570,9 +614,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -580,14 +636,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -626,7 +687,9 @@ public class HistoricoCarteraComercialPorOF {
 
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+            workbook.close();
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -641,9 +704,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -651,14 +726,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -700,7 +780,9 @@ public class HistoricoCarteraComercialPorOF {
 
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+            workbook.close();
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -715,9 +797,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -725,14 +819,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -775,6 +874,7 @@ public class HistoricoCarteraComercialPorOF {
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -789,9 +889,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -799,14 +911,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -852,6 +969,7 @@ public class HistoricoCarteraComercialPorOF {
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -866,9 +984,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -876,14 +1006,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -929,6 +1064,7 @@ public class HistoricoCarteraComercialPorOF {
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -943,9 +1079,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -953,14 +1101,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -1005,6 +1158,7 @@ public class HistoricoCarteraComercialPorOF {
 
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -1019,9 +1173,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -1029,14 +1195,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -1082,6 +1253,7 @@ public class HistoricoCarteraComercialPorOF {
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -1096,9 +1268,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -1106,14 +1290,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -1160,6 +1349,7 @@ public class HistoricoCarteraComercialPorOF {
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -1174,9 +1364,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -1184,14 +1386,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -1238,6 +1445,7 @@ public class HistoricoCarteraComercialPorOF {
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -1252,9 +1460,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -1262,14 +1482,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -1318,6 +1543,7 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -1332,9 +1558,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -1342,14 +1580,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
@@ -1396,6 +1639,7 @@ public class HistoricoCarteraComercialPorOF {
             // Filtrar los datos por el campo y el rango especificados
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
 
+            workbook.close();
             System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -1410,9 +1654,21 @@ public class HistoricoCarteraComercialPorOF {
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
+                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                }
+
                 for (Map<String, String> datoMF : datosMasterFile) {
                     for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
                         /*------------------------------------------------------------*/
+                        if (entry.getKey() == "null" || entry.getValue() == "null"){
+                            errorMessage("Los datos del Maestro contienen null");
+                        }
+
+                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
                         if (entryOkCartera.getKey().contains(entry.getKey())) {
 
                             System.out.println("CODIGO ENCONTRADO");
@@ -1420,14 +1676,19 @@ public class HistoricoCarteraComercialPorOF {
 
                             if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(error);
+                                errores.add(error);
+
                             } else {
 
-                                System.out.println("LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey());
+                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                System.out.println(coincidencia);
+                                coincidencias.add(coincidencia);
 
                             }
                         } else {
-                            System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
                         }
                         /*-------------------------------------------------------------------*/
                     }
