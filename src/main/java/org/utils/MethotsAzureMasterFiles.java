@@ -249,7 +249,7 @@ public class MethotsAzureMasterFiles {
         String headerSecondFile = headers2.get(0);
 
         if (!headerFirstFile1.equals(headerSecondFile)) {
-            headers2 = findValueInColumn(sheet1, 0, seleccion);
+            headers2 = findValueInColumn(sheet2, 0, seleccion);
         }
 
         return headers2;
@@ -262,7 +262,7 @@ public class MethotsAzureMasterFiles {
         String headerSecondFile = headers2.get(0);
 
         if (!headerFirstFile1.equals(headerSecondFile)) {
-            headers2 = findValueInColumn(sheet1, 0, headerFirstFile1);
+            headers2 = findValueInColumn(sheet2, 0, headerFirstFile1);
         }
 
         return headers2;
