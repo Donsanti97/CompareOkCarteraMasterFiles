@@ -8,9 +8,9 @@ import org.apache.poi.util.IOUtils;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.utils.FunctionsApachePoi.*;
 import static org.utils.MethotsAzureMasterFiles.*;
@@ -113,7 +113,8 @@ public class GetMasterAnalisis {
                     String codigo = mostrarMenu(encabezados2);
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
                     String fechaCorteMF = mostrarMenu(encabezados2);
-                    if (!fechaCorte.equals(fechaCorteMF)) {
+                    String fecha = parsearFecha(fechaCorteMF);
+                    if (!fechaCorte.equals(fecha)) {
                         errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
                                 "\n tengan un formato tipo FECHA idéntica a " + fechaCorte);
 
@@ -124,6 +125,7 @@ public class GetMasterAnalisis {
                         if (valoresEncabezados2.equals(null)){
                             errorMessage("No es posible analizar los valores ya que los campos están incompletos." +
                                     "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores.");
+                            return null;
                         }else {
                             System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                             mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
@@ -153,5 +155,18 @@ public class GetMasterAnalisis {
         return mapList;
     }
 
+    public static String parsearFecha(String fechaString) {
+        SimpleDateFormat formatoEntrada = new SimpleDateFormat("dd-MMM-yy", new Locale("es", "ES"));
+        SimpleDateFormat formatoSalida = new SimpleDateFormat("dd/MM/yyyy");
+
+        try {
+            Date fecha = formatoEntrada.parse(fechaString);
+            return formatoSalida.format(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null; // o manejar el error de alguna manera
+    }
 
 }

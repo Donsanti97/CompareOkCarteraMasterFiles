@@ -243,13 +243,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
             logErrorsToFile(masterFile, errores);
 
             deleteTempFile(tempFile);
-        } catch (HeadlessException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (HeadlessException | IOException | ParseException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -294,39 +288,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -385,39 +386,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -477,39 +485,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -568,39 +583,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -659,39 +681,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -751,39 +780,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -843,39 +879,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -934,39 +977,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -1024,39 +1074,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -1115,39 +1172,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -1205,39 +1269,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -1296,39 +1367,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
@@ -1391,39 +1469,46 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                     errorMessage("Hay un null en: " + entryOkCartera.getKey());
                 }
 
-                for (Map<String, String> datoMF : datosMasterFile) {
-                    for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                        //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                if (datosMasterFile != null) {
+                    for (Map<String, String> datoMF : datosMasterFile) {
+                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                        /*------------------------------------------------------------*/
-                        if (entry.getKey() == "null" || entry.getValue() == "null"){
-                            errorMessage("Los datos del Maestro contienen null");
-                        }
-
-                        //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                        if (entryOkCartera.getKey().contains(entry.getKey())) {
-
-                            System.out.println("CODIGO ENCONTRADO");
-
-
-                            if (!entryOkCartera.getValue().equals(entry.getValue())) {
-
-                                String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(error);
-                                errores.add(error);
-
-                            } else {
-
-                                String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                System.out.println(coincidencia);
-                                coincidencias.add(coincidencia);
-
+                            /*------------------------------------------------------------*/
+                            if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                errorMessage("Los datos del Maestro contienen null");
                             }
-                        } else {
-                            //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+
+                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                            if (entryOkCartera.getKey().contains(entry.getKey())) {
+
+                                System.out.println("CODIGO ENCONTRADO");
+
+
+                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+
+                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(error);
+                                    errores.add(error);
+
+                                } else {
+
+                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                    System.out.println(coincidencia);
+                                    coincidencias.add(coincidencia);
+
+                                }
+                            } else {
+                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                            }
+                            /*-------------------------------------------------------------------*/
                         }
-                        /*-------------------------------------------------------------------*/
                     }
+                }else {
+                    String error = "La información está incompleta, no es posible completar el análisis. " +
+                            "\n Por favor complete en caso de ser necesario";
+                    errorMessage(error);
+                    errores.add(error);
                 }
 
             }
