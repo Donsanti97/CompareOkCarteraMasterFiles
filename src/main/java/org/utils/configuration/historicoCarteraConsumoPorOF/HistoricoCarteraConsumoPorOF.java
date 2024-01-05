@@ -87,7 +87,7 @@ public class HistoricoCarteraConsumoPorOF {
             List<String> machSheets = machSheets(azureFile, masterFile);
             
 
-            carteraBruta(okCartera, masterFile, azureFile, fechaCorte, "Cartera Bruta", tempFile, machSheets);
+            carteraBruta(okCartera, masterFile, azureFile, fechaCorte, "CARTERA BRUTA", tempFile, machSheets);
             waitSeconds(5);
 
 

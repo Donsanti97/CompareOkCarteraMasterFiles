@@ -100,6 +100,7 @@ public class GetMasterAnalisis {
 
                 if (sheet.equals(hoja)) {
 
+                    System.out.println("SE ESTA ANALIZANDO LA HOJA: " + hoja);
                     sheet1 = workbook.getSheet(sht1);
                     encabezados1 = getHeadersN(sheet1);
 
@@ -120,18 +121,18 @@ public class GetMasterAnalisis {
                                 "]\n el formato de fecha no es el correcto");
                     } else {
                         valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
-                        if (valoresEncabezados2.contains(null)){
+                        if (valoresEncabezados2.equals(null)){
                             errorMessage("No es posible analizar los valores ya que los campos están incompletos." +
                                     "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores.");
                         }else {
                             System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                             mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
-                            for (Map<String, String> map : mapList) {
+                            /*for (Map<String, String> map : mapList) {
                                 System.out.println("Analizando valores... ");
                                 for (Map.Entry<String, String> entry : map.entrySet()) {
                                     System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
                                 }
-                            }
+                            }*/
                         }
                     }
                 }

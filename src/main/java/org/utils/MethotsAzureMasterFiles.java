@@ -273,10 +273,12 @@ public class MethotsAzureMasterFiles {
         Iterator<Cell> cellIterator = row.cellIterator();
         while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
-            if (cell == null){
-                valoresFila.add("0");
+            String value = obtenerValorVisibleCelda(cell);
+            if (value == "null" || value == null){
+                value = "0";
+                valoresFila.add(value);
             }else {
-                valoresFila.add(obtenerValorVisibleCelda(cell));//obtenerValorCelda()
+                valoresFila.add(value);//obtenerValorCelda()
             }
         }
         return valoresFila;
@@ -460,7 +462,7 @@ public class MethotsAzureMasterFiles {
                 key.replaceAll(null, "--");
                 value.replaceAll(null, "--");
             }*/
-                //System.out.println( key );
+                System.out.println( key );
                 if (key == "null" ){
                     //System.out.println("ENTRA AL CONDICIONAL NULL");
                     errorMap.put(key, value);
@@ -540,8 +542,10 @@ public class MethotsAzureMasterFiles {
         if (total == i){
             errorMessage("No es posible continuar con el análisis, la cantidad de información incompleta es demasiada." +
                     "\n Por favor verifique las indicaciones anteriores.");
+            return null;
+        }else {
+            return valoresPorFilas;
         }
-        return valoresPorFilas;
     }
 
     public static List<Map<String, String>> obtenerValoresPorFilas(Workbook workbook1, Workbook workbook2, String sheetName1, String sheetName2) throws IOException {

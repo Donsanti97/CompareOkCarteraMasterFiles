@@ -43,6 +43,11 @@ public class Start {
     public static void excecution() {
         JOptionPane.showMessageDialog(null, "Seleccione el archivo Maestro");
         String masterFile = getDocument();
+        while (masterFile ==null){
+            JOptionPane.showMessageDialog(null, "NO HA SELECCIONADO NINGÚN ARCHIVO " +
+                    "\n POR FAVOR SELECCIONE UN ARCHIVO MAESTRO A ANALIZAR");
+            masterFile = getDocument();
+        }
 
         try {
             assert masterFile != null;
