@@ -116,15 +116,22 @@ public class GetMasterAnalisis {
                     String fecha = parsearFecha(fechaCorteMF);
                     if (!fechaCorte.equals(fecha)) {
                         errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
-                                "\n tengan un formato tipo FECHA idéntica a " + fechaCorte);
+                                "\n tengan un formato tipo FECHA idéntica a " + fechaCorte +
+                                "\n o en su defecto que aparezca en la lista");
 
                         errorMessage("No es posible completar el análisis de la hoja [" + hoja +
                                 "]\n el formato de fecha no es el correcto");
+                        workbook.close();
+                        workbook2.close();
+                        return null;
+
                     } else {
                         valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
                         if (valoresEncabezados2.equals(null)){
                             errorMessage("No es posible analizar los valores ya que los campos están incompletos." +
                                     "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores.");
+                            workbook.close();
+                            workbook2.close();
                             return null;
                         }else {
                             System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
@@ -160,8 +167,13 @@ public class GetMasterAnalisis {
         SimpleDateFormat formatoSalida = new SimpleDateFormat("dd/MM/yyyy");
 
         try {
-            Date fecha = formatoEntrada.parse(fechaString);
-            return formatoSalida.format(fecha);
+            if (fechaString == null || fechaString.equals("Ninguno")) {
+                System.err.println("Fecha no encontrada");
+                return null;
+            } else {
+                Date fecha = formatoEntrada.parse(fechaString);
+                return formatoSalida.format(fecha);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }

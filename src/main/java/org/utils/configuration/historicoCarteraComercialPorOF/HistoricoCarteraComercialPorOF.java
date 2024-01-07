@@ -284,6 +284,7 @@ public class HistoricoCarteraComercialPorOF {
                             "\n Por favor complete en caso de ser necesario";
                     errorMessage(error);
                     errores.add(error);
+                    break;
                 }
 
             }
