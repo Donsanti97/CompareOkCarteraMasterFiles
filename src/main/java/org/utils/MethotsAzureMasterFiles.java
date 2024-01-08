@@ -242,6 +242,53 @@ public class MethotsAzureMasterFiles {
         return null; // Valor no encontrado en la columna especificada
     }
 
+    public static List<String> headersRow(String filePath, String sheetName, String targetHeader) {
+        try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
+            Sheet sheet = workbook.getSheet(sheetName);
+
+            if (sheet != null) {
+                for (Row row : sheet) {
+                    Cell cell = row.getCell(0);
+
+                    if (cell != null) {
+                        String cellValue = obtenerValorVisibleCelda(cell);
+                        if (targetHeader.equalsIgnoreCase(cellValue)) {
+                            int rowNum = row.getRowNum() + 1;
+
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    public static int findHeaderRow(String filePath, String sheetName, String targetHeader) {
+        try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
+            Sheet sheet = workbook.getSheet(sheetName);
+
+            if (sheet != null) {
+                for (Row row : sheet) {
+                    Cell cell = row.getCell(0); // Primera columna
+
+                    if (cell != null) {
+                        String cellValue = cell.getStringCellValue();
+                        if (targetHeader.equalsIgnoreCase(cellValue)) {
+                            return row.getRowNum() + 1; // Se suma 1 porque las filas se cuentan desde 0
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // Retornar -1 si no se encuentra el encabezado
+    }
+
     public static List<String> getHeadersMasterfile(Sheet sheet1, Sheet sheet2, String seleccion) throws IOException {
         List<String> headers1 = getHeaders(sheet1);
         String headerFirstFile1 = headers1.get(0);
@@ -254,6 +301,8 @@ public class MethotsAzureMasterFiles {
 
         return headers2;
     }
+
+
 
     public static List<String> getHeadersMasterfile(Sheet sheet1, Sheet sheet2) throws IOException {
         List<String> headers1 = getHeaders(sheet1);
@@ -274,7 +323,7 @@ public class MethotsAzureMasterFiles {
         while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
             String value = obtenerValorVisibleCelda(cell);
-            if (value == "null" || value == null){
+            if (value == "null" || value == null || valoresFila.isEmpty()){
                 value = "0";
                 valoresFila.add(value);
             }else {
@@ -374,6 +423,9 @@ public class MethotsAzureMasterFiles {
                 case BOOLEAN:
                     valor = Boolean.toString(cell.getBooleanCellValue());
                     break;
+                case FORMULA:
+                    valor = evaluarFormulas(cell);
+
                 case BLANK:
                 case _NONE:
                 case ERROR:
@@ -392,7 +444,26 @@ public class MethotsAzureMasterFiles {
             Workbook workbook = cell.getSheet().getWorkbook();
             FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
             CellValue cellValue = evaluator.evaluate(cell);
-            if (cellValue.getCellType() == CellType.NUMERIC) {
+
+            if (cellValue == null){
+                return "0";
+            }
+            switch (cellValue.getCellType()) {
+                case STRING:
+                    return cellValue.getStringValue();
+                case NUMERIC:
+                    return String.valueOf(cellValue.getNumberValue());
+                case BOOLEAN:
+                    return String.valueOf(cellValue.getBooleanValue());
+                case ERROR:
+                    return "Error: " + cellValue.getErrorValue();
+                case BLANK:
+                case _NONE:
+                    return "0";
+                default:
+                    return cellValue.formatAsString();
+            }
+            /*if (cellValue.getCellType() == CellType.NUMERIC) {
                 double valor = cellValue.getNumberValue();
                 //System.out.println("El valor de la fórmula en A5 es: " + valor);
                 return Double.toString(valor);
@@ -402,7 +473,7 @@ public class MethotsAzureMasterFiles {
                 return valor;
             } else {
                 return cellValue.formatAsString();
-            }
+            }*/
         } catch (Exception e) {
             return "";
         }
@@ -501,7 +572,7 @@ public class MethotsAzureMasterFiles {
             throw new IllegalArgumentException("Los encabezados especificados no se encontraron en la hoja.");
         }
 
-        Iterator<Row> rowIterator = sheet1.iterator();
+        Iterator<Row> rowIterator = sheet2.iterator();
         // Omitir la primera fila ya que contiene los encabezados
         if (rowIterator.hasNext()) {
             rowIterator.next();
@@ -514,8 +585,11 @@ public class MethotsAzureMasterFiles {
             Map<String, String> fila = new HashMap<>();
 
             try {
-                if (indexHeader1 >= 0 && indexHeader1 < valoresFila.size() &&
-                        indexHeader2 >= 0 && indexHeader2 < valoresFila.size()) {
+                while (valoresFila.size() != encabezados.size()){
+                    valoresFila.add("0");
+                }
+                if (indexHeader1 >= 0 && indexHeader1 <= valoresFila.size() &&
+                        indexHeader2 >= 0 && indexHeader2 <= valoresFila.size()) {
                     fila.put(header1, valoresFila.get(indexHeader1));
                     fila.put(header2, valoresFila.get(indexHeader2));
                     count++;

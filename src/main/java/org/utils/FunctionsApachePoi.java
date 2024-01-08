@@ -50,8 +50,7 @@ public class FunctionsApachePoi {
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -78,8 +77,7 @@ public class FunctionsApachePoi {
 
     public static void convertirExcel(String archivo) throws IOException {
         FileInputStream fis = new FileInputStream(archivo);
-        Workbook workbook = WorkbookFactory.create(new File(archivo));
-        ;
+        Workbook workbook = WorkbookFactory.create(new File(archivo));;
 
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             Sheet sheet = workbook.getSheetAt(i);
@@ -208,8 +206,7 @@ public class FunctionsApachePoi {
 
     public static Map<String, Integer> extractPivotTableData(String filePath, String filterColumnName, String valueColumnName) throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
-        Workbook workbook = WorkbookFactory.create(new File(filePath));
-        ;
+        Workbook workbook = WorkbookFactory.create(new File(filePath));;
         Sheet sheet = workbook.getSheetAt(0);
         System.out.println("Hoja: " + sheet.getSheetName());
         List<XSSFTable> tables = ((XSSFSheet) sheet).getTables();
@@ -241,8 +238,7 @@ public class FunctionsApachePoi {
 
     public static Map<String, Integer> processExcelFile(String filePath) throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
-        Workbook workbook = WorkbookFactory.create(new File(filePath));
-        ;
+        Workbook workbook = WorkbookFactory.create(new File(filePath));;
         Sheet sheet = workbook.getSheetAt(0); // Suponiendo que estás trabajando en la primera hoja del archivo
 
         Map<String, Integer> resultMap = new HashMap<>();
@@ -317,8 +313,7 @@ public class FunctionsApachePoi {
             }
         }
     }
-
-    /*------------------------------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------------------------------------------------------*/
 /*public static List<String> obtenerEncabezados(String excelFilePath, String sheetName) {
     List<String> headers = new ArrayList<>();
 
@@ -427,8 +422,7 @@ public class FunctionsApachePoi {
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -466,8 +460,7 @@ public class FunctionsApachePoi {
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -506,8 +499,7 @@ public class FunctionsApachePoi {
             convertirExcel(excelFilePath);
 
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             int numberOfRows = sheet.getPhysicalNumberOfRows();
             for (int rowIndex = 1; rowIndex < numberOfRows; rowIndex++) {
@@ -546,8 +538,7 @@ public class FunctionsApachePoi {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex = headers.indexOf(campoFiltrar);
@@ -692,8 +683,7 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             //FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex = headers.indexOf(campoFiltrar);
@@ -734,8 +724,7 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -788,8 +777,7 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -841,8 +829,7 @@ workbook.close();
             IOUtils.setByteArrayMaxOverride(300000000);
 
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -890,8 +877,7 @@ workbook.close();
             IOUtils.setByteArrayMaxOverride(300000000);
 
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -941,8 +927,7 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -1015,8 +1000,7 @@ workbook.close();
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
             int campoFiltrarIndex1 = headers.indexOf(campoFiltrar1);
@@ -1242,8 +1226,7 @@ workbook.close();
         List<String> sheetNames = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             int numberOfSheets = workbook.getNumberOfSheets();
             for (int i = indexFrom; i < numberOfSheets; i++) {
                 Sheet sheet = workbook.getSheetAt(i);
@@ -1768,8 +1751,7 @@ workbook.close();
     public static List<String> getHeaders(String excelFilePath, String sheetName) {
         List<String> headers = new ArrayList<>();
         try {
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
-            ;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
             Sheet sheet = workbook.getSheet(sheetName);
             Row headerRow = sheet.getRow(0);
             for (Cell cell : headerRow) {
@@ -2679,8 +2661,8 @@ workbook.close();
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
     public static final String SPECIAL_CHAR = " -X- ";
-    
-    
+
+
     public static List<String> createDualDropDownListsAndReturnSelectedValues(List<String> list1, List<String> list2) {
         List<String> selectedValues = new ArrayList<>();
 
@@ -2795,9 +2777,6 @@ workbook.close();
                 e.printStackTrace();
             }
         }
-
-        //runtime();
-        //waitSeconds(2);
 
         return selectedValues;
     }

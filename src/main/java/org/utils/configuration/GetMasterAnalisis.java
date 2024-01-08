@@ -114,6 +114,7 @@ public class GetMasterAnalisis {
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
                     String fechaCorteMF = mostrarMenu(encabezados2);
                     String fecha = parsearFecha(fechaCorteMF);
+                    JOptionPane.showMessageDialog(null, "Fecha formateada: " + fecha);
                     if (!fechaCorte.equals(fecha)) {
                         errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
                                 "\n tengan un formato tipo FECHA idéntica a " + fechaCorte +
@@ -124,24 +125,18 @@ public class GetMasterAnalisis {
                         workbook.close();
                         workbook2.close();
                         return null;
-
                     } else {
                         valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
-                        if (valoresEncabezados2.equals(null)){
+                        if (valoresEncabezados2 != null){
+                            System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
+                            mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
+                        }else {
                             errorMessage("No es posible analizar los valores ya que los campos están incompletos." +
                                     "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores.");
                             workbook.close();
                             workbook2.close();
+
                             return null;
-                        }else {
-                            System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
-                            mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
-                            /*for (Map<String, String> map : mapList) {
-                                System.out.println("Analizando valores... ");
-                                for (Map.Entry<String, String> entry : map.entrySet()) {
-                                    System.out.println("Headers2: " + entry.getKey() + ", Value: " + entry.getValue());
-                                }
-                            }*/
                         }
                     }
                 }
