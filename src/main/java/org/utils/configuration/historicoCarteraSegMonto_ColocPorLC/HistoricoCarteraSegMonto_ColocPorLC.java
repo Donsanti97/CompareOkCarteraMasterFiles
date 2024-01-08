@@ -310,7 +310,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -408,7 +408,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -506,7 +506,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -604,7 +604,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -702,7 +702,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -801,7 +801,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -899,7 +899,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -998,7 +998,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -1096,7 +1096,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -1193,7 +1193,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -1290,7 +1290,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -1387,7 +1387,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
@@ -1488,7 +1488,7 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
                             }
 
                             //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0")) {
+                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
