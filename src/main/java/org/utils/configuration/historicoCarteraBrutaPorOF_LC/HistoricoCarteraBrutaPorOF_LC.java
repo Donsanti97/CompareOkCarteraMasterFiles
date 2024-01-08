@@ -442,6 +442,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -541,6 +542,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -640,6 +642,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -740,6 +743,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 

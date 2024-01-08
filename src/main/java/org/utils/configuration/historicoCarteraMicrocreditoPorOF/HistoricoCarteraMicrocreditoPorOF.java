@@ -275,6 +275,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -377,6 +378,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -476,6 +478,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -575,6 +578,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -671,6 +675,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -768,6 +773,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -868,6 +874,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -968,6 +975,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1071,6 +1079,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1174,6 +1183,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1276,6 +1286,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1379,6 +1390,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1483,6 +1495,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1587,6 +1600,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1693,6 +1707,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 
@@ -1797,6 +1812,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
+                                entry.getValue().replaceAll("\\.", "");
 
                                 if (!entryOkCartera.getValue().equals(entry.getValue())) {
 

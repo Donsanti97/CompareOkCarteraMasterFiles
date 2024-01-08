@@ -1528,7 +1528,7 @@ workbook.close();
             // Redondea los valores a dos decimales
             Map<String, String> resultadoFormateado = new HashMap<>();
             DecimalFormat df = new DecimalFormat("0.00");
-            int filasFinales = sumaPorValorUnico.size() - 1;
+            int filasFinales = sumaPorValorUnico.size();
             for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
                 double valor = entry.getValue();
                 String valorFormateado = df.format(valor);
