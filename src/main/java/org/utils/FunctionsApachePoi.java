@@ -1480,7 +1480,7 @@ workbook.close();
 
             // Redondea los valores a dos decimales
             Map<String, String> resultadoFormateado = new HashMap<>();
-            DecimalFormat df = new DecimalFormat("0.00");
+            DecimalFormat df = new DecimalFormat("#,##0.00");
             for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
                 double valor = entry.getValue();
                 String valorFormateado = df.format(valor);
@@ -1527,7 +1527,7 @@ workbook.close();
             System.out.println("\n TERMINANDO PROCESO DE SUMATORIA DE VALORES");
             // Redondea los valores a dos decimales
             Map<String, String> resultadoFormateado = new HashMap<>();
-            DecimalFormat df = new DecimalFormat("0.00");
+            DecimalFormat df = new DecimalFormat("#,##0.00");
             int filasFinales = sumaPorValorUnico.size();
             for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
                 double valor = entry.getValue();
@@ -1623,7 +1623,7 @@ workbook.close();
             }
 
             Map<String, String> promedioPorValorUnico = new HashMap<>();
-            DecimalFormat df = new DecimalFormat("0.00");
+            DecimalFormat df = new DecimalFormat("#,##0.00");
 
             for (Map.Entry<String, Double> entry : sumaPorValorUnico.entrySet()) {
                 String key = entry.getKey();
@@ -1678,7 +1678,7 @@ workbook.close();
             }
 
             Map<String, String> minimoFormateado = new HashMap<>();
-            DecimalFormat df = new DecimalFormat("0.00");
+            DecimalFormat df = new DecimalFormat("#,##0.00");
 
             for (Map.Entry<String, Double> entry : minimoPorValorUnico.entrySet()) {
                 minimoFormateado.put(entry.getKey(), df.format(entry.getValue()));
@@ -1727,7 +1727,7 @@ workbook.close();
             }
 
             Map<String, String> maximoFormateado = new HashMap<>();
-            DecimalFormat df = new DecimalFormat("0.00");
+            DecimalFormat df = new DecimalFormat("#,##0.00");
 
             for (Map.Entry<String, Double> entry : maximoPorValorUnico.entrySet()) {
                 maximoFormateado.put(entry.getKey(), df.format(entry.getValue()));

@@ -279,9 +279,9 @@ public class HistoricoCarteraConsumoPorOF {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(value)) {
+                                if (!entryOkCartera.getValue().equals(entry.getValue()) || entryOkCartera.getValue() != entry.getValue() ||
+                                        !entryOkCartera.getValue().contains(entry.getValue())) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
