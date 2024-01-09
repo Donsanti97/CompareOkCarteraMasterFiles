@@ -155,7 +155,7 @@ public class HistoricoCarteraConsumoPorOF {
             waitSeconds(5);
 
 
-            reEstCapital(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital", tempFile, machSheets);
+            reEstCapital(okCartera, masterFile, azureFile, fechaCorte, "Re_Est CAPITAL", tempFile, machSheets);
             waitSeconds(5);
 
 
@@ -167,41 +167,41 @@ public class HistoricoCarteraConsumoPorOF {
             waitSeconds(5);
 
 
-            reEstNCreditos(okCartera, masterFile, azureFile, fechaCorte, "Re_Est N° Creditos", tempFile, machSheets);
+            reEstNCreditos(okCartera, masterFile, azureFile, fechaCorte, "Re_Est N° CREDITOS", tempFile, machSheets);
             waitSeconds(5);
 
 
-            nCreditosVigentes(okCartera, masterFile, azureFile, fechaCorte, "N° Creditos Vigentes", tempFile, machSheets);
+            nCreditosVigentes(okCartera, masterFile, azureFile, fechaCorte, "N° CREDITOS VIGENTES", tempFile, machSheets);
             waitSeconds(5);
 
-            clientesComercial(okCartera, masterFile, azureFile, fechaCorte, "Clientes_Comercial", tempFile, machSheets);
+            clientesComercial(okCartera, masterFile, azureFile, fechaCorte, "Clientes_Consumo", tempFile, machSheets);
             waitSeconds(5);
 
-            colocacionComercial(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Colocación_Comercial", tempFile, machSheets);
+            colocacionComercial(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "COLOCACIÓN_CONSUMO", tempFile, machSheets);
             waitSeconds(5);
 
-            nCreditoComercial(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "N° De Créd Comercial", tempFile, machSheets);
+            nCreditoComercial(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "N° De Créd Consumo", tempFile, machSheets);
             waitSeconds(5);
 
-            colocacionPromComercial(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Colocación Prom Comercial", tempFile, machSheets);
+            colocacionPromComercial(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Colocación Prom Consumo", tempFile, machSheets);
             waitSeconds(5);
 
-            comercialPercentil05(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Comercial Percentil 0.5", tempFile, machSheets);
+            comercialPercentil05(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Consumo Percentil 0.5", tempFile, machSheets);
             waitSeconds(5);
 
-            comercialPercentil08(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Comercial Percentil 0.8", tempFile, machSheets);
+            comercialPercentil08(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Consumo Percentil 0.8", tempFile, machSheets);
             waitSeconds(5);
 
-            comercialPzoPerc05(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Comercial_Pzo_Perc_0.5", tempFile, machSheets);
+            comercialPzoPerc05(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Consumo_Pzo_Perc_0.5", tempFile, machSheets);
             waitSeconds(5);
 
-            comercialPzoProm(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Comercial_Pzo_Prom", tempFile, machSheets);
+            comercialPzoProm(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Consumo_Pzo_Prom", tempFile, machSheets);
             waitSeconds(5);
 
             JOptionPane.showMessageDialog(null, "Espere un momento la última hoja está siendo analizada. \n Por favor de clic en Ok para continuar...");
             waitSeconds(5);
 
-            comercialPzoPerc08(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Comercial_Pzo_Perc_0.8", tempFile, machSheets);
+            comercialPzoPerc08(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Consumo_Pzo_Perc_0.8", tempFile, machSheets);
             waitSeconds(5);
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
