@@ -314,9 +314,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -413,9 +413,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -512,9 +512,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -611,9 +611,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -710,9 +710,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -810,9 +810,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -909,9 +909,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -1009,9 +1009,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -1108,9 +1108,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -1206,9 +1206,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -1304,9 +1304,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -1402,9 +1402,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
@@ -1504,9 +1504,9 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
 
                                 System.out.println("CODIGO ENCONTRADO");
 
-                                entry.getValue().replaceAll("\\.", "");
+                                String value = entry.getValue().replaceAll("\\.", "");
 
-                                if (!entryOkCartera.getValue().equals(entry.getValue())) {
+                                if (!entryOkCartera.getValue().equals(value)) {
 
                                     String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
                                     System.out.println(error);
