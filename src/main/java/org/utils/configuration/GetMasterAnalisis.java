@@ -100,6 +100,7 @@ public class GetMasterAnalisis {
 
                 if (sheet.equals(hoja)) {
 
+                    System.out.println();
                     System.out.println("SE ESTA ANALIZANDO LA HOJA: " + hoja);
                     sheet1 = workbook.getSheet(sht1);
                     encabezados1 = getHeadersN(sheet1);
@@ -114,7 +115,7 @@ public class GetMasterAnalisis {
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
                     String fechaCorteMF = mostrarMenu(encabezados2);
                     String fecha = parsearFecha(fechaCorteMF);
-                    JOptionPane.showMessageDialog(null, "Fecha formateada: " + fecha);
+                    System.out.println("Fecha formateada: " + fecha);
                     if (!fechaCorte.equals(fecha)) {
                         errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
                                 "\n tengan un formato tipo FECHA idéntica a " + fechaCorte +

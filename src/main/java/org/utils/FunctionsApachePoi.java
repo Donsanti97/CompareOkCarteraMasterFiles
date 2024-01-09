@@ -2580,84 +2580,54 @@ workbook.close();
     }
 
     public static void logWinsToFile(String filePath, List<String> messages) {
-        logToPdf(filePath, messages, "messages");
+        writeExcelFile(filePath, messages, "messages");
     }
 
     public static void logErrorsToFile(String filePath, List<String> errors) {
-        logToPdf(filePath, errors, "errors");
+        writeExcelFile(filePath, errors, "errors");
     }
 
-    private static void logToPdf(String filePath, List<String> messages, String folderName) {
+    public static void writeExcelFile(String filePath, List<String> messages, String folderName) {
         // Obtener el nombre del archivo sin la extensión
-        System.out.println("FILENAME");
-        String fileName;
-        String fileNewName;
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        try {
-
-
-            fileName = cambiarExtensionPDF(new File(filePath).getName());
-            fileNewName = new File(filePath).getName();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("FILENAME: "+ fileName);
-        System.out.println("FOLDERNAME: " + folderName);
-        System.out.println("FILEPATH: " + filePath);
-
-
-
-        String folderPath = filePath.replace(fileNewName, folderName);
-        System.out.println("FOLDERPATH: " + folderPath);
+        String fileName = new File(filePath).getName();
+        String folderPath = filePath.replace(fileName, folderName);
+        System.err.println(folderPath);
 
         // Crear la carpeta si no existe
         File folder = new File(folderPath);
         folder.mkdirs();
 
-        // Agregar "-estatus" al nombre del archivo
-        String logFilePath = folderPath + File.separator + fileName;
+        System.err.println(folderName);
+        System.err.println(fileName);
 
-        try (PDDocument document = new PDDocument()) {
-            PDPage page = new PDPage();
-            document.addPage(page);
+        String formattedDate = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(new Date());
+        String excelFileName = fileName.replace(".xlsx", "-" + folderName + "-" + formattedDate + ".xlsx");
 
-            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                for (String message : messages) {
-                    // Escribir cada mensaje en una nueva línea
+        System.err.println(excelFileName);
 
-                    contentStream.beginText();
-                    contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 14);
-                    contentStream.newLineAtOffset(10, 700);
-                    contentStream.showText(message);
-                    contentStream.endText();
-                    contentStream.close();
-                }
+        // Agregar "-estatus" al nombre del archivo Excel
+        String excelFilePath = folderPath + File.separator + excelFileName;
+
+        try (Workbook workbook = new XSSFWorkbook(); // Utiliza XSSFWorkbook para archivos .xlsx
+             FileOutputStream fileOut = new FileOutputStream(excelFilePath)) {
+
+            Sheet sheet = workbook.createSheet("LogSheet");
+
+            int rowNum = 0;
+            for (String message : messages) {
+                Row row = sheet.createRow(rowNum++);
+                Cell cell = row.createCell(0);
+                cell.setCellValue(message);
             }
 
-
-            document.save(logFilePath);
-            System.out.println("Mensajes registrados en: " + logFilePath);
+            workbook.write(fileOut);
+            System.out.println("Mensajes registrados en el archivo Excel: " + excelFilePath);
         } catch (IOException e) {
             // Manejar cualquier excepción de IO, por ejemplo, imprimir en la consola
             e.printStackTrace();
         }
     }
 
-    public static String cambiarExtensionPDF(String nombreArchivoXlsx) {
-        // Obtén la fecha actual
-        LocalDate fechaActual = LocalDate.now();
-
-        // Formatea la fecha como parte del nuevo nombre
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String fechaFormateada = fechaActual.format(formatter);
-
-        // Cambia la extensión a ".pdf"
-        String nuevoNombrePdf = nombreArchivoXlsx.replaceFirst("\\.xlsx$", "_" + fechaFormateada + ".pdf");
-
-        return nuevoNombrePdf;
-    }
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
     public static final String SPECIAL_CHAR = " -X- ";
