@@ -323,7 +323,7 @@ public class MethotsAzureMasterFiles {
         while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
             String value = obtenerValorVisibleCelda(cell);
-            if (value == "null" || value == null || valoresFila.isEmpty()){
+            if (value == "null" || value == null || value.isEmpty()){
                 value = "0";
                 valoresFila.add(value);
             }else {
