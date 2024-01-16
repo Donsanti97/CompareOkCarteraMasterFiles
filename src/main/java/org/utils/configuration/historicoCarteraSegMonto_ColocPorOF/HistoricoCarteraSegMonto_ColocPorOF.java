@@ -361,6 +361,8 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
             String valorFin = "Nuevo"; // Reemplaza con el valor de fin del rango
             List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, "dias_de_mora", 31, 5000);
 
+            workbook.close();
+            System.out.println();
             System.out.println("CREANDO ARCHIVO TEMPORAL");
             // Crear una nueva hoja Excel con los datos filtrados
             crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
@@ -373,7 +375,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -468,7 +470,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -518,6 +520,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
             }
             workbook.close();
             runtime();
+            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -562,7 +565,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -656,7 +659,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -751,7 +754,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
             Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-            List<Map<String, String>> datosMasterFile = obtenerValoresEncabezados2(azureFile, masterFile, hoja, fechaCorte)/*getHeadersMFile(azureFile, masterFile, fechaCorte)*/;
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
 
             for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
