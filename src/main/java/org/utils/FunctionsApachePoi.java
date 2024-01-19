@@ -2310,8 +2310,10 @@ workbook.close();
                 String valueCampoFiltrar1 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1));
                 Date valueCampoFiltrar2 = parseDate(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2)));
 
+
                 if ((valueCampoFiltrar1.compareTo(valorIni1) >= 0 && valueCampoFiltrar1.compareTo(valorFin1) <= 0) &&
-                        (valueCampoFiltrar2.compareTo(valorIni2) >= 0 && valueCampoFiltrar2.compareTo(valorFin2) <= 0)) {
+                        (valueCampoFiltrar2.compareTo(valorIni2) >= 0 && valueCampoFiltrar2.compareTo(valorFin2) <= 0) &&
+                        (valueCampoFiltrar1 != null && valueCampoFiltrar2 != null)) {
 
                     Iterator<String> columnNameIterator = headers.iterator();
                     Iterator<Cell> cellIterator = row.cellIterator();
@@ -2346,6 +2348,7 @@ workbook.close();
 
         return datosFiltrados;
     }
+
 
     public static List<Map<String, Object>> getHeaderFilterValuesNNN(Sheet sheet, List<String> headers, String campoFiltrar1, double valorIni1, double valorFin1, String campoFiltrar2, double valorIni2, double valorFin2) {
         List<Map<String, Object>> datosFiltrados = new ArrayList<>();
@@ -2488,11 +2491,30 @@ workbook.close();
     private static Date parseDate(String dateStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            return dateFormat.parse(dateStr);
+                return dateFormat.parse(dateStr);
+
         } catch (ParseException e) {
-            System.err.println("Error parsing date: " + e.getMessage());
+            System.err.println("Información incompleta: " + e.getMessage());
             return null;
         }
+    }
+
+    public static Date parsearFecha(String fechaStr) {
+        String[] patrones = {"dd/MM/yyyy", "yyyyMMdd", "MMddyyyy", "yyyyMMddHHmmss"};
+
+        for (String patron : patrones) {
+            SimpleDateFormat formato = new SimpleDateFormat(patron);
+            try {
+                if (fechaStr != null) {
+                    return formato.parse(fechaStr);
+                }
+            } catch (ParseException e) {
+                // Ignorar la excepción y probar con el siguiente patrón
+            }
+        }
+
+        System.err.println("Error parsing date: Unparseable date: " + fechaStr);
+        return null;
     }
 
     public static List<Map<String, Object>> getHeaderFilterValuesNNS(Sheet sheet, List<String> headers, String campoFiltrar1, double valorIni1, double valorFin1, String campoFiltrar2, String valorIni2, String valorFin2) {

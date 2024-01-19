@@ -50,7 +50,6 @@ public class Start {
         }
 
         try {
-            assert masterFile != null;
             File file = new File(masterFile);
             System.out.println(file.getName());
             String fileName = file.getName().toLowerCase();

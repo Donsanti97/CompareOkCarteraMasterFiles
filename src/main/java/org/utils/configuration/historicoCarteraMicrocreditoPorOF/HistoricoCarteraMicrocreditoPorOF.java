@@ -1064,6 +1064,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
+
     public static void nCreditoComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
