@@ -1758,7 +1758,7 @@ workbook.close();
     public static List<String> getHeaders(String excelFilePath, String sheetName) {
         List<String> headers = new ArrayList<>();
         try {
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
+            Workbook workbook = createWorkbook(excelFilePath);
             Sheet sheet = workbook.getSheet(sheetName);
             Row headerRow = sheet.getRow(0);
             for (Cell cell : headerRow) {
@@ -1792,8 +1792,8 @@ workbook.close();
             List<String> nameSheets2 = new ArrayList<>();
             assert azureFile != null;
             assert masterFile != null;
-            Workbook workbook = WorkbookFactory.create(new File(azureFile));
-            Workbook workbook2 = WorkbookFactory.create(new File(masterFile));
+            Workbook workbook = createWorkbook(azureFile);
+            Workbook workbook2 = createWorkbook(masterFile);
             Sheet sheet1 = null;
             Sheet sheet2 = null;
 
@@ -1901,7 +1901,7 @@ workbook.close();
 
         try /*(Workbook workbook = WorkbookFactory.create(new File(filePath)))*/ {
             System.out.println("AQUI ESTOY");
-            Workbook workbook = WorkbookFactory.create(new File(filePath));
+            Workbook workbook = createWorkbook(filePath);
             Sheet sheet = workbook.getSheet(sheetName);
             Row row = sheet.getRow(0);
             System.out.println("PROCESANDO CAMPOS...");
@@ -2935,7 +2935,7 @@ workbook.close();
         return sdf.format(dateChooser.getDate());
     }
 
-    public static void showProgressBarPercent(int current, int total) {
+    /*public static void showProgressBarPercent(int current, int total) {
         int progressBarWidth = 50;
         int progress = (int) ((double) current / total * 100);
 
@@ -2949,7 +2949,7 @@ workbook.close();
         }
         progressBar.append("] " + progress + "%");
         System.out.print("\r" + progressBar.toString());
-    }
+    }*/
 
 }
 

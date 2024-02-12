@@ -399,7 +399,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 errorMessage(message);
                 errores.add(message);
             }else {
-                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+                Workbook workbook = createWorkbook(okCarteraFile);
 
 
                 IOUtils.setByteArrayMaxOverride(20000000);
@@ -422,7 +422,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 System.out.println("CREANDO ARCHIVO TEMPORAL");
                 crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-                workbook = WorkbookFactory.create(new File(tempFile));
+                workbook = createWorkbook(tempFile);
 
                 sheet = workbook.getSheetAt(0);
 
@@ -505,7 +505,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 errores.add(message);
             }else {
 
-                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+                Workbook workbook = createWorkbook(okCarteraFile);
 
 
                 IOUtils.setByteArrayMaxOverride(20000000);
@@ -527,7 +527,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 System.out.println("CREANDO ARCHIVO TEMPORAL");
                 crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-                workbook = WorkbookFactory.create(new File(tempFile));
+                workbook = createWorkbook(tempFile);
 
                 sheet = workbook.getSheetAt(0);
 
@@ -609,7 +609,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 errorMessage(message);
                 errores.add(message);
             }else {
-                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+                Workbook workbook = createWorkbook(okCarteraFile);
 
 
                 IOUtils.setByteArrayMaxOverride(20000000);
@@ -632,7 +632,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 System.out.println("CREANDO ARCHIVO TEMPORAL");
                 crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-                workbook = WorkbookFactory.create(new File(tempFile));
+                workbook = createWorkbook(tempFile);
 
                 sheet = workbook.getSheetAt(0);
 
@@ -714,7 +714,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 errorMessage(message);
                 errores.add(message);
             }else {
-                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+                Workbook workbook = createWorkbook(okCarteraFile);
 
 
                 IOUtils.setByteArrayMaxOverride(20000000);
@@ -738,7 +738,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
                 System.out.println("CREANDO ARCHIVO TEMPORAL");
                 crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
 
-                workbook = WorkbookFactory.create(new File(tempFile));
+                workbook = createWorkbook(tempFile);
 
                 sheet = workbook.getSheetAt(0);
 

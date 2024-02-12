@@ -90,7 +90,7 @@ public class MethotsAzureMasterFiles {
     }
 
     /*-------------------------------------------------------------------------------------------------------------------------------*/
-    public static int findSheetIndexInExcelB(String excelAFilePath, String excelBFilePath, String targetSheetName) throws IOException {
+    /*public static int findSheetIndexInExcelB(String excelAFilePath, String excelBFilePath, String targetSheetName) throws IOException {
         FileInputStream excelAFile = new FileInputStream(excelAFilePath);
         FileInputStream excelBFile = new FileInputStream(excelBFilePath);
 
@@ -121,7 +121,7 @@ public class MethotsAzureMasterFiles {
         excelBFile.close();
 
         return sheetIndexInB;
-    }
+    }*/
 
     public static void runtime() {
         Runtime runtime = Runtime.getRuntime();
@@ -132,7 +132,7 @@ public class MethotsAzureMasterFiles {
     }
     /*---------------------------------------------------------------------------------------------------------------*/
 
-    public static List<String> getWorkSheet(String filePath, int i) {
+    /*public static List<String> getWorkSheet(String filePath, int i) {
         List<String> shetNames = new ArrayList<>();
         try {
             Workbook workbook = WorkbookFactory.create(new File(filePath));
@@ -150,9 +150,9 @@ public class MethotsAzureMasterFiles {
             throw new RuntimeException(e);
         }
         return shetNames;
-    }
+    }*/
 
-    public static List<Map<String, String>> getValuebyHeader(String excelFilePath, String sheetName) {
+    /*public static List<Map<String, String>> getValuebyHeader(String excelFilePath, String sheetName) {
         List<Map<String, String>> data = new ArrayList<>();
         List<String> headers = getHeaders(excelFilePath, sheetName);
         try {
@@ -185,9 +185,9 @@ public class MethotsAzureMasterFiles {
             e.printStackTrace();
         }
         return data;
-    }
+    }*/
 
-    public static List<String> getHeaders(String excelFilePath, String sheetName) {
+    /*public static List<String> getHeaders(String excelFilePath, String sheetName) {
         List<String> headers = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
@@ -203,7 +203,7 @@ public class MethotsAzureMasterFiles {
             e.printStackTrace();
         }
         return headers;
-    }
+    }*/
 
     public static List<String> getHeaders(Sheet sheet) {
         List<String> encabezados = new ArrayList<>();
@@ -242,7 +242,7 @@ public class MethotsAzureMasterFiles {
         return null; // Valor no encontrado en la columna especificada
     }
 
-    public static List<String> headersRow(String filePath, String sheetName, String targetHeader) {
+    /*public static List<String> headersRow(String filePath, String sheetName, String targetHeader) {
         try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
             Sheet sheet = workbook.getSheet(sheetName);
 
@@ -264,9 +264,9 @@ public class MethotsAzureMasterFiles {
         }
 
         return null;
-    }
+    }*/
 
-    public static int findHeaderRow(String filePath, String sheetName, String targetHeader) {
+    /*public static int findHeaderRow(String filePath, String sheetName, String targetHeader) {
         try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
             Sheet sheet = workbook.getSheet(sheetName);
 
@@ -287,7 +287,7 @@ public class MethotsAzureMasterFiles {
         }
 
         return -1; // Retornar -1 si no se encuentra el encabezado
-    }
+    }*/
 
     public static List<String> getHeadersMasterfile(Sheet sheet1, Sheet sheet2, String seleccion) throws IOException {
         List<String> headers1 = getHeaders(sheet1);
@@ -333,7 +333,7 @@ public class MethotsAzureMasterFiles {
         return valoresFila;
     }
 
-    public static String obtenerValorCelda(Cell cell) {
+    /*public static String obtenerValorCelda(Cell cell) {
         String valor = "";
         if (cell != null) {
             try {
@@ -354,7 +354,6 @@ public class MethotsAzureMasterFiles {
                             valor = cell.toString();
                             System.out.println("VALOR1 " + valor);
                         } else {
-                            //valor = Date.toString(cell.getDateCellValue()/*NumericCellValue()*/);
                             System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getNumericCellValue() + ", CELL: " + cell);
                             valor = cell.getStringCellValue();
                             System.out.println("VALOR3 " + valor);
@@ -366,16 +365,10 @@ public class MethotsAzureMasterFiles {
                         break;
                     case FORMULA:
                         System.out.println("CELLTYPE " + cell.getCellType() + ": " + cell.getCellFormula().toString() + ", CELL: " + cell + " CELLADD: " + cell.getAddress());
-                        /*System.err.println("Formato fecha no valido."+ cell.getCellFormula() +" Encabezado "+ cell.getSheet().getSheetName() +" Posición: "+ cell.getAddress() +" puede contener formula o valor cadena de caracteres");
-                        valor = evaluarFormula(cell);
-                        System.out.println("VALORF: " + valor);
-                        FunctionsApachePoi.waitSeconds(20);
-                        System.exit(1);*/
-                        valor = obtenerValorCeldaString(cell);
 
-                        //break;
+                        valor = obtenerValorCeldaString(cell);
                     default:
-                        /*valor = obtenerValorCeldaString(cell);*/
+
                         break;
                 }
 
@@ -384,7 +377,7 @@ public class MethotsAzureMasterFiles {
             }
         }
         return valor;
-    }
+    }*/
 
     public static String obtenerValorVisibleCelda(Cell cell) {
         try {
@@ -479,7 +472,7 @@ public class MethotsAzureMasterFiles {
         }
     }
 
-    public static String obtenerValorCeldaString(Cell cell) {
+    /*public static String obtenerValorCeldaString(Cell cell) {
         try {
             DataFormatter dataFormatter = new DataFormatter();
             String valor = dataFormatter.formatCellValue(cell);
@@ -487,9 +480,9 @@ public class MethotsAzureMasterFiles {
         } catch (Exception e) {
             return "";
         }
-    }
+    }*/
 
-    public static String evaluarFormula(Cell cell) {
+    /*public static String evaluarFormula(Cell cell) {
         try {
             Workbook workbook = cell.getSheet().getWorkbook();
             FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
@@ -515,7 +508,7 @@ public class MethotsAzureMasterFiles {
         }
 
         return ""; // Valor por defecto si no se pudo obtener el valor de la fórmula
-    }
+    }*/
 
     public static List<Map<String, String>> createMapList(List<Map<String, String>> originalList, String keyHeader, String valueHeader) {
         List<Map<String, String>> mapList = new ArrayList<>();
@@ -618,7 +611,7 @@ public class MethotsAzureMasterFiles {
         }
     }
 
-    public static List<Map<String, String>> obtenerValoresPorFilas(Workbook workbook1, Workbook workbook2, String sheetName1, String sheetName2) throws IOException {
+    /*public static List<Map<String, String>> obtenerValoresPorFilas(Workbook workbook1, Workbook workbook2, String sheetName1, String sheetName2) throws IOException {
         List<Map<String, String>> valoresPorFilas = new ArrayList<>();
         Sheet sheet1 = workbook1.getSheet(sheetName1);
         Sheet sheet2 = workbook2.getSheet(sheetName2);
@@ -646,9 +639,9 @@ public class MethotsAzureMasterFiles {
         }
 
         return valoresPorFilas;
-    }
+    }*/
 
-    public static List<Map<String, String>> obtenerValoresPorFilas(Sheet sheet, Sheet sheet2) throws IOException {
+    /*public static List<Map<String, String>> obtenerValoresPorFilas(Sheet sheet, Sheet sheet2) throws IOException {
         List<Map<String, String>> valoresPorFilas = new ArrayList<>();
         List<String> encabezados = getHeadersMasterfile(sheet, sheet2);
 
@@ -673,9 +666,9 @@ public class MethotsAzureMasterFiles {
         }
 
         return valoresPorFilas;
-    }
+    }*/
 
-    public static List<Map<String, String>> obtenerValoresPorFilas(Sheet sheet, List<String> encabezados) {
+    /*public static List<Map<String, String>> obtenerValoresPorFilas(Sheet sheet, List<String> encabezados) {
         List<Map<String, String>> valoresPorFilas = new ArrayList<>();
 
         Iterator<Row> rowIterator = sheet.iterator();
@@ -699,9 +692,9 @@ public class MethotsAzureMasterFiles {
         }
 
         return valoresPorFilas;
-    }
+    }*/
 
-    public static Map<String, String> obtenerValoresPorEncabezado(Sheet sheet, String encabezadoCodCiudad, String encabezadoFecha) {
+    /*public static Map<String, String> obtenerValoresPorEncabezado(Sheet sheet, String encabezadoCodCiudad, String encabezadoFecha) {
         Map<String, String> valoresPorCodCiudad = new HashMap<>();
 
         List<String> encabezados = obtenerValoresFila(sheet.getRow(0)); // Obtener encabezados de la primera fila
@@ -737,7 +730,7 @@ public class MethotsAzureMasterFiles {
         }
 
         return valoresPorCodCiudad;
-    }
+    }*/
 
 
 }

@@ -37,8 +37,8 @@ public class GetMasterAnalisis {
             List<String> nameSheets2 = new ArrayList<>();
             assert azureFile != null;
             assert masterFile != null;
-            Workbook workbook = WorkbookFactory.create(new File(azureFile));
-            Workbook workbook2 = WorkbookFactory.create(new File(masterFile));
+            Workbook workbook = createWorkbook(azureFile);
+            Workbook workbook2 = createWorkbook(masterFile);
             Sheet sheet1;
             Sheet sheet2;
 
@@ -78,8 +78,8 @@ public class GetMasterAnalisis {
         List<Map<String, String>> valoresEncabezados2;
         List<Map<String, String>> mapList = new ArrayList<>();
         try{
-            Workbook workbook = WorkbookFactory.create(new File(azureFile));
-            Workbook workbook2 = WorkbookFactory.create(new File(masterFile));
+            Workbook workbook = createWorkbook(azureFile);
+            Workbook workbook2 = createWorkbook(masterFile);
             Sheet sheet1;
             Sheet sheet2;
             String sht1 = "";
