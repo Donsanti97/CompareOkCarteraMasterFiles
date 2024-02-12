@@ -4,6 +4,7 @@ import com.toedter.calendar.JDateChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -1045,11 +1046,17 @@ workbook.close();
 
 
     public static Workbook createWorkbook(String filePath) {
-        if (filePath.endsWith(".xls")) {
-            return new HSSFWorkbook();
-        } else {
-            return new XSSFWorkbook();
+        try {
+            File file = new File(filePath);
+            if (filePath.endsWith(".xls")) {
+                return new HSSFWorkbook(POIFSFileSystem.create(file));
+            } else {
+                return new XSSFWorkbook(file);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
     }
     //Método que crea una nueva hoja excel con información específica ya tratada en un archivo excel nuevo
     public static void crearNuevaHojaExcel(String filePath, List<String> headers, List<Map<String, String>> data) {
