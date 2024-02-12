@@ -1487,7 +1487,13 @@ workbook.close();
                 resultadoFormateado.put(entry.getKey(), valorFormateado);
             }
 
-            return resultadoFormateado;
+            if (resultadoFormateado != null){
+                return resultadoFormateado;
+            } else {
+                return null;
+            }
+
+
         }
 
         public static Map<String, String> calcularSumaPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException, InterruptedException {
@@ -1543,7 +1549,11 @@ workbook.close();
             showProgressBarPerQuantity(count2, filasFinales);
 
 
-            return resultadoFormateado;
+            if (resultadoFormateado != null) {
+                return resultadoFormateado;
+            }else {
+                return null;
+            }
         }
 
         public static Map<String, String> calcularConteoPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException, InterruptedException {
@@ -1584,7 +1594,11 @@ workbook.close();
                 Thread.sleep(200);
             }
 
-            return resultadoFormateado;
+            if (resultadoFormateado != null) {
+                return resultadoFormateado;
+            }else {
+                return null;
+            }
         }
 
         public static Map<String, String> calcularPromedioPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException, InterruptedException {
@@ -1639,7 +1653,11 @@ workbook.close();
                 Thread.sleep(200);
             }
 
-            return promedioPorValorUnico;
+            if (promedioPorValorUnico != null) {
+                return promedioPorValorUnico;
+            } else {
+                return null;
+            }
         }
 
         public static Map<String, String> calcularMinimoPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException, InterruptedException {
@@ -1688,7 +1706,12 @@ workbook.close();
                 runtime();
                 Thread.sleep(200);
             }
-            return minimoFormateado;
+
+            if (minimoFormateado != null) {
+                return minimoFormateado;
+            }else {
+                return null;
+            }
         }
 
         public static Map<String, String> calcularMaximoPorValoresUnicos(String filePath, String firstHeader, String secondHeader) throws IOException, InterruptedException {
@@ -1738,7 +1761,11 @@ workbook.close();
                 Thread.sleep(200);
             }
 
-            return maximoFormateado;
+            if (maximoFormateado != null) {
+                return maximoFormateado;
+            }else {
+                return null;
+            }
         }
 
     }
@@ -2655,125 +2682,6 @@ workbook.close();
     public static final String SPECIAL_CHAR = " -X- ";
 
 
-    /*public static List<String> createDualDropDownListsAndReturnSelectedValues(List<String> list1, List<String> list2) {
-        List<String> selectedValues = new ArrayList<>();
-
-        JFrame frame = new JFrame("SELECCIÓN DE HOJAS");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new FlowLayout());
-
-        JComboBox<String> dropdown1 = new JComboBox<>(list1.toArray(new String[0]));
-        JComboBox<String> dropdown2 = new JComboBox<>(list2.toArray(new String[0]));
-        JButton addButton = new JButton("Agregar Selecciones");
-
-        frame.add(dropdown1);
-        frame.add(dropdown2);
-        frame.add(addButton);
-
-        // Panel para contener las selecciones y checkboxes
-        JPanel selectionsPanel = new JPanel(new GridLayout(0, 2));
-        selectionsPanel.setLayout(new BoxLayout(selectionsPanel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(selectionsPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        frame.add(selectionsPanel);
-
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedValue1 = (String) dropdown1.getSelectedItem();
-                String selectedValue2 = (String) dropdown2.getSelectedItem();
-
-                if (selectedValue1 != null && selectedValue2 != null) {
-                    String combinedSelection = selectedValue1 + SPECIAL_CHAR + selectedValue2;
-                    selectedValues.add(combinedSelection);
-
-                    // Crear checkbox para la selección recién agregada
-                    JCheckBox checkBox = new JCheckBox(combinedSelection);
-                    selectionsPanel.add(checkBox);
-
-                    // Eliminar elementos seleccionados de los desplegables
-                    list1.remove(selectedValue1);
-                    list2.remove(selectedValue2);
-
-                    // Actualizar los modelos de los desplegables
-                    dropdown1.setModel(new DefaultComboBoxModel<>(list1.toArray(new String[0])));
-                    dropdown2.setModel(new DefaultComboBoxModel<>(list2.toArray(new String[0])));
-
-                    System.out.println("Elementos agregados: " + combinedSelection);
-
-                    frame.revalidate();
-                    frame.repaint();
-                } else {
-                    // Puedes mostrar un mensaje de error si ambos elementos no están seleccionados
-                    JOptionPane.showMessageDialog(frame, "Selecciona un elemento de cada lista", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        // Botón para eliminar selecciones marcadas
-        JButton removeButton = new JButton("Eliminar Selecciones");
-        frame.add(removeButton);
-
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Eliminar selecciones marcadas
-                for (Component component : selectionsPanel.getComponents()) {
-                    if (component instanceof JCheckBox) {
-                        JCheckBox checkBox = (JCheckBox) component;
-                        if (checkBox.isSelected()) {
-                            selectedValues.remove(checkBox.getText());
-
-                            // Recuperar elementos eliminados a los desplegables
-                            String[] parts = checkBox.getText().split(SPECIAL_CHAR);
-                            if (!list1.contains(parts[0])) {
-                                list1.add(parts[0]);
-                            }
-                            if (!list2.contains(parts[1])) {
-                                list2.add(parts[1]);
-                            }
-
-                            // Actualizar los modelos de los desplegables
-                            dropdown1.setModel(new DefaultComboBoxModel<>(list1.toArray(new String[0])));
-                            dropdown2.setModel(new DefaultComboBoxModel<>(list2.toArray(new String[0])));
-
-                            selectionsPanel.remove(checkBox);
-                        }
-                    }
-                }
-
-                frame.revalidate();
-                frame.repaint();
-            }
-        });
-
-        // Botón para terminar el proceso de selección
-        JButton finishButton = new JButton("Terminar Selección");
-        frame.add(finishButton);
-
-        finishButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Puedes realizar acciones finales aquí, por ejemplo, cerrar la aplicación
-                frame.dispose();
-            }
-        });
-
-        frame.setVisible(true);
-
-        // Esperar hasta que se cierre la ventana
-        while (frame.isVisible()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return selectedValues;
-    }*/
     public static List<String> createDualDropDownListsAndReturnSelectedValues(List<String> list1, List<String> list2) {
         List<String> selectedValues = new ArrayList<>();
 
@@ -2880,6 +2788,8 @@ workbook.close();
 
         return selectedValues;
     }
+
+
 
     public static void errorMessage(String mensaje) {
         JLabel label = new JLabel("<html><font color='red'>" + mensaje + "</font></html>");

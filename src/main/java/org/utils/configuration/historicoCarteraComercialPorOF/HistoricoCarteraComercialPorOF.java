@@ -203,92 +203,101 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
-            workbook.close();
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-            //List<String> errores = new ArrayList<>();
-            //List<String> coincidencias = new ArrayList<>();
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                Sheet sheet = workbook.getSheetAt(0);
 
-                                System.out.println("CODIGO ENCONTRADO");
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                                
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+                workbook.close();
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+                //List<String> errores = new ArrayList<>();
+                //List<String> coincidencias = new ArrayList<>();
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            //logWinsToFile(masterFile, coincidencias);
-            //logErrorsToFile(masterFile, errores);
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -302,95 +311,106 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
+            String message;
 
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
-
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String campoDiasDeMora = "dias_de_mora";
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            //int rangoDesde = 361;
-            //int rangoHasta = 5000L;
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, campoDiasDeMora, rangoDesde, rangoHasta);
-
-            workbook.close();
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                Sheet sheet = workbook.getSheetAt(0);
 
-                                System.out.println("CODIGO ENCONTRADO");
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
+                String campoDiasDeMora = "dias_de_mora";
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                //int rangoDesde = 361;
+                //int rangoHasta = 5000L;
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, campoDiasDeMora, rangoDesde, rangoHasta);
+
+                workbook.close();
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
+                    }
+
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
                                 }
 
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
-                    }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
 
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                //logWinsToFile(masterFile, coincidencias);
+                //logErrorsToFile(masterFile, errores);
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            //logWinsToFile(masterFile, coincidencias);
-            //logErrorsToFile(masterFile, errores);
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -404,88 +424,100 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
+            String message;
 
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String campoCalificacion = "calificacion";
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSS(sheet, headers, campoFiltrar, valorInicio, valorFin, campoCalificacion, calificacion, calificacion);
-            workbook.close();
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoCalificacion = "calificacion";
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSS(sheet, headers, campoFiltrar, valorInicio, valorFin, campoCalificacion, calificacion, calificacion);
+                workbook.close();
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -499,88 +531,99 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String reEstCapital = "re_est";
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, reEstCapital, 1, 1);
-            workbook.close();
-            
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String reEstCapital = "re_est";
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSN(sheet, headers, campoFiltrar, valorInicio, valorFin, reEstCapital, 1, 1);
+                workbook.close();
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -594,85 +637,96 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String reEstCapital = "re_est";
-            String diasDeMora = "dias_de_mora";
-
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNNN(sheet, headers, reEstCapital, 1, 1, diasDeMora, diasMoradesde, diasMoraHasta);
-            workbook.close();
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "capital");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String reEstCapital = "re_est";
+                String diasDeMora = "dias_de_mora";
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNNN(sheet, headers, reEstCapital, 1, 1, diasDeMora, diasMoradesde, diasMoraHasta);
+                workbook.close();
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -685,87 +739,99 @@ public class HistoricoCarteraComercialPorOF {
 
         System.setProperty("org.apache.poi.ooxml.strict", "false");
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
+            String message;
 
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
-            workbook.close();
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+                workbook.close();
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -780,88 +846,99 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
+            String message;
 
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
-
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("linea", "Cliente");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
-            workbook.close();
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                Sheet sheet = workbook.getSheetAt(0);
 
-                                System.out.println("CODIGO ENCONTRADO");
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("linea", "Cliente");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+                workbook.close();
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -876,87 +953,98 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
+            String message;
 
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
-
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                Sheet sheet = workbook.getSheetAt(0);
 
-                                System.out.println("CODIGO ENCONTRADO");
+                List<String> headers = getHeadersN(sheet);
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "re_est");
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNS(sheet, headers, campoFiltrar, valorInicio, valorFin);
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -970,91 +1058,102 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (resultado != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1068,91 +1167,102 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (resultado != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1166,90 +1276,101 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (resultado != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1263,91 +1384,102 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (resultado != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1362,91 +1494,102 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "valor_desem");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (resultado != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1461,91 +1604,102 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (datosMasterFile != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -1561,92 +1715,103 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (resultado != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1661,91 +1826,102 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
         try {
-            Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
+            String message;
 
-
-            IOUtils.setByteArrayMaxOverride(20000000);
-
-            Sheet sheet = workbook.getSheetAt(0);
-
-            List<String> headers = getHeadersN(sheet);
-            System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
-            List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
-
-            String campoFiltrar = "modalidad";
-            String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
-            String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
-            String fechaInicio = "01/" + mesAnoCorte;
-            String fechafin = "31/" + mesAnoCorte;
-            Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
-            Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
-
-
-            // Filtrar los datos por el campo y el rango especificados
-            List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
-
-            workbook.close();
-            System.out.println();
-            System.out.println("CREANDO ARCHIVO TEMPORAL");
-            crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
-
-            workbook = WorkbookFactory.create(new File(tempFile));
-
-            sheet = workbook.getSheetAt(0);
-
-            System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
-
-            Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
             List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
 
-            for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+            if (datosMasterFile == null){
+                message = "La información está incompleta, no es posible completar el análisis. " +
+                        "\n Por favor complete en caso de ser necesario. Hoja: [" + hoja + "]";
+                errorMessage(message);
+                errores.add(message);
+            }else {
+                Workbook workbook = WorkbookFactory.create(new File(okCarteraFile));
 
-                if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null"){
-                    errorMessage("Hay un null en: " + entryOkCartera.getKey());
-                }
 
-                if (datosMasterFile != null) {
-                    for (Map<String, String> datoMF : datosMasterFile) {
-                        for (Map.Entry<String, String> entry : datoMF.entrySet()) {
-                            //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+                IOUtils.setByteArrayMaxOverride(20000000);
 
-                            /*------------------------------------------------------------*/
-                            if (entry.getKey() == "null" || entry.getValue() == "null") {
-                                errorMessage("Los datos del Maestro contienen null");
-                            }
+                Sheet sheet = workbook.getSheetAt(0);
 
-                            //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
-                            if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+                List<String> headers = getHeadersN(sheet);
+                System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
+                List<String> camposDeseados = Arrays.asList("codigo_sucursal", "plazo");
 
-                                System.out.println("CODIGO ENCONTRADO");
+                String campoFiltrar = "modalidad";
+                String valorInicio = "COMERCIAL"; // Reemplaza con el valor de inicio del rango
+                String valorFin = "COMERCIAL"; // Reemplaza con el valor de fin del rango
+                String fechaInicio = "01/" + mesAnoCorte;
+                String fechafin = "31/" + mesAnoCorte;
+                Date rangoInicio = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicio);
+                Date rangoFin = new SimpleDateFormat("dd/MM/yyyy").parse(fechafin);
 
-                                if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())){
-                                    String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(coincidencia);
-                                    coincidencias.add(coincidencia);
-                                } else {
-                                    String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
-                                    System.out.println(error);
-                                    errores.add(error);
-                                }
-                            } else {
-                                //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
-                            }
-                            /*-------------------------------------------------------------------*/
-                        }
+
+                // Filtrar los datos por el campo y el rango especificados
+                List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNSD(sheet, headers, campoFiltrar, valorInicio, valorFin, "fecha_inicio_cre", rangoInicio, rangoFin);
+
+                workbook.close();
+                System.out.println();
+                System.out.println("CREANDO ARCHIVO TEMPORAL");
+                crearNuevaHojaExcel(camposDeseados, datosFiltrados, tempFile);
+
+                workbook = WorkbookFactory.create(new File(tempFile));
+
+                sheet = workbook.getSheetAt(0);
+
+                System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
+
+                Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+
+                for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
+
+                    if (entryOkCartera.getKey() == "null" || entryOkCartera.getValue() == "null") {
+                        errorMessage("Hay un null en: " + entryOkCartera.getKey());
                     }
-                }else {
-                    String error = "La información está incompleta, no es posible completar el análisis. " +
-                            "\n Por favor complete en caso de ser necesario";
-                    errorMessage(error);
-                    errores.add(error);
-                    break;
-                }
 
+                    if (resultado != null) {
+                        for (Map<String, String> datoMF : datosMasterFile) {
+                            for (Map.Entry<String, String> entry : datoMF.entrySet()) {
+                                //System.out.println("ENTRA AL ANALISIS ENTRE OK Y MAESTRO_for " + entry.getKey());
+
+                                /*------------------------------------------------------------*/
+                                if (entry.getKey() == "null" || entry.getValue() == "null") {
+                                    errorMessage("Los datos del Maestro contienen null");
+                                }
+
+                                //System.out.println("SI ESTA ENTRANDO A LA COMPARACIÓN DE DATOS ENTRE MAESTRO Y OKCARTERA");
+                                if (entryOkCartera.getKey().contains(entry.getKey()) && !entryOkCartera.getKey().equals("0") && !entry.getKey().equals("0")) {
+
+                                    System.out.println("CODIGO ENCONTRADO");
+
+                                    if (entry.getValue() == entryOkCartera.getValue() || entry.getValue().contains(entryOkCartera.getValue())) {
+                                        String coincidencia = hoja + " -> LOS VALORES ENCONTRADOS SON IGUALES-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(coincidencia);
+                                        coincidencias.add(coincidencia);
+                                    } else {
+                                        String error = hoja + " -> LOS VALORES ENCONTRADOS SON DISTINTOS-> " + entryOkCartera.getValue() + ": " + entry.getValue() + " CON RESPECTO AL CODIGO: " + entry.getKey();
+                                        System.out.println(error);
+                                        errores.add(error);
+                                    }
+                                } else {
+                                    //System.err.println("Código no encontrado: " + entryOkCartera.getKey());
+                                }
+                                /*-------------------------------------------------------------------*/
+                            }
+                        }
+                    } else {
+                        String error = "La información está incompleta, no es posible completar el análisis. " +
+                                "\n Por favor complete en caso de ser necesario";
+                        errorMessage(error);
+                        errores.add(error);
+                        break;
+                    }
+
+                }
+                workbook.close();
+                runtime();
+                waitSeconds(2);
             }
-            workbook.close();
-            runtime();
-            waitSeconds(2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

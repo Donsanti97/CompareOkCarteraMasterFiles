@@ -88,6 +88,7 @@ public class GetMasterAnalisis {
             List<String> encabezados2;
             String encabezado;
             int i = 0;
+            String message;
 
             for (String seleccion : dataList) {
                 String[] elementos = seleccion.split(SPECIAL_CHAR);
@@ -102,41 +103,93 @@ public class GetMasterAnalisis {
 
                     System.out.println();
                     System.out.println("SE ESTA ANALIZANDO LA HOJA: " + hoja);
+
                     sheet1 = workbook.getSheet(sht1);
+                    sheet2 = workbook2.getSheet(sheet);
+
                     encabezados1 = getHeadersN(sheet1);
 
                     JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
-                    assert encabezados1 != null;
                     encabezado = mostrarMenu(encabezados1);
-                    sheet2 = workbook2.getSheet(sheet);
+
+                    /**/
+                    while (encabezado == null) {
+                        errorMessage("No fue seleccionado el encabezado. Por favor siga la instrucción");
+                        JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
+                        encabezado = mostrarMenu(encabezados1);
+                    }
+                    /**/
+
                     encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
                     String codigo = mostrarMenu(encabezados2);
+                    while (codigo == null || codigo == "Ninguno"){
+                        errorMessage("No fue seleccionado el código. Por favor siga la instrucción");
+                        JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
+                        codigo = mostrarMenu(encabezados2);
+                    }
+
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
                     String fechaCorteMF = mostrarMenu(encabezados2);
+                    if (fechaCorteMF == null || fechaCorteMF == "Ninguno") {
+                        errorMessage("No fue seleccionada la \"fecha de corte\". Por favor siga la instrucción");
+                        JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
+                        fechaCorteMF = mostrarMenu(encabezados2);
+                    }
+
                     String fecha = parsearFecha(fechaCorteMF);
                     System.out.println("Fecha formateada: " + fecha);
                     if (!fechaCorte.equals(fecha)) {
-                        errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
-                                "\n tengan un formato tipo FECHA idéntica a " + fechaCorte +
-                                "\n o en su defecto que aparezca en la lista");
+                        String yesNoAnswer = showYesNoDialog("Los dos valores que intenta comparar estan contenidos en un encabezado tipo fecha de corte " +
+                                "\n O diferente al que seleccionó al comienzo del programa? ?");
+                        if (yesNoAnswer.equals("SI")){
+                            encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
 
-                        errorMessage("No es posible completar el análisis de la hoja [" + hoja +
-                                "]\n el formato de fecha no es el correcto");
-                        workbook.close();
-                        workbook2.close();
-                        return null;
+                            JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizada");
+                            fechaCorteMF = mostrarMenu(encabezados2);
+                            while (fechaCorteMF == null || fechaCorteMF.equals("Nunguno")) {
+                                errorMessage("No fue seleccionado la fecha de corte. Por favor siga la instrucción");
+                                JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizada");
+                                fechaCorteMF = mostrarMenu(encabezados2);
+                            }
+                            valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
+                            if (valoresEncabezados2 != null){
+                                System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
+                                mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
+                            }else {
+                                message = "No es posible analizar los valores ya que los campos están incompletos." +
+                                        "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores. Hoja: [" + sheet + "]";
+                                errorMessage(message);
+                                workbook.close();
+                                workbook2.close();
+                                errores.add(message);
+                                return null;
+                            }
+                        }else {
+                            message = "No es posible completar el análisis de la hoja [" + hoja +
+                                    "]\n el formato de fecha no es el correcto";
+                            errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
+                                    "\n tengan un formato tipo FECHA idéntica a " + fechaCorte +
+                                    "\n o en su defecto que aparezca en la lista");
+
+                            errorMessage(message);
+                            workbook.close();
+                            workbook2.close();
+                            errores.add(message);
+                            return null;
+                        }
                     } else {
                         valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
                         if (valoresEncabezados2 != null){
                             System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                             mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
                         }else {
-                            errorMessage("No es posible analizar los valores ya que los campos están incompletos." +
-                                    "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores.");
+                            message = "No es posible analizar los valores ya que los campos están incompletos." +
+                                    "\n Por favor verifique que la cantidad de campos sea equivalente a la de valores. Hoja: [" + sheet + "]";
+                            errorMessage(message);
                             workbook.close();
                             workbook2.close();
-
+                            errores.add(message);
                             return null;
                         }
                     }
@@ -176,5 +229,31 @@ public class GetMasterAnalisis {
 
         return null; // o manejar el error de alguna manera
     }
+
+    public static String showYesNoDialog(String message) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // El mensaje que se mostrará en el cuadro de diálogo
+        String[] options = {"SI", "NO"};
+
+        // Mostrar el cuadro de diálogo con los botones "Sí" y "No"
+        int choice = JOptionPane.showOptionDialog(
+                frame,
+                message,
+                "Confirmación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        frame.dispose();
+
+        // Retorna la opción seleccionada como String
+        return (choice == JOptionPane.YES_OPTION) ? "SI" : "NO";
+    }
+
 
 }
