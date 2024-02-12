@@ -3,20 +3,9 @@ package org.utils;
 import com.toedter.calendar.JDateChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDMMType1Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.AreaReference;
-import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFPivotTable;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
@@ -24,12 +13,12 @@ import java.awt.Font;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -45,7 +34,7 @@ public class FunctionsApachePoi {
 
 
     //Método para obtener los valores de encabezados generales
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName) {
         List<Map<String, String>> data = new ArrayList<>();
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
@@ -73,9 +62,9 @@ public class FunctionsApachePoi {
             logger.error("Error al procesar el archivo Excel", e);
         }
         return data;
-    }
+    }*/
 
-    public static void convertirExcel(String archivo) throws IOException {
+    /*public static void convertirExcel(String archivo) throws IOException {
         FileInputStream fis = new FileInputStream(archivo);
         Workbook workbook = WorkbookFactory.create(new File(archivo));;
 
@@ -105,11 +94,11 @@ public class FunctionsApachePoi {
         fos.close();
 
         workbook.close();
-    }
+    }*/
 
     //@Test
     //Método para creación de tablas dinámicas
-    public static void tablasDinamicasApachePoi(String filePath, String codSucursal, String colValores, String funcion) {
+    /*public static void tablasDinamicasApachePoi(String filePath, String codSucursal, String colValores, String funcion) {
 
         try {
             IOUtils.setByteArrayMaxOverride(300000000);
@@ -185,7 +174,7 @@ public class FunctionsApachePoi {
         } catch (IOException e) {
             logger.error("Error al procesar el archivo Excel", e);
         }
-    }
+    }*/
 
 
     public static void waitSeconds(int seconds) {
@@ -204,7 +193,7 @@ public class FunctionsApachePoi {
         }
     }
 
-    public static Map<String, Integer> extractPivotTableData(String filePath, String filterColumnName, String valueColumnName) throws IOException {
+    /*public static Map<String, Integer> extractPivotTableData(String filePath, String filterColumnName, String valueColumnName) throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
         Workbook workbook = WorkbookFactory.create(new File(filePath));;
         Sheet sheet = workbook.getSheetAt(0);
@@ -234,9 +223,9 @@ public class FunctionsApachePoi {
 
         fis.close();
         return dataMap;
-    }
+    }*/
 
-    public static Map<String, Integer> processExcelFile(String filePath) throws IOException {
+    /*public static Map<String, Integer> processExcelFile(String filePath) throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
         Workbook workbook = WorkbookFactory.create(new File(filePath));;
         Sheet sheet = workbook.getSheetAt(0); // Suponiendo que estás trabajando en la primera hoja del archivo
@@ -267,14 +256,14 @@ public class FunctionsApachePoi {
 
         fis.close();
         return resultMap;
-    }
+    }*/
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
-    private static final int BATCH_SIZE = 1000; // Tamaño del lote para procesar
+    //private static final int BATCH_SIZE = 1000; // Tamaño del lote para procesar
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
 
     //Método para obtener los nombres de las hojas existentes en el excel
-    public static List<String> obtenerNombresDeHojas(String excelFilePath) {
+    /*public static List<String> obtenerNombresDeHojas(String excelFilePath) {
         List<String> sheetNames = new ArrayList<>();
         try {
 
@@ -294,10 +283,10 @@ public class FunctionsApachePoi {
             System.err.println("Error al procesar el archivo Excel: " + e);
         }
         return sheetNames;
-    }
+    }*/
 
 
-    public static void convertExcelToCsv(String excelFilePath, String csvFilePath) throws IOException {
+    /*public static void convertExcelToCsv(String excelFilePath, String csvFilePath) throws IOException {
         try (FileInputStream fis = new FileInputStream(excelFilePath);
              Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
              BufferedWriter writer = new BufferedWriter(new FileWriter(csvFilePath))) {
@@ -312,7 +301,7 @@ public class FunctionsApachePoi {
                 writer.newLine();
             }
         }
-    }
+    }*/
 /*------------------------------------------------------------------------------------------------------------------------------------------*/
 /*public static List<String> obtenerEncabezados(String excelFilePath, String sheetName) {
     List<String> headers = new ArrayList<>();
@@ -390,7 +379,7 @@ public class FunctionsApachePoi {
     }*/
     /*---------------------------------------------------------------------------------------------------------------------------------------*/
     //Método para obtener los encabezados en las hojas
-    public static List<String> obtenerEncabezados(String excelFilePath, String sheetName) {
+    /*public static List<String> obtenerEncabezados(String excelFilePath, String sheetName) {
         List<String> headers = new ArrayList<>();
         try {
             IOUtils.setByteArrayMaxOverride(300000000);
@@ -400,11 +389,6 @@ public class FunctionsApachePoi {
             Row headerRow = sheet.getRow(0);
             String value = "";
             for (Cell cell : headerRow) {
-                /*if (cell.getCellType() == CellType.STRING) {
-                    value = cell.getStringCellValue();
-                } else if (cell.getCellType() == CellType.NUMERIC) {
-                    value = String.valueOf(cell.getNumericCellValue());
-                }*/
                 value = obtenerValorVisibleCelda(cell);
                 headers.add(value);
             }
@@ -414,10 +398,10 @@ public class FunctionsApachePoi {
             logger.error("Error al procesar el archivo Excel", e);
         }
         return headers;
-    }
+    }*/
 
     //Método para obtener los valores de encabezados específicos
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados) {
         List<Map<String, String>> data = new ArrayList<>();
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
@@ -433,11 +417,6 @@ public class FunctionsApachePoi {
                     String header = headers.get(cellIndex);
                     String value = "";
                     if (cell != null) {
-                        /*if (cell.getCellType() == CellType.STRING) {
-                            value = cell.getStringCellValue();
-                        } else if (cell.getCellType() == CellType.NUMERIC) {
-                            value = String.valueOf(cell.getNumericCellValue());
-                        }*/
                         value = obtenerValorVisibleCelda(cell);
                     }
                     if (camposDeseados.contains(header)) {
@@ -452,10 +431,10 @@ public class FunctionsApachePoi {
             logger.error("Error al procesar el archivo Excel", e);
         }
         return data;
-    }
+    }*/
 
 
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados, String header) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados, String header) {
         List<Map<String, String>> data = new ArrayList<>();
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
@@ -489,10 +468,10 @@ public class FunctionsApachePoi {
             logger.error("Error al procesar el archivo Excel", e);
         }
         return data;
-    }
+    }*/
 
     /*---------------------------------------------------------------------------------------------------*/
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados, int percent) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, List<String> camposDeseados, int percent) {
         List<Map<String, String>> data = new ArrayList<>();
         List<String> headers = obtenerEncabezados(excelFilePath, sheetName);
         try {
@@ -529,12 +508,12 @@ public class FunctionsApachePoi {
             logger.error("Error al procesar el archivo Excel", e);
         }
         return data;
-    }
+    }*/
 
 
     /*---------------------------------------------------------------------------------------------------*/
 
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar, int valorInicio, int valorFin) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar, int valorInicio, int valorFin) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
@@ -572,7 +551,7 @@ public class FunctionsApachePoi {
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
     /*-------------------------------------------------------------------------------------------------*/
 
@@ -633,11 +612,10 @@ workbook.close();
         return datosFiltrados;
     }*/
 
-    private static Map<String, String> procesarLote(List<Map<String, String>> datosFiltrados, List<String> headers, String tempFile) {
+    /*private static Map<String, String> procesarLote(List<Map<String, String>> datosFiltrados, List<String> headers, String tempFile) {
         Map<String, String> resultado;
         try {
             crearNuevaHojaExcel(tempFile, headers, datosFiltrados);
-            /*Map<String, String> */
             resultado = functions.calcularSumaPorValoresUnicos(tempFile, headers.get(0), headers.get(1));
             if (datosFiltrados.size() % BATCH_SIZE == 0) {
                 System.out.println("Procesando lote de filas: " + datosFiltrados.size());
@@ -661,9 +639,9 @@ workbook.close();
             throw new RuntimeException(e);
         }
         return resultado;
-    }
+    }*/
 
-    private static List<String> obtenerEncabezados(Workbook workbook, String sheetName) {
+    /*private static List<String> obtenerEncabezados(Workbook workbook, String sheetName) {
         List<String> headers = new ArrayList<>();
         Sheet sheet = workbook.getSheet(sheetName);
         Row headerRow = sheet.getRow(0);
@@ -675,11 +653,11 @@ workbook.close();
         }
 
         return headers;
-    }
+    }*/
     /*--------------------------------------------------------------------------------------------------*/
 
     //Método para obtener valores de los encabezados en un rango especifico de valores
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar, String valorInicio, String valorFin) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar, String valorInicio, String valorFin) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             //FileInputStream fis = new FileInputStream(excelFilePath);
@@ -717,10 +695,10 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
     //Método para obtener valores de dos encabezados de un rango específico de valores cada uno
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, String valorInicio1, String valorFin1, String campoFiltrar2, String valorInicio2, String valorFin2) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, String valorInicio1, String valorFin1, String campoFiltrar2, String valorInicio2, String valorFin2) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
@@ -770,10 +748,10 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
     //Método para obtener valores de dos encabezados de un rango específico cada uno, en campos numéricos
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, double valorInicio1, double valorFin1, String campoFiltrar2, double valorInicio2, double valorFin2) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, double valorInicio1, double valorFin1, String campoFiltrar2, double valorInicio2, double valorFin2) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
@@ -819,10 +797,10 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
     //Método para obtener valores de los encabezados de un rango específico cada uno, el primero rango String y el segundo rango double
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, String valorInicio1, String valorFin1, String campoFiltrar2, int valorInicio2, int valorFin2) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, String valorInicio1, String valorFin1, String campoFiltrar2, int valorInicio2, int valorFin2) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         List<String> headers;
         try {
@@ -868,9 +846,9 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, int valorInicio1, int valorFin1, String campoFiltrar2, int valorInicio2, int valorFin2) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, int valorInicio1, int valorFin1, String campoFiltrar2, int valorInicio2, int valorFin2) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         List<String> headers;
         try {
@@ -921,9 +899,9 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, String valorInicio1, String valorFin1, String campoFiltrar2, Date valorInicio2, Date valorFin2) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, String valorInicio1, String valorFin1, String campoFiltrar2, Date valorInicio2, Date valorFin2) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
@@ -990,13 +968,13 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
     public static void deleteTempFile(String tempFile) {
         eliminarExcel(tempFile, 5);
     }
 
-    public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, int valorInicio1, int valorFin1, String campoFiltrar2, Date valorInicio2, Date valorFin2) {
+    /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName, String campoFiltrar1, int valorInicio1, int valorFin1, String campoFiltrar2, Date valorInicio2, Date valorFin2) {
         List<Map<String, String>> datosFiltrados = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
@@ -1063,8 +1041,16 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return datosFiltrados;
-    }
+    }*/
 
+
+    public static Workbook createWorkbook(String filePath) {
+        if (filePath.endsWith(".xls")) {
+            return new HSSFWorkbook();
+        } else {
+            return new XSSFWorkbook();
+        }
+    }
     //Método que crea una nueva hoja excel con información específica ya tratada en un archivo excel nuevo
     public static void crearNuevaHojaExcel(String filePath, List<String> headers, List<Map<String, String>> data) {
         Workbook workbook = new XSSFWorkbook();
@@ -1200,7 +1186,7 @@ workbook.close();
     }
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    public static List<String> obtenerEncabezados(Sheet sheet) {
+    /*public static List<String> obtenerEncabezados(Sheet sheet) {
         List<String> encabezados = new ArrayList<>();
 
         Iterator<Row> rowIterator = sheet.iterator();
@@ -1220,9 +1206,9 @@ workbook.close();
         }
 
         return encabezados;
-    }
+    }*/
 
-    public static List<String> obtenerNombresDeHojas(String excelFilePath, int indexFrom) {
+    /*public static List<String> obtenerNombresDeHojas(String excelFilePath, int indexFrom) {
         List<String> sheetNames = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(excelFilePath);
@@ -1240,9 +1226,9 @@ workbook.close();
             logger.error("Error al procesar el archivo Excel", e);
         }
         return sheetNames;
-    }
+    }*/
 
-    public static List<String> obtenerEncabezados(Sheet sheet, int index) {
+    /*public static List<String> obtenerEncabezados(Sheet sheet, int index) {
         List<String> encabezados = new ArrayList<>();
 
         Iterator<Row> rowIterator = sheet.iterator();
@@ -1265,9 +1251,9 @@ workbook.close();
 
         return encabezados;
 
-    }
+    }*/
 
-    public static List<String> encontrarEncabezadosSegundoArchivo(Sheet sheet, Workbook workbook2) {
+    /*public static List<String> encontrarEncabezadosSegundoArchivo(Sheet sheet, Workbook workbook2) {
         List<String> encabezadosSegundoArchivo = new ArrayList<>();
 
         // Busca el primer encabezado del primer archivo en la misma columna en el segundo archivo
@@ -1286,9 +1272,9 @@ workbook.close();
         }
 
         return encabezadosSegundoArchivo;
-    }
+    }*/
 
-    private static boolean buscarEncabezadoEnColumna(String encabezado, int columnIndex, Workbook workbook) {
+    /*private static boolean buscarEncabezadoEnColumna(String encabezado, int columnIndex, Workbook workbook) {
         Sheet sheet = workbook.getSheetAt(3); // Puedes especificar el índice de la hoja del segundo archivo
         Iterator<Row> rowIterator = sheet.iterator();
         while (rowIterator.hasNext()) {
@@ -1303,10 +1289,10 @@ workbook.close();
             }
         }
         return false;
-    }
+    }*/
 
     /*-----------------------------------------------------------------------------------------*/
-    public static List<String> buscarValorEnColumna(Sheet sheet, int columnaBuscada, String valorBuscado) {
+    /*public static List<String> buscarValorEnColumna(Sheet sheet, int columnaBuscada, String valorBuscado) {
         Iterator<Row> rowIterator = sheet.iterator();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
@@ -1319,9 +1305,9 @@ workbook.close();
         }
 
         return null; // Valor no encontrado en la columna especificada
-    }
+    }*/
 
-    public static Map<String, List<String>> obtenerValoresPorEncabezado(Sheet sheet, List<String> encabezados) {
+   /* public static Map<String, List<String>> obtenerValoresPorEncabezado(Sheet sheet, List<String> encabezados) {
         Map<String, List<String>> valoresPorEncabezado = new HashMap<>();
 
         for (String encabezado : encabezados) {
@@ -1349,10 +1335,10 @@ workbook.close();
         }
 
         return valoresPorEncabezado;
-    }
+    }*/
 
 
-    public static List<String> obtenerValoresFila(Row row) {
+    /*public static List<String> obtenerValoresFila(Row row) {
         List<String> valoresFila = new ArrayList<>();
         Iterator<Cell> cellIterator = row.cellIterator();
         while (cellIterator.hasNext()) {
@@ -1361,11 +1347,11 @@ workbook.close();
         }
         runtime();
         return valoresFila;
-    }
+    }*/
     /*-----------------------------------------------------------------------------------------------*/
 
 
-    private static String obtenerValorCelda(Cell cell) {
+    /*private static String obtenerValorCelda(Cell cell) {
         String valor = "";
         if (cell != null) {
             switch (cell.getCellType()) {
@@ -1399,13 +1385,13 @@ workbook.close();
             }
         }
         return valor;
-    }
+    }*/
 
     /*--------------------OTROS MÉTODOS PARA LEER Y HACER LA SUMATORIA POR VALOR---------------------------------------------------------------*/
     public static List<Map<String, String>> leerExcel(String filePath) throws IOException {
         List<Map<String, String>> data = new ArrayList<>();
 
-        try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
+        try (Workbook workbook = createWorkbook(filePath)/*WorkbookFactory.create(new File(filePath))*/) {
 
             Sheet sheet = workbook.getSheetAt(0); // Supongamos que es la primera hoja
 
@@ -1424,13 +1410,7 @@ workbook.close();
                     Cell currentCell = currentRow.getCell(columnIndex);
 
                     String headerValue = headerCell.getStringCellValue();
-                    String cellValue = ""/*String.valueOf(currentCell.getNumericCellValue())*/; // Puedes adaptar esto para otros tipos de celdas
-                    /*if (currentCell.getCellType() == CellType.STRING) {
-                        cellValue = currentCell.getStringCellValue();
-                    } else if (currentCell.getCellType() == CellType.NUMERIC) {
-                        cellValue = String.valueOf(currentCell.getNumericCellValue());
-
-                    }*/
+                    String cellValue;
                     cellValue = obtenerValorVisibleCelda(currentCell);
                     rowMap.put(headerValue, cellValue);
                 }
@@ -1778,7 +1758,7 @@ workbook.close();
     public static List<String> getHeaders(String excelFilePath, String sheetName) {
         List<String> headers = new ArrayList<>();
         try {
-            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));;
+            Workbook workbook = WorkbookFactory.create(new File(excelFilePath));
             Sheet sheet = workbook.getSheet(sheetName);
             Row headerRow = sheet.getRow(0);
             for (Cell cell : headerRow) {
