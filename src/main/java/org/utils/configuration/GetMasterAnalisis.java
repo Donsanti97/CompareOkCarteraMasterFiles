@@ -109,18 +109,18 @@ public class GetMasterAnalisis {
 
                     encabezados1 = getHeadersN(sheet1);
 
-                    JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
-                    encabezado = mostrarMenu(encabezados1);
+                    /*JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
+                    encabezado = mostrarMenu(encabezados1);*/
 
                     /**/
-                    while (encabezado == null) {
+                    /*while (encabezado == null) {
                         errorMessage("No fue seleccionado el encabezado. Por favor siga la instrucción");
                         JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
                         encabezado = mostrarMenu(encabezados1);
-                    }
+                    }*/
                     /**/
 
-                    encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
+                    encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezados1);
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
                     String codigo = mostrarMenu(encabezados2);
                     while (codigo == null || codigo == "Ninguno"){
@@ -143,7 +143,7 @@ public class GetMasterAnalisis {
                         String yesNoAnswer = showYesNoDialog("Los dos valores que intenta comparar estan contenidos en un encabezado tipo fecha de corte " +
                                 "\n O diferente al que seleccionó al comienzo del programa? ?");
                         if (yesNoAnswer.equals("SI")){
-                            encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
+                            encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezados1);
 
                             JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizada");
                             fechaCorteMF = mostrarMenu(encabezados2);

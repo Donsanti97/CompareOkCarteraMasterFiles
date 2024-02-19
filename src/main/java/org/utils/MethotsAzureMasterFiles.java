@@ -289,14 +289,17 @@ public class MethotsAzureMasterFiles {
         return -1; // Retornar -1 si no se encuentra el encabezado
     }*/
 
-    public static List<String> getHeadersMasterfile(Sheet sheet1, Sheet sheet2, String seleccion) throws IOException {
+    public static List<String> getHeadersMasterfile(Sheet sheet1, Sheet sheet2, List<String> headers) throws IOException {
         List<String> headers1 = getHeaders(sheet1);
         String headerFirstFile1 = headers1.get(0);
         List<String> headers2 = getHeaders(sheet2);
         String headerSecondFile = headers2.get(0);
 
         if (!headerFirstFile1.equals(headerSecondFile)) {
-            headers2 = findValueInColumn(sheet2, 0, seleccion);
+            for (String seleccion : headers) {
+                headers2 = findValueInColumn(sheet2, 0, seleccion);
+                break;
+            }
         }
 
         return headers2;

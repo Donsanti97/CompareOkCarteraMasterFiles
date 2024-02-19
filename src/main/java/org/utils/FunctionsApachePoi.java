@@ -1839,7 +1839,7 @@ workbook.close();
             assert encabezados1 != null;
             encabezado = mostrarMenu(encabezados1);
 
-            encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezado);
+            encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezados1);
 
             JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
             String codigo = mostrarMenu(encabezados2);
@@ -2140,6 +2140,8 @@ workbook.close();
                     showProgressBarPerQuantity(currentRow, totalRows);
 
                     Thread.sleep(50);
+                }else {
+                    return datosFiltrados;
                 }
             }
         } catch (InterruptedException e) {
@@ -2787,17 +2789,16 @@ workbook.close();
 
 
     public static String mostrarMenu(List<String> opciones) {
-
-        opciones.add(0, "Ninguno");
+        List<String> opcionesConNinguno = new ArrayList<>(opciones);
+        opcionesConNinguno.add(0, "Ninguno");
 
         JFrame frame = new JFrame("Menú de Opciones");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JComboBox<String> comboBox = new JComboBox<>(opciones.toArray(new String[0]));
+        JComboBox<String> comboBox = new JComboBox<>(opcionesConNinguno.toArray(new String[0]));
         comboBox.setSelectedIndex(0);
 
         JButton button = new JButton("Seleccionar");
-
 
         ActionListener actionListener = e -> frame.dispose();
 
