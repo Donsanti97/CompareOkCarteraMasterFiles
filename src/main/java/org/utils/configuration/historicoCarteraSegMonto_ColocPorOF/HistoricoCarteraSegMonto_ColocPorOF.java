@@ -2,7 +2,6 @@ package org.utils.configuration.historicoCarteraSegMonto_ColocPorOF;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
@@ -1014,8 +1013,8 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("EL ANÁLISIS PUEDE SER ALGO DEMORADO POR FAVOR ESPERE...");
 
                 String campoFiltrar = "valor_desem";
-                long valorInicio = valorInic * 1000000L; // Reemplaza con el valor de inicio del rango
-                long valorFin = valorFinal * 1000000L; //
+                int valorInicio = valorInic * 1000000; // Reemplaza con el valor de inicio del rango
+                int valorFin = valorFinal * 1000000; //
 
                 List<Map<String, Object>> datosFiltrados = getHeaderFilterValuesNNN(sheet, headers, campoFiltrar, valorInicio, valorFin, "dias_de_mora", 31, 5000);
 

@@ -2111,6 +2111,8 @@ workbook.close();
                 }
 
                 String valueCampoFiltrar = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex));
+                valueCampoFiltrar = valueCampoFiltrar.replaceAll("\\.", "");
+                valueCampoFiltrar = valueCampoFiltrar.replaceAll(",", ".");
                 double numericValueCampoFiltrar = parseDouble(valueCampoFiltrar);
 
                 Iterator<String> columnNameIterator = headers.iterator();
@@ -2140,8 +2142,6 @@ workbook.close();
                     showProgressBarPerQuantity(currentRow, totalRows);
 
                     Thread.sleep(50);
-                }else {
-                    return datosFiltrados;
                 }
             }
         } catch (InterruptedException e) {
@@ -2257,10 +2257,13 @@ workbook.close();
                 }
 
                 String valueCampoFiltrar1 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1));
-                double valueCampoFiltrar2 = Double.parseDouble(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2)));
+                String valueCampoFiltrar2 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2));
+                valueCampoFiltrar2 = valueCampoFiltrar2.replaceAll("\\.", "");
+                valueCampoFiltrar2 = valueCampoFiltrar2.replace(",", "");
+                double numeroCampoFiltrar2 = Double.parseDouble(valueCampoFiltrar2);
 
                 if ((valueCampoFiltrar1.compareTo(valorIni1) >= 0 && valueCampoFiltrar1.compareTo(valorFin1) <= 0) &&
-                        (valueCampoFiltrar2 >= valorIni2 && valueCampoFiltrar2 <= valorFin2)) {
+                        (numeroCampoFiltrar2 >= valorIni2 && numeroCampoFiltrar2 <= valorFin2)) {
 
                     Iterator<String> columnNameIterator = headers.iterator();
                     Iterator<Cell> cellIterator = row.cellIterator();
@@ -2394,11 +2397,19 @@ workbook.close();
                     return datosFiltrados;
                 }
 
-                double valueCampoFiltrar1 = Double.parseDouble(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1)));
-                double valueCampoFiltrar2 = Double.parseDouble(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2)));
+                String valueCampoFiltrar1 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1));
+                String valueCampoFiltrar2 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2));
+                valueCampoFiltrar1 = valueCampoFiltrar1.replaceAll("\\.", "");
+                valueCampoFiltrar1 = valueCampoFiltrar1.replace(",", ".");
+                valueCampoFiltrar2 = valueCampoFiltrar2.replaceAll("\\.", "");
+                valueCampoFiltrar2 = valueCampoFiltrar2.replace(",", ".");
 
-                if ((valueCampoFiltrar1 >= valorIni1 && valueCampoFiltrar1 <= valorFin1) &&
-                        (valueCampoFiltrar2 >= valorIni2 && valueCampoFiltrar2 <= valorFin2)) {
+
+                double numericCampoFiltrar1 = Double.parseDouble(valueCampoFiltrar1);
+                double numericCampoFiltrar2 = Double.parseDouble(valueCampoFiltrar2);
+
+                if ((numericCampoFiltrar1 >= valorIni1 && numericCampoFiltrar1 <= valorFin1) &&
+                        (numericCampoFiltrar2 >= valorIni2 && numericCampoFiltrar2 <= valorFin2)) {
 
                     Iterator<String> columnNameIterator = headers.iterator();
                     Iterator<Cell> cellIterator = row.cellIterator();
@@ -2463,10 +2474,14 @@ workbook.close();
                     return datosFiltrados;
                 }
 
-                double valueCampoFiltrar1 = Double.parseDouble(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1)));
+                String valueCampoFiltrar1 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1));
+                valueCampoFiltrar1 = valueCampoFiltrar1.replaceAll("\\.", "");
+                valueCampoFiltrar1 = valueCampoFiltrar1.replace(",", "");
+
+                double numericCampoFiltrar1 = Double.parseDouble(valueCampoFiltrar1);
                 Date valueCampoFiltrar2 = parseDate(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2)));
 
-                if ((valueCampoFiltrar1 >= valorIni1 && valueCampoFiltrar1 <= valorFin1) &&
+                if ((numericCampoFiltrar1 >= valorIni1 && numericCampoFiltrar1 <= valorFin1) &&
                         (valueCampoFiltrar2.after(valorIni2) || valueCampoFiltrar2.equals(valorIni2)) &&
                         (valueCampoFiltrar2.before(valorFin2) || valueCampoFiltrar2.equals(valorFin2))) {
 
@@ -2561,11 +2576,18 @@ workbook.close();
                     return datosFiltrados;
                 }
 
-                double valueCampoFiltrar1 = Double.parseDouble(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1)));
-                double valueCampoFiltrar2 = Double.parseDouble(obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2)));
+                String valueCampoFiltrar1 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex1));
+                valueCampoFiltrar1 = valueCampoFiltrar1.replaceAll("\\.", "");
+                valueCampoFiltrar1 = valueCampoFiltrar1.replace(",", "");
+                String valueCampoFiltrar2 = obtenerValorVisibleCelda(row.getCell(campoFiltrarIndex2));
+                valueCampoFiltrar2 = valueCampoFiltrar2.replaceAll("\\.", "");
+                valueCampoFiltrar2 = valueCampoFiltrar2.replace(",", "");
 
-                if ((valueCampoFiltrar1 >= valorIni1 && valueCampoFiltrar1 <= valorFin1) &&
-                        (valueCampoFiltrar2 >= Double.parseDouble(valorIni2) && valueCampoFiltrar2 <= Double.parseDouble(valorFin2))) {
+                double numeroCampoFiltrar1 = Double.parseDouble(valueCampoFiltrar1);
+                double numeroCampoFiltrar2 = Double.parseDouble(valueCampoFiltrar2);
+
+                if ((numeroCampoFiltrar1 >= valorIni1 && numeroCampoFiltrar1 <= valorFin1) &&
+                        (numeroCampoFiltrar2 >= Double.parseDouble(valorIni2) && numeroCampoFiltrar2 <= Double.parseDouble(valorFin2))) {
 
                     Iterator<String> columnNameIterator = headers.iterator();
                     Iterator<Cell> cellIterator = row.cellIterator();
