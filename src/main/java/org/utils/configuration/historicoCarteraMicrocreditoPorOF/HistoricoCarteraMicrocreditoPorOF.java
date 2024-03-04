@@ -224,7 +224,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -262,7 +262,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -328,7 +328,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -370,7 +370,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -436,7 +436,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -475,7 +475,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -541,7 +541,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -580,7 +580,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -646,7 +646,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -682,7 +682,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -747,7 +747,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -785,7 +785,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -852,7 +852,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -891,7 +891,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -958,7 +958,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -997,7 +997,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1063,7 +1063,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1106,7 +1106,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1173,7 +1173,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1216,7 +1216,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1282,7 +1282,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1324,7 +1324,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1390,7 +1390,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1433,7 +1433,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1500,7 +1500,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1543,7 +1543,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1610,7 +1610,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1653,7 +1653,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1721,7 +1721,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1765,7 +1765,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1832,7 +1832,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1875,7 +1875,7 @@ public class HistoricoCarteraMicrocreditoPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja, fechaCorte);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
