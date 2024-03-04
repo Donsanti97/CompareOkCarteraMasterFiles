@@ -80,66 +80,66 @@ public class HistoricoCarteraPorLC {
 
             List<String> machSheets = machSheets(azureFile, masterFile);
 
-            carteraTotal(okCartera, masterFile, azureFile, fechaCorte, "Cartera Total", tempFile, machSheets);
+            carteraTotal(okCartera, masterFile, azureFile, "Cartera Total", tempFile, machSheets);
 
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "0 Dias", 0, 0, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "1 - 7 Dias", 1, 7, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "8 - 15 Dias", 8, 15, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "16 - 30 Dias", 16, 30, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "31 - 60 Dias", 31, 60, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "61 - 90 Dias", 61, 90, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "91 - 120 Dias", 91, 120, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "121 - 150 Dias", 121, 150, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "151 - 180 Dias", 151, 180, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "181 - 360 Dias", 181, 360, tempFile, machSheets);
-            carteraDias(okCartera, masterFile, azureFile, fechaCorte, "> 361 Dias", 361, 5000, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "0 Dias", 0, 0, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "1 - 7 Dias", 1, 7, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "8 - 15 Dias", 8, 15, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "16 - 30 Dias", 16, 30, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "31 - 60 Dias", 31, 60, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "61 - 90 Dias", 61, 90, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "91 - 120 Dias", 91, 120, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "121 - 150 Dias", 121, 150, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "151 - 180 Dias", 151, 180, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "181 - 360 Dias", 181, 360, tempFile, machSheets);
+            carteraDias(okCartera, masterFile, azureFile, "> 361 Dias", 361, 5000, tempFile, machSheets);
 
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "A", "A", tempFile, machSheets);
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "B", "B", tempFile, machSheets);
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "C", "C", tempFile, machSheets);
-            calificacion(okCartera, masterFile, azureFile, fechaCorte, "D", "D", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "A", "A", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "B", "B", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "C", "C", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "D", "D", tempFile, machSheets);
 
-            reEstCapital(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital", tempFile, machSheets);
+            reEstCapital(okCartera, masterFile, azureFile, "Re_Est Capital", tempFile, machSheets);
 
-            reEstCapital(okCartera, 0, 30, masterFile, azureFile, fechaCorte, "Re_Est Capital < = 30", tempFile, machSheets);
-            reEstCapital(okCartera, 31, 5000, masterFile, azureFile, fechaCorte, "Re_Est Capítal > 31", tempFile, machSheets);
+            reEstCapital(okCartera, 0, 30, masterFile, azureFile, "Re_Est Capital < = 30", tempFile, machSheets);
+            reEstCapital(okCartera, 31, 5000, masterFile, azureFile, "Re_Est Capítal > 31", tempFile, machSheets);
 
-            reEstNCreditos(okCartera, masterFile, azureFile, fechaCorte, "Re_Est N° Creditos", tempFile, machSheets);
-            nCreditosVigentes(okCartera, masterFile, azureFile, fechaCorte, "N° Creditos Vigentes", tempFile, machSheets);
+            reEstNCreditos(okCartera, masterFile, azureFile, "Re_Est N° Creditos", tempFile, machSheets);
+            nCreditosVigentes(okCartera, masterFile, azureFile, "N° Creditos Vigentes", tempFile, machSheets);
 
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC-A", "A", tempFile, machSheets);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC-B", "B", tempFile, machSheets);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC-C", "C", tempFile, machSheets);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC-D", "D", tempFile, machSheets);
-            reestructuradosCapitalLc(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC-E", "E", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, "Re_Est Capital_LC-A", "A", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, "Re_Est Capital_LC-B", "B", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, "Re_Est Capital_LC-C", "C", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, "Re_Est Capital_LC-D", "D", tempFile, machSheets);
+            reestructuradosCapitalLc(okCartera, masterFile, azureFile, "Re_Est Capital_LC-E", "E", tempFile, machSheets);
 
-            reestructuradosCapitalLcPlazosProm(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC_Plazos_Prom", tempFile, machSheets);
+            reestructuradosCapitalLcPlazosProm(okCartera, masterFile, azureFile, "Re_Est Capital_LC_Plazos_Prom", tempFile, machSheets);
 
-            reestructuradosCapitalLcPlazosMin(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC_Plazos_Min", tempFile, machSheets);
+            reestructuradosCapitalLcPlazosMin(okCartera, masterFile, azureFile, "Re_Est Capital_LC_Plazos_Min", tempFile, machSheets);
 
-            reestructuradosCapitalLcPlazosMax(okCartera, masterFile, azureFile, fechaCorte, "Re_Est Capital_LC_Plazos_Max", tempFile, machSheets);
+            reestructuradosCapitalLcPlazosMax(okCartera, masterFile, azureFile, "Re_Est Capital_LC_Plazos_Max", tempFile, machSheets);
 
-            mora1raCuotaMontoLC(okCartera, masterFile, azureFile, fechaCorte, "Mora-1raCuota_Monto_LC", tempFile, machSheets);
+            mora1raCuotaMontoLC(okCartera, masterFile, azureFile, "Mora-1raCuota_Monto_LC", tempFile, machSheets);
 
-            mora1raCuotaCantLC(okCartera, masterFile, azureFile, fechaCorte, "Mora-1raCuota_Cant_LC", tempFile, machSheets);
+            mora1raCuotaCantLC(okCartera, masterFile, azureFile, "Mora-1raCuota_Cant_LC", tempFile, machSheets);
 
-            provisiones(okCartera, masterFile, azureFile, fechaCorte, "Provisiones", tempFile, machSheets);
+            provisiones(okCartera, masterFile, azureFile, "Provisiones", tempFile, machSheets);
 
-            clientesGeneral(okCartera, masterFile, azureFile, fechaCorte, "Clientes_General", tempFile, machSheets);
+            clientesGeneral(okCartera, masterFile, azureFile, "Clientes_General", tempFile, machSheets);
 
-            colocacion(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Colocación", tempFile, machSheets);
+            colocacion(okCartera, masterFile, azureFile, mesAnoCorte, "Colocación", tempFile, machSheets);
 
-            credPromColocacion(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Cred Prom Colocación", tempFile, machSheets);
+            credPromColocacion(okCartera, masterFile, azureFile, mesAnoCorte, "Cred Prom Colocación", tempFile, machSheets);
 
-            colocacionPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, fechaCorte, "Colocación Percentil 0.5", tempFile, machSheets);
+            colocacionPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, "Colocación Percentil 0.5", tempFile, machSheets);
 
-            colocacionPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, fechaCorte, "Colocación Percentil 0.8", tempFile, machSheets);
+            colocacionPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, "Colocación Percentil 0.8", tempFile, machSheets);
 
-            pzoProm(okCartera, masterFile, azureFile, mesAnoCorte, fechaCorte, "Pzo_Prom", tempFile, machSheets);
+            pzoProm(okCartera, masterFile, azureFile, mesAnoCorte, "Pzo_Prom", tempFile, machSheets);
 
-            pzoPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, fechaCorte, "Pzo_Percentil 0.5", tempFile, machSheets);
+            pzoPercentil(okCartera, masterFile, azureFile, 50, mesAnoCorte, "Pzo_Percentil 0.5", tempFile, machSheets);
 
-            pzoPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, fechaCorte, "Pzo_Percentil 0.8", tempFile, machSheets);
+            pzoPercentil(okCartera, masterFile, azureFile, 80, mesAnoCorte, "Pzo_Percentil 0.8", tempFile, machSheets);
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
             waitSeconds(10);
@@ -155,7 +155,7 @@ public class HistoricoCarteraPorLC {
     }
 
 
-    public static void carteraTotal(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void carteraTotal(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -258,7 +258,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void carteraDias(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, int rangIni, int rangFin,  String tempFile, List <String> machSheets) throws IOException {
+    public static void carteraDias(String okCarteraFile, String masterFile, String azureFile, String hoja, int rangIni, int rangFin,  String tempFile, List <String> machSheets) throws IOException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -361,7 +361,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void calificacion(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
+    public static void calificacion(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -464,7 +464,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstCapital(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reEstCapital(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -567,7 +567,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstCapital(String okCarteraFile, int diasMoradesde, int diasMoraHasta, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reEstCapital(String okCarteraFile, int diasMoradesde, int diasMoraHasta, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -672,7 +672,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstNCreditos(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reEstNCreditos(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -775,7 +775,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void nCreditosVigentes(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void nCreditosVigentes(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -878,7 +878,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalLc(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reestructuradosCapitalLc(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -976,7 +976,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalLcPlazosProm(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reestructuradosCapitalLcPlazosProm(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1072,7 +1072,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalLcPlazosMin(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reestructuradosCapitalLcPlazosMin(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1169,7 +1169,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reestructuradosCapitalLcPlazosMax(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reestructuradosCapitalLcPlazosMax(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1265,7 +1265,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void mora1raCuotaMontoLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void mora1raCuotaMontoLC(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1365,7 +1365,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void mora1raCuotaCantLC(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void mora1raCuotaCantLC(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1467,7 +1467,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void provisiones(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void provisiones(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1569,7 +1569,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void clientesGeneral(String okCarteraFile, String masterFile, String azureFile, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void clientesGeneral(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1671,7 +1671,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void colocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void colocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1778,7 +1778,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void credPromColocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void credPromColocacion(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
 
         IOUtils.setByteArrayMaxOverride(300000000);
@@ -1886,7 +1886,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void colocacionPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void colocacionPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -1993,7 +1993,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void pzoProm(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void pzoProm(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
@@ -2100,7 +2100,7 @@ public class HistoricoCarteraPorLC {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void pzoPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String fechaCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void pzoPercentil(String okCarteraFile, String masterFile, String azureFile, int percent, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
