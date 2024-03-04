@@ -1,18 +1,14 @@
 package org.utils;
 
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.utils.FunctionsApachePoi.errorMessage;
@@ -124,11 +120,19 @@ public class MethotsAzureMasterFiles {
     }*/
 
     public static void runtime() {
-        Runtime runtime = Runtime.getRuntime();
-        long minRunningMemory = (8L * 1024L * 1024L * 1024L);
-        if (runtime.freeMemory() < minRunningMemory) {
-            System.gc();
+        try {
+            System.out.println("Inicio runtime");
+            Runtime runtime = Runtime.getRuntime();
+            System.out.println(runtime.freeMemory());
+            long minRunningMemory = (8L * 1024L * 1024L * 1024L);
+            if (runtime.freeMemory() < minRunningMemory) {
+                System.out.println("Se ejecuta garbageCollection");
+                System.gc();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
     }
     /*---------------------------------------------------------------------------------------------------------------*/
 

@@ -2,7 +2,6 @@ package org.utils.configuration.historicoCarteraPorLC;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
@@ -80,7 +79,6 @@ public class HistoricoCarteraPorLC {
             waitSeconds(5);
 
             List<String> machSheets = machSheets(azureFile, masterFile);
-            
 
             carteraTotal(okCartera, masterFile, azureFile, fechaCorte, "Cartera Total", tempFile, machSheets);
 

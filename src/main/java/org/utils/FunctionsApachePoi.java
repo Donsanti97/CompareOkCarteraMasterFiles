@@ -33,6 +33,8 @@ public class FunctionsApachePoi {
 
     private static final Logger logger = LogManager.getLogger(FunctionsApachePoi.class);
 
+    private static final int ROWS_PER_BATCH = 3000;
+
 
     //Método para obtener los valores de encabezados generales
     /*public static List<Map<String, String>> obtenerValoresDeEncabezados(String excelFilePath, String sheetName) {
@@ -1099,7 +1101,7 @@ workbook.close();
 
         int count1 = 0;
         int count2 = 0;
-        int rowsPerBatch = 5000;
+        //int rowsPerBatch = 5000;
 
         // Crear la fila de encabezados en la nueva hoja
         Row headerRow = sheet.createRow(0);
@@ -1108,7 +1110,7 @@ workbook.close();
             cell.setCellValue(headers.get(i));
             count1++;
         }
-        if (count1 % rowsPerBatch == 0) {
+        if (count1 % ROWS_PER_BATCH == 0) {
             runtime();
             Thread.sleep(200);
         }
@@ -1125,7 +1127,7 @@ workbook.close();
                 count2++;
             }
         }
-        if (count2 % rowsPerBatch == 0) {
+        if (count2 % ROWS_PER_BATCH == 0) {
             runtime();
             Thread.sleep(200);
         }
@@ -1405,7 +1407,7 @@ workbook.close();
             Row headerRow = sheet.getRow(0);
 
             int countRows = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             int totalRows = sheet.getPhysicalNumberOfRows() - 1;
             System.out.println("LECTURA EXCEL");
             for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
@@ -1423,7 +1425,7 @@ workbook.close();
                 }
                 countRows++;
 
-                if (countRows % rowsPerBatch == 0) {
+                if (countRows % ROWS_PER_BATCH == 0) {
                     runtime();
                     Thread.sleep(200);
                 }
@@ -1489,7 +1491,7 @@ workbook.close();
 
             int count = 0;
             int count2 = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("\n CALCULANDO SUMATORIA DE VALORES");
             for (Map<String, String> row : data) {
                 String firstHeaderValue = row.get(firstHeader);
@@ -1512,7 +1514,7 @@ workbook.close();
                     count++;
                 }
             }
-            if (count % rowsPerBatch == 0) {
+            if (count % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1528,7 +1530,7 @@ workbook.close();
                 resultadoFormateado.put(entry.getKey(), valorFormateado);
                 count2++;
             }
-            if (count2 % rowsPerBatch == 0) {
+            if (count2 % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1549,7 +1551,7 @@ workbook.close();
 
             int count = 0;
             int count2 = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
 
             for (Map<String, String> row : data) {
                 String firstHeaderValue = row.get(firstHeader);
@@ -1564,7 +1566,7 @@ workbook.close();
                     count++;
                 }
             }
-            if (count % rowsPerBatch == 0) {
+            if (count % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1576,7 +1578,7 @@ workbook.close();
                 count2++;
             }
 
-            if (count2 % rowsPerBatch == 0) {
+            if (count2 % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1595,7 +1597,7 @@ workbook.close();
 
             int count = 0;
             int count2 = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
 
             for (Map<String, String> row : data) {
                 String firstHeaderValue = row.get(firstHeader);
@@ -1618,7 +1620,7 @@ workbook.close();
                     count++;
                 }
             }
-            if (count % rowsPerBatch == 0) {
+            if (count % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1635,7 +1637,7 @@ workbook.close();
                 promedioPorValorUnico.put(key, df.format(promedio));
                 count2++;
             }
-            if (count2 % rowsPerBatch == 0) {
+            if (count2 % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1653,7 +1655,7 @@ workbook.close();
 
             int count = 0;
             int count2 = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
 
             for (Map<String, String> row : data) {
                 String firstHeaderValue = row.get(firstHeader);
@@ -1677,7 +1679,7 @@ workbook.close();
                     count++;
                 }
             }
-            if (count % rowsPerBatch == 0) {
+            if (count % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1689,7 +1691,7 @@ workbook.close();
                 minimoFormateado.put(entry.getKey(), df.format(entry.getValue()));
                 count2++;
             }
-            if (count2 % rowsPerBatch == 0) {
+            if (count2 % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1707,7 +1709,7 @@ workbook.close();
 
             int count = 0;
             int count2 = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
 
             for (Map<String, String> row : data) {
                 String firstHeaderValue = row.get(firstHeader);
@@ -1731,7 +1733,7 @@ workbook.close();
                     count++;
                 }
             }
-            if (count % rowsPerBatch == 0) {
+            if (count % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1743,7 +1745,7 @@ workbook.close();
                 maximoFormateado.put(entry.getKey(), df.format(entry.getValue()));
                 count2++;
             }
-            if (count2 % rowsPerBatch == 0) {
+            if (count2 % ROWS_PER_BATCH == 0) {
                 runtime();
                 Thread.sleep(200);
             }
@@ -1974,7 +1976,7 @@ workbook.close();
         try {
 
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             int totalRows = sheet.getPhysicalNumberOfRows() - 1;
 
             System.out.println("PROCESANDO VALORES");
@@ -2006,7 +2008,7 @@ workbook.close();
                 dataList.add(rowData);
                 currentRow++;
 
-                if (currentRow % rowsPerBatch == 0) {
+                if (currentRow % ROWS_PER_BATCH == 0) {
                     runtime();
                     Thread.sleep(200);
                 }
@@ -2034,7 +2036,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2068,7 +2070,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0) {
+                    if (currentRow % ROWS_PER_BATCH == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2096,7 +2098,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            int rowsPerBatch = 3000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2135,6 +2137,7 @@ workbook.close();
                     currentRow++;
 
                     if (currentRow % rowsPerBatch == 0) {
+                        System.out.println("3000 registros");
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2172,7 +2175,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2211,7 +2214,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0) {
+                    if (currentRow % ROWS_PER_BATCH == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2240,7 +2243,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2281,7 +2284,7 @@ workbook.close();
                     }
                     datosFiltrados.add(rowData);
                     currentRow++;
-                    if (currentRow % rowsPerBatch == 0) {
+                    if (currentRow % ROWS_PER_BATCH == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2310,7 +2313,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2350,7 +2353,7 @@ workbook.close();
                     }
                     datosFiltrados.add(rowData);
                     currentRow++;
-                    if (currentRow % rowsPerBatch == 0) {
+                    if (currentRow % ROWS_PER_BATCH == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2380,7 +2383,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2428,7 +2431,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0) {
+                    if (currentRow % ROWS_PER_BATCH == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2457,7 +2460,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2502,7 +2505,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0) {
+                    if (currentRow % ROWS_PER_BATCH == 0) {
                         runtime();
                         Thread.sleep(200);
                     }
@@ -2559,7 +2562,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 5000;
+            //int rowsPerBatch = 5000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2606,7 +2609,7 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0) {
+                    if (currentRow % ROWS_PER_BATCH == 0) {
                         runtime();
                         Thread.sleep(200);
                     }

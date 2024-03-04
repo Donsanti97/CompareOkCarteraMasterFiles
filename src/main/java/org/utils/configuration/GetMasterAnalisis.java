@@ -2,11 +2,9 @@ package org.utils.configuration;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -72,7 +70,7 @@ public class GetMasterAnalisis {
     /**
      * Función: Este método retorna una lista de keys y valores que corresponden específicamente a la hoja que está siendo analizada en su momento
      * **/
-    public static List<Map<String, String>> getSheetInformation(String azureFile, String masterFile, List<String> dataList, String hoja, String fechaCorte){
+    public static List<Map<String, String>> getSheetInformation(String azureFile, String masterFile, List<String> dataList, String hoja){
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
         List<Map<String, String>> valoresEncabezados2;
@@ -129,27 +127,29 @@ public class GetMasterAnalisis {
                         codigo = mostrarMenu(encabezados2);
                     }
 
-                    JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
+                    /*JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
                     String fechaCorteMF = mostrarMenu(encabezados2);
                     if (fechaCorteMF == null || fechaCorteMF == "Ninguno") {
                         errorMessage("No fue seleccionada la \"fecha de corte\". Por favor siga la instrucción");
                         JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
                         fechaCorteMF = mostrarMenu(encabezados2);
-                    }
+                    }*/
 
-                    String fecha = parsearFecha(fechaCorteMF);
-                    System.out.println("Fecha formateada: " + fecha);
-                    if (!fechaCorte.equals(fecha)) {
-                        String yesNoAnswer = showYesNoDialog("Los dos valores que intenta comparar estan contenidos en un encabezado tipo fecha de corte " +
-                                "\n O diferente al que seleccionó al comienzo del programa? ?");
+                    //String fecha = parsearFecha(fechaCorteMF);
+                    //System.out.println("Fecha formateada: " + fecha);
+                    JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro de los valores que desea comparar");
+                    String fechaCorteMF = mostrarMenu(encabezados2);
+                    if (fechaCorteMF == null || fechaCorteMF == "Ninguno" || fechaCorteMF == "0") {
+                        String yesNoAnswer = showYesNoDialog("Ha seleccionado una opción no válida.. " +
+                                "\nEl encabezado con los valores que desea comparar se encuentra dentro de la lista anterior?");
                         if (yesNoAnswer.equals("SI")){
                             encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezados1);
 
-                            JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizada");
+                            JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizado");
                             fechaCorteMF = mostrarMenu(encabezados2);
                             while (fechaCorteMF == null || fechaCorteMF.equals("Nunguno")) {
-                                errorMessage("No fue seleccionado la fecha de corte. Por favor siga la instrucción");
-                                JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizada");
+                                errorMessage("No fue seleccionado el encabezado. Por favor siga la instrucción");
+                                JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizado");
                                 fechaCorteMF = mostrarMenu(encabezados2);
                             }
                             valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
@@ -216,7 +216,7 @@ public class GetMasterAnalisis {
         SimpleDateFormat formatoSalida = new SimpleDateFormat("dd/MM/yyyy");
 
         try {
-            if (fechaString == null || fechaString.equals("Ninguno")) {
+            if (fechaString == null || fechaString.equals("Ninguno") || fechaString.equals("0")) {
                 System.err.println("Fecha no encontrada");
                 return null;
             } else {
@@ -229,6 +229,28 @@ public class GetMasterAnalisis {
 
         return null; // o manejar el error de alguna manera
     }
+
+    /*public static void playSystemSound() {
+        try {
+            // Obtener el clip de sonido del sistema
+            Clip clip = AudioSystem.getClip();
+            // Obtener el archivo de sonido del sistema para terminar la tarea
+            clip.open(AudioSystem.getAudioInputStream(GetMasterAnalisis.class.getResourceAsStream("/SystemSounds/Windows/Windows Shutdown.wav")));
+            // Reproducir el sonido
+            clip.start();
+            // Esperar hasta que el sonido termine de reproducirse
+            clip.addLineListener(new LineListener() {
+                @Override
+                public void update(LineEvent event) {
+                    if (event.getType() == LineEvent.Type.STOP) {
+                        clip.close(); // Cerrar el clip después de que termina la reproducción del sonido
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 
     public static String showYesNoDialog(String message) {
         JFrame frame = new JFrame();
