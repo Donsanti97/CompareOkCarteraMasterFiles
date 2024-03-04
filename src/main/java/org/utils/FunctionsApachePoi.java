@@ -2098,7 +2098,7 @@ workbook.close();
 
         try {
             int currentRow = 0;
-            int rowsPerBatch = 3000;
+            //int rowsPerBatch = 3000;
             System.out.println("PROCESANDO VALORES");
             while (rowIterator.hasNext()) {
 
@@ -2136,8 +2136,8 @@ workbook.close();
                     datosFiltrados.add(rowData);
                     currentRow++;
 
-                    if (currentRow % rowsPerBatch == 0) {
-                        System.out.println("3000 registros");
+                    if (currentRow % ROWS_PER_BATCH == 0) {
+                        //System.out.println("3000 registros");
                         runtime();
                         Thread.sleep(200);
                     }

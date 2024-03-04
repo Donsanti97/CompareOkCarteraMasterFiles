@@ -168,9 +168,8 @@ public class GetMasterAnalisis {
                         }else {
                             message = "No es posible completar el análisis de la hoja [" + hoja +
                                     "]\n el formato de fecha no es el correcto";
-                            errorMessage("Por favor verifique que los encabezados correspondientes a las fechas" +
-                                    "\n tengan un formato tipo FECHA idéntica a " + fechaCorte +
-                                    "\n o en su defecto que aparezca en la lista");
+                            errorMessage("Por favor verifique que los encabezados a analizar existan, " +
+                                    "o verifique que su archivo Excel no tenga errores en sus celdas");
 
                             errorMessage(message);
                             workbook.close();
@@ -181,7 +180,7 @@ public class GetMasterAnalisis {
                     } else {
                         valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
                         if (valoresEncabezados2 != null){
-                            System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
+                            //System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                             mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
                         }else {
                             message = "No es posible analizar los valores ya que los campos están incompletos." +

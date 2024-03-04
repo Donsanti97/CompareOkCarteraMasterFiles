@@ -123,10 +123,10 @@ public class MethotsAzureMasterFiles {
         try {
             System.out.println("Inicio runtime");
             Runtime runtime = Runtime.getRuntime();
-            System.out.println(runtime.freeMemory());
+            //System.out.println(runtime.freeMemory());
             long minRunningMemory = (8L * 1024L * 1024L * 1024L);
             if (runtime.freeMemory() < minRunningMemory) {
-                System.out.println("Se ejecuta garbageCollection");
+                //System.out.println("Se ejecuta garbageCollection");
                 System.gc();
             }
         } catch (Exception e) {
