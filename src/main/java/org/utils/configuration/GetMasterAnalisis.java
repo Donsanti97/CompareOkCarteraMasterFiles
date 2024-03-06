@@ -75,12 +75,14 @@ public class GetMasterAnalisis {
         System.setProperty("org.apache.poi.ooxml.strict", "false");
         List<Map<String, String>> valoresEncabezados2;
         List<Map<String, String>> mapList = new ArrayList<>();
+        List<String> sheets = new ArrayList<>();
         try{
             Workbook workbook = createWorkbook(azureFile);
             Workbook workbook2 = createWorkbook(masterFile);
             Sheet sheet1;
             Sheet sheet2;
-            String sht1 = "";
+            Sheet sheetName;
+            //String sht1 = "";
             //List<String> sht2 = new ArrayList<>();
             List<String> encabezados1;
             List<String> encabezados2;
@@ -95,9 +97,9 @@ public class GetMasterAnalisis {
                 //System.out.println("ELEMENTOS SELECCIONADOS: " + sht1 + ", " + sht2);
             }*/
             String azureSheet = workbook.getSheetName(0);
-            List<String> sheets = new ArrayList<>();
+
             for (int j = 0; j < workbook2.getNumberOfSheets(); j++) {
-                sheets.add(workbook2.getSheetName(i));
+                sheets.add(workbook2.getSheetName(j));
             }
 
             for (String sheet : sheets) {
@@ -136,7 +138,7 @@ public class GetMasterAnalisis {
                                 JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizado");
                                 fechaCorteMF = mostrarMenu(encabezados2);
                             }
-                            valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF, encabezados1);
+                            valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, azureSheet, sheet, codigo, fechaCorteMF, encabezados1);
                             if (valoresEncabezados2 != null){
                                 System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                                 mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
@@ -162,7 +164,7 @@ public class GetMasterAnalisis {
                             return null;
                         }
                     } else {
-                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF, encabezados1);
+                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, azureSheet, sheet, codigo, fechaCorteMF, encabezados1);
                         if (valoresEncabezados2 != null){
                             //System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                             mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
