@@ -112,7 +112,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
             System.out.println("Espere un momento el análisis puede ser demorado...");
             waitSeconds(5);
 
-            List<String> machSheets = machSheets(azureFile, masterFile);
+            //List<String> machSheets = machSheets(azureFile, masterFile);
 
 
             JOptionPane.showMessageDialog(null, "Para los análisis de algunas de las hojas a continuación es necesario que" +

@@ -2,7 +2,6 @@ package org.utils.configuration.historicoCarteraBrutaPorOF_LC;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
@@ -72,7 +71,7 @@ public class HistoricoCarteraBrutaPorOF_LC {
             System.out.println("Espere un momento el análisis puede ser demorado...");
             waitSeconds(5);
 
-            List<String> machSheets = machSheets(azureFile, masterFile);
+            //List<String> machSheets = machSheets(azureFile, masterFile);
             
 
             carteraTotal(okCartera, masterFile, azureFile, "CARTERA TOTAL", tempFile);

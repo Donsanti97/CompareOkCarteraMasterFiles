@@ -79,7 +79,7 @@ public class HistoricoCarteraConsumoPorOF {
             System.out.println("Espere un momento el análisis puede ser demorado...");
             waitMinutes(5);
 
-            List<String> machSheets = machSheets(azureFile, masterFile);
+            //List<String> machSheets = machSheets(azureFile, masterFile);
             
 
             carteraBruta(okCartera, masterFile, azureFile, "CARTERA BRUTA", tempFile);

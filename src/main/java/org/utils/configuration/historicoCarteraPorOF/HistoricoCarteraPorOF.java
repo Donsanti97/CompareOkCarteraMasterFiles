@@ -74,7 +74,7 @@ public class HistoricoCarteraPorOF {
             System.out.println("Espere un momento el análisis puede ser demorado...");
             waitSeconds(5);
 
-            List<String> machSheets = machSheets(azureFile, masterFile);
+            //List<String> machSheets = machSheets(azureFile, masterFile);
 
             //waitMinutes(8);
 

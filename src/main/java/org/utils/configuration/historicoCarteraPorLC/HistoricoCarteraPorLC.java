@@ -74,7 +74,7 @@ public class HistoricoCarteraPorLC {
             System.out.println("Espere un momento el análisis puede ser demorado...");
             waitSeconds(5);
 
-            List<String> machSheets = machSheets(azureFile, masterFile);
+            //List<String> machSheets = machSheets(azureFile, masterFile);
 
             carteraTotal(okCartera, masterFile, azureFile, "Cartera Total", tempFile);
 
