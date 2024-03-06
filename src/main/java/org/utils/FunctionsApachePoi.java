@@ -5,12 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.util.IOUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
-import java.awt.Font;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +26,8 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.utils.MethotsAzureMasterFiles.*;
+import static org.utils.MethotsAzureMasterFiles.obtenerValorVisibleCelda;
+import static org.utils.MethotsAzureMasterFiles.runtime;
 
 
 public class FunctionsApachePoi {
@@ -1781,7 +1783,7 @@ workbook.close();
     }
 
 
-    public static List<Map<String, String>> obtenerValoresEncabezados2(String azureFile, String masterFile, String hoja, String fechaCorte) {
+    /*public static List<Map<String, String>> obtenerValoresEncabezados2(String azureFile, String masterFile, String hoja, String fechaCorte) {
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
 
@@ -1858,7 +1860,7 @@ workbook.close();
                         errorMessage("No es posible completar el análisis de la hoja [" + hoja +
                                 "]\n el formato de fecha no es el correcto");
                     } else {
-                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sht2, codigo, fechaCorteMF);
+                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sht2, codigo, fechaCorteMF, headers);
                         mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
                         for (Map<String, String> map : mapList) {
                             System.out.println("Analizando valores... ");
@@ -1884,7 +1886,7 @@ workbook.close();
         }
 
         return mapList;
-    }
+    }*/
 
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -2633,7 +2635,7 @@ workbook.close();
         StringBuilder progressBar = new StringBuilder("[");
         for (int i = 0; i < progressBarWidth; i++) {
             if (i < progress) {
-                progressBar.append("||");
+                progressBar.append("=");
             } else {
                 progressBar.append(" ");
             }

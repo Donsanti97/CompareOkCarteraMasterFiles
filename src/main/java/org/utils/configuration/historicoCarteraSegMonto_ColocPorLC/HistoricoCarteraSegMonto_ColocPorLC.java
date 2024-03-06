@@ -2,7 +2,6 @@ package org.utils.configuration.historicoCarteraSegMonto_ColocPorLC;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.util.IOUtils;
 
 import javax.swing.*;
@@ -86,10 +85,8 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
         String okCartera = getDocument();
         JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
         String mesAnoCorte = showMonthYearChooser();
-        JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
-        String fechaCorte = showDateChooser();
 
-        while (azureFile == null || okCartera == null || mesAnoCorte == null || fechaCorte == null) {
+        while (azureFile == null || okCartera == null || mesAnoCorte == null) {
             errorMessage("Alguno de los items requeridos anteriormente no fue seleccionado." +
                     "\n Por favor seleccione nuevamente los items requeridos.");
             JOptionPane.showMessageDialog(null, "Seleccione el archivo Azure");
@@ -103,8 +100,6 @@ public class HistoricoCarteraSegMonto_ColocPorLC {
             okCartera = getDocument();
             JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola el número del mes y año de corte del archivo OkCartera sin espacios (Ejemplo: 02/2023 (febrero/2023))");
             mesAnoCorte = showMonthYearChooser();
-            JOptionPane.showMessageDialog(null, "ingrese a continuación en la consola la fecha de corte del archivo OkCartera sin espacios (Ejemplo: 30/02/2023)");
-            fechaCorte = showDateChooser();
         }
         JOptionPane.showMessageDialog(null, "A continuación se creará un archivo temporal " +
                 "\n Se recomienda seleccionar la carpeta \"Documentos\" para esta función...");

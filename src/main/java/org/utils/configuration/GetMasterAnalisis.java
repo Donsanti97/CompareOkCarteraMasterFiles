@@ -152,7 +152,7 @@ public class GetMasterAnalisis {
                                 JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro que será analizado");
                                 fechaCorteMF = mostrarMenu(encabezados2);
                             }
-                            valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
+                            valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF, encabezados1);
                             if (valoresEncabezados2 != null){
                                 System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                                 mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
@@ -178,7 +178,7 @@ public class GetMasterAnalisis {
                             return null;
                         }
                     } else {
-                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF);
+                        valoresEncabezados2 = obtenerValoresPorFilas(workbook, workbook2, sht1, sheet, codigo, fechaCorteMF, encabezados1);
                         if (valoresEncabezados2 != null){
                             //System.out.println(" SI ESTÁ ENTRANDO A LLENAR EL MAPLIST DE LOS DATOS MAESTROS");
                             mapList = createMapList(valoresEncabezados2, codigo, fechaCorteMF);
