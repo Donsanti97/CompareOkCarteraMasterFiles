@@ -77,106 +77,106 @@ public class HistoricoCarteraComercialPorOF {
             List<String> machSheets = machSheets(azureFile, masterFile);
 
 
-            carteraBruta(okCartera, masterFile, azureFile, "Cartera Bruta", tempFile, machSheets);
+            carteraBruta(okCartera, masterFile, azureFile, "Cartera Bruta", tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "0 Dias", 0, 0, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "0 Dias", 0, 0, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "1 - 7 Dias", 1, 7, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "1 - 7 Dias", 1, 7, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "7 - 15 Dias", 8, 15, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "7 - 15 Dias", 8, 15, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "16 - 30 Dias", 16, 30, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "16 - 30 Dias", 16, 30, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "31 - 60 Dias", 31, 60, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "31 - 60 Dias", 31, 60, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "61 - 90 Dias", 61, 90, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "61 - 90 Dias", 61, 90, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "91 - 120 Dias", 91, 120, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "91 - 120 Dias", 91, 120, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "121 - 150 Dias", 121, 150, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "121 - 150 Dias", 121, 150, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "151 - 180 Dias", 151, 180, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "151 - 180 Dias", 151, 180, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "181 - 360 Dias", 181, 360, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "181 - 360 Dias", 181, 360, tempFile);
             waitSeconds(5);
 
-            diasDeMoraDias(okCartera, masterFile, azureFile, "> 361 Dias", 361, 5000, tempFile, machSheets);
+            diasDeMoraDias(okCartera, masterFile, azureFile, "> 361 Dias", 361, 5000, tempFile);
             waitSeconds(5);
 
-            calificacion(okCartera, masterFile, azureFile, "A", "A", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "A", "A", tempFile);
             waitSeconds(5);
 
-            calificacion(okCartera, masterFile, azureFile, "B", "B", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "B", "B", tempFile);
             waitSeconds(5);
 
-            calificacion(okCartera, masterFile, azureFile, "C", "C", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "C", "C", tempFile);
             waitSeconds(5);
 
-            calificacion(okCartera, masterFile, azureFile, "D", "D", tempFile, machSheets);
-            waitSeconds(5);
-
-
-            calificacion(okCartera, masterFile, azureFile, "E", "E", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "D", "D", tempFile);
             waitSeconds(5);
 
 
-            reEstCapital(okCartera, masterFile, azureFile, "Re_Est Capital", tempFile, machSheets);
+            calificacion(okCartera, masterFile, azureFile, "E", "E", tempFile);
             waitSeconds(5);
 
 
-            reEstCapital(okCartera, 0, 150, masterFile, azureFile, "Re_Est Capital < = 150", tempFile, machSheets);
+            reEstCapital(okCartera, masterFile, azureFile, "Re_Est Capital", tempFile);
             waitSeconds(5);
 
 
-            reEstCapital(okCartera, 151, 5000, masterFile, azureFile, "Re_Est Capital > 150", tempFile, machSheets);
+            reEstCapital(okCartera, 0, 150, masterFile, azureFile, "Re_Est Capital < = 150", tempFile);
             waitSeconds(5);
 
 
-            reEstNCreditos(okCartera, masterFile, azureFile, "Re_Est N° Creditos", tempFile, machSheets);
+            reEstCapital(okCartera, 151, 5000, masterFile, azureFile, "Re_Est Capital > 150", tempFile);
             waitSeconds(5);
 
 
-            nCreditosVigentes(okCartera, masterFile, azureFile, "N° Creditos Vigentes", tempFile, machSheets);
+            reEstNCreditos(okCartera, masterFile, azureFile, "Re_Est N° Creditos", tempFile);
             waitSeconds(5);
 
-            clientesComercial(okCartera, masterFile, azureFile, "Clientes_Comercial", tempFile, machSheets);
+
+            nCreditosVigentes(okCartera, masterFile, azureFile, "N° Creditos Vigentes", tempFile);
             waitSeconds(5);
 
-            colocacionComercial(okCartera, masterFile, azureFile, mesAnoCorte, "Colocación_Comercial", tempFile, machSheets);
+            clientesComercial(okCartera, masterFile, azureFile, "Clientes_Comercial", tempFile);
             waitSeconds(5);
 
-            nCreditoComercial(okCartera, masterFile, azureFile, mesAnoCorte, "N° De Créd Comercial", tempFile, machSheets);
+            colocacionComercial(okCartera, masterFile, azureFile, mesAnoCorte, "Colocación_Comercial", tempFile);
             waitSeconds(5);
 
-            colocacionPromComercial(okCartera, masterFile, azureFile, mesAnoCorte, "Colocación Prom Comercial", tempFile, machSheets);
+            nCreditoComercial(okCartera, masterFile, azureFile, mesAnoCorte, "N° De Créd Comercial", tempFile);
             waitSeconds(5);
 
-            comercialPercentil05(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial Percentil 0.5", tempFile, machSheets);
+            colocacionPromComercial(okCartera, masterFile, azureFile, mesAnoCorte, "Colocación Prom Comercial", tempFile);
             waitSeconds(5);
 
-            comercialPercentil08(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial Percentil 0.8", tempFile, machSheets);
+            comercialPercentil05(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial Percentil 0.5", tempFile);
             waitSeconds(5);
 
-            comercialPzoPerc05(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial_Pzo_Perc_0.5", tempFile, machSheets);
+            comercialPercentil08(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial Percentil 0.8", tempFile);
             waitSeconds(5);
 
-            comercialPzoProm(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial_Pzo_Prom", tempFile, machSheets);
+            comercialPzoPerc05(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial_Pzo_Perc_0.5", tempFile);
+            waitSeconds(5);
+
+            comercialPzoProm(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial_Pzo_Prom", tempFile);
             waitSeconds(5);
 
             JOptionPane.showMessageDialog(null, "Espere un momento la última hoja está siendo analizada. \n Por favor de clic en Ok para continuar...");
             waitSeconds(5);
 
-            comercialPzoPerc08(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial_Pzo_Perc_0.8", tempFile, machSheets);
+            comercialPzoPerc08(okCartera, masterFile, azureFile, mesAnoCorte, "Comercial_Pzo_Perc_0.8", tempFile);
             waitSeconds(5);
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
@@ -194,7 +194,7 @@ public class HistoricoCarteraComercialPorOF {
 
     }
 
-    public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void carteraBruta(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -203,7 +203,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -302,7 +302,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void diasDeMoraDias(String okCarteraFile, String masterFile, String azureFile, String hoja, int rangoDesde, int rangoHasta,  String tempFile, List <String> machSheets) throws IOException {
+    public static void diasDeMoraDias(String okCarteraFile, String masterFile, String azureFile, String hoja, int rangoDesde, int rangoHasta,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -311,7 +311,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -355,7 +355,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -415,7 +415,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void calificacion(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion,  String tempFile, List <String> machSheets) throws IOException {
+    public static void calificacion(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -425,7 +425,7 @@ public class HistoricoCarteraComercialPorOF {
 
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -465,7 +465,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -522,7 +522,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstCapital(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reEstCapital(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -531,7 +531,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -571,7 +571,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -628,7 +628,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstCapital(String okCarteraFile, int diasMoradesde, int diasMoraHasta, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reEstCapital(String okCarteraFile, int diasMoradesde, int diasMoraHasta, String masterFile, String azureFile, String hoja,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -637,7 +637,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -674,7 +674,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -731,7 +731,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void reEstNCreditos(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void reEstNCreditos(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -740,7 +740,7 @@ public class HistoricoCarteraComercialPorOF {
 
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -779,7 +779,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -837,7 +837,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void nCreditosVigentes(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void nCreditosVigentes(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -846,7 +846,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -886,7 +886,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -944,7 +944,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void clientesComercial(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile, List <String> machSheets) throws IOException {
+    public static void clientesComercial(String okCarteraFile, String masterFile, String azureFile, String hoja,  String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -953,7 +953,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -992,7 +992,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1049,7 +1049,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void colocacionComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void colocacionComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1058,7 +1058,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1101,7 +1101,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1158,7 +1158,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void nCreditoComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void nCreditoComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1167,7 +1167,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1210,7 +1210,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1267,7 +1267,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void colocacionPromComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void colocacionPromComercial(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1276,7 +1276,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1318,7 +1318,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1375,7 +1375,7 @@ public class HistoricoCarteraComercialPorOF {
         System.setProperty("org.apache.poi.ooxml.strict", "true");
     }
 
-    public static void comercialPercentil05(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void comercialPercentil05(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1384,7 +1384,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1427,7 +1427,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1485,7 +1485,7 @@ public class HistoricoCarteraComercialPorOF {
     }
 
 
-    public static void comercialPercentil08(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void comercialPercentil08(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1494,7 +1494,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1537,7 +1537,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1595,7 +1595,7 @@ public class HistoricoCarteraComercialPorOF {
     }
 
     /*---------------------------------------------------------------------------------------------------------------------*/
-    public static void comercialPzoProm(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void comercialPzoProm(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1604,7 +1604,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1647,7 +1647,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1706,7 +1706,7 @@ public class HistoricoCarteraComercialPorOF {
     }
 
     //Mertodos a los que hay que hacerle un método aparte en la tabla dinámica para hallar el porcentaje 50%
-    public static void comercialPzoPerc05(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void comercialPzoPerc05(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1715,7 +1715,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1759,7 +1759,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 50);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1817,7 +1817,7 @@ public class HistoricoCarteraComercialPorOF {
     }
 
     //Mertodos a los que hay que hacerle un método aparte en la tabla dinámica para hallar el porcentaje 80%
-    public static void comercialPzoPerc08(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile, List <String> machSheets) throws IOException, ParseException {
+    public static void comercialPzoPerc08(String okCarteraFile, String masterFile, String azureFile, String mesAnoCorte, String hoja,  String tempFile) throws IOException, ParseException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1826,7 +1826,7 @@ public class HistoricoCarteraComercialPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null){
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1869,7 +1869,7 @@ public class HistoricoCarteraComercialPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1), 80);
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 

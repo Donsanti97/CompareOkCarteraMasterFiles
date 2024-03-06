@@ -120,115 +120,115 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
             List<String> opciones = Arrays.asList("B", "C", "D", "E");
             String calificacion = menu(opciones);
 
-            nuevosOficinas(okCartera, masterFile, azureFile, "Nuevos_Oficinas", tempFile, machSheets);
+            nuevosOficinas(okCartera, masterFile, azureFile, "Nuevos_Oficinas", tempFile);
 
-            nuevosOficinasMay30(okCartera, masterFile, azureFile, "Nuevos_Oficinas > 30", tempFile, machSheets);
+            nuevosOficinasMay30(okCartera, masterFile, azureFile, "Nuevos_Oficinas > 30", tempFile);
 
-            nuevosOficinasBE(okCartera, masterFile, azureFile, "Nuevos_Oficinas_B_E", calificacion, tempFile, machSheets);
+            nuevosOficinasBE(okCartera, masterFile, azureFile, "Nuevos_Oficinas_B_E", calificacion, tempFile);
 
-            renovadoOficinas(okCartera, masterFile, azureFile, "Renovado_Oficinas", tempFile, machSheets);
+            renovadoOficinas(okCartera, masterFile, azureFile, "Renovado_Oficinas", tempFile);
 
-            renovadoOficinasMay30(okCartera, masterFile, azureFile, "Renovado_Oficinas_>30", tempFile, machSheets);
+            renovadoOficinasMay30(okCartera, masterFile, azureFile, "Renovado_Oficinas_>30", tempFile);
 
-            renovadoOficinasBE(okCartera, masterFile, azureFile, "Renovado_Oficinas_B_E", calificacion, tempFile, machSheets);
+            renovadoOficinasBE(okCartera, masterFile, azureFile, "Renovado_Oficinas_B_E", calificacion, tempFile);
 
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc '0-0.5 M", 0, 5, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 0.5-1 M", 5, 10, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 1-2 M", 10, 20, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 2-3 M", 20, 30, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 3-4 M", 30, 40, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 4-5 M", 40, 50, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 5-10 M", 50, 100, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 10-15 M", 100, 150, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 15-20 M", 150, 200, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 20-25 M", 200, 250, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 25-50 M", 250, 500, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 50-100 M", 500, 1000, tempFile, machSheets);
-            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc > 100 M", 1000, 10000, tempFile, machSheets);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc '0-0.5 M", 0, 5, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 0.5-1 M", 5, 10, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 1-2 M", 10, 20, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 2-3 M", 20, 30, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 3-4 M", 30, 40, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 4-5 M", 40, 50, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 5-10 M", 50, 100, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 10-15 M", 100, 150, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 15-20 M", 150, 200, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 20-25 M", 200, 250, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 25-50 M", 250, 500, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc 50-100 M", 500, 1000, tempFile);
+            oficinasMontoColoc(okCartera, masterFile, azureFile, "Oficinas_Monto_Coloc > 100 M", 1000, 10000, tempFile);
 
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol '0-0.5 >30", 0, 5, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 0.5-1 > 30", 5, 10, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 1-2M >30", 10, 20, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 2-3M >30", 20, 30, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 3-4M >30", 30, 40, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 4-5M >30", 40, 50, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 5-10M >30", 50, 100, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 10-15 >30", 100, 150, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 15-20 >30", 150, 200, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 20-25 >30", 200, 250, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 25-50 >30", 250, 500, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 50-100 >30", 500, 1000, tempFile, machSheets);
-            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol > 100 >30", 1000, 10000, tempFile, machSheets);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol '0-0.5 >30", 0, 5, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 0.5-1 > 30", 5, 10, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 1-2M >30", 10, 20, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 2-3M >30", 20, 30, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 3-4M >30", 30, 40, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 4-5M >30", 40, 50, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 5-10M >30", 50, 100, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 10-15 >30", 100, 150, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 15-20 >30", 150, 200, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 20-25 >30", 200, 250, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 25-50 >30", 250, 500, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 50-100 >30", 500, 1000, tempFile);
+            oficinasMontoColocMay30(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol > 100 >30", 1000, 10000, tempFile);
 
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol '0-0.5 B_E", 0, 5, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 0.5-1 B_E", 5, 10, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 1-2 B_E", 10, 20, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 2-3 B_E", 20, 30, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 3-4 B_E", 30, 40, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 4-5 B_E", 40, 50, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 5-10 B_E", 50, 100, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 10-15 B_E", 100, 150, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 15-20 B_E", 150, 200, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 20-25 B_E", 200, 250, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 25-50 B_E", 250, 500, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 50-100 B_E", 500, 1000, calificacion, tempFile, machSheets);
-            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol > 100 B_E", 1000, 10000, calificacion, tempFile, machSheets);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol '0-0.5 B_E", 0, 5, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 0.5-1 B_E", 5, 10, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 1-2 B_E", 10, 20, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 2-3 B_E", 20, 30, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 3-4 B_E", 30, 40, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 4-5 B_E", 40, 50, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 5-10 B_E", 50, 100, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 10-15 B_E", 100, 150, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 15-20 B_E", 150, 200, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 20-25 B_E", 200, 250, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 25-50 B_E", 250, 500, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol 50-100 B_E", 500, 1000, calificacion, tempFile);
+            oficinasMontoColocBE(okCartera, masterFile, azureFile, "Oficinas_Monto_Cocol > 100 B_E", 1000, 10000, calificacion, tempFile);
 
-            reestOF(okCartera, masterFile, azureFile, "Reest_'0-0.5 M", 0, 5, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_0.5-1 M", 5, 10, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_1-2M M", 10, 20, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_2-3M M", 20, 30, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_3-4M M", 30, 40, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_4-5M M", 40, 50, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_5-10M M", 50, 100, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_10-15 M", 100, 150, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_15-20 M", 150, 200, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_20-25 M", 200, 250, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_25-50 M", 250, 500, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_50-100 M", 500, 1000, tempFile, machSheets);
-            reestOF(okCartera, masterFile, azureFile, "Reest_> 100 M", 1000, 10000, tempFile, machSheets);
+            reestOF(okCartera, masterFile, azureFile, "Reest_'0-0.5 M", 0, 5, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_0.5-1 M", 5, 10, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_1-2M M", 10, 20, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_2-3M M", 20, 30, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_3-4M M", 30, 40, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_4-5M M", 40, 50, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_5-10M M", 50, 100, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_10-15 M", 100, 150, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_15-20 M", 150, 200, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_20-25 M", 200, 250, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_25-50 M", 250, 500, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_50-100 M", 500, 1000, tempFile);
+            reestOF(okCartera, masterFile, azureFile, "Reest_> 100 M", 1000, 10000, tempFile);
 
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_'0-0.5 M", 0, 5, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_0.5-1 M", 5, 10, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_1-2M M", 10, 20, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_2-3M M", 20, 30, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_3-4M M", 30, 40, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_4-5M M", 40, 50, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_5-10M M", 50, 100, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_10-15 M", 100, 150, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_15-20 M", 150, 200, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_20-25 M", 200, 250, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_25-50 M", 250, 500, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_50-100 M", 500, 1000, tempFile, machSheets);
-            clientesOF(okCartera, masterFile, azureFile, "Clientes_> 100 M", 1000, 10000, tempFile, machSheets);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_'0-0.5 M", 0, 5, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_0.5-1 M", 5, 10, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_1-2M M", 10, 20, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_2-3M M", 20, 30, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_3-4M M", 30, 40, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_4-5M M", 40, 50, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_5-10M M", 50, 100, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_10-15 M", 100, 150, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_15-20 M", 150, 200, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_20-25 M", 200, 250, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_25-50 M", 250, 500, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_50-100 M", 500, 1000, tempFile);
+            clientesOF(okCartera, masterFile, azureFile, "Clientes_> 100 M", 1000, 10000, tempFile);
 
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_'0-0.5 M", 0, 5, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_0.5-1 M", 5, 10, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_1-2M M", 10, 20, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_2-3M M", 20, 30, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_3-4M M", 30, 40, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_4-5M M", 40, 50, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_5-10M M", 50, 100, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_10-15 M", 100, 150, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_15-20 M", 150, 200, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_20-25 M", 200, 250, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_25-50 M", 250, 500, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_50-100 M", 500, 1000, tempFile, machSheets);
-            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_> 100 M", 1000, 10000, tempFile, machSheets);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_'0-0.5 M", 0, 5, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_0.5-1 M", 5, 10, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_1-2M M", 10, 20, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_2-3M M", 20, 30, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_3-4M M", 30, 40, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_4-5M M", 40, 50, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_5-10M M", 50, 100, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_10-15 M", 100, 150, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_15-20 M", 150, 200, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_20-25 M", 200, 250, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_25-50 M", 250, 500, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_50-100 M", 500, 1000, tempFile);
+            operacionesOF(okCartera, masterFile, azureFile, "Operaciones_> 100 M", 1000, 10000, tempFile);
 
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_'0-0.5 M", 0, 5, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_0.5-1 M", 5, 10, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_1-2M M", 10, 20, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_2-3M M", 20, 30, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_3-4M M", 30, 40, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_4-5M M", 40, 50, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_5-10M M", 50, 100, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_10-15 M", 100, 150, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_15-20 M", 150, 200, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_20-25 M", 200, 250, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_25-50 M", 250, 500, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_50-100 M", 500, 1000, mesAnoCorte, tempFile, machSheets);
-            colocacionOF(okCartera, masterFile, azureFile, "Colocación_> 100 M", 1000, 10000, mesAnoCorte, tempFile, machSheets);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_'0-0.5 M", 0, 5, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_0.5-1 M", 5, 10, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_1-2M M", 10, 20, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_2-3M M", 20, 30, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_3-4M M", 30, 40, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_4-5M M", 40, 50, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_5-10M M", 50, 100, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_10-15 M", 100, 150, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_15-20 M", 150, 200, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_20-25 M", 200, 250, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_25-50 M", 250, 500, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_50-100 M", 500, 1000, mesAnoCorte, tempFile);
+            colocacionOF(okCartera, masterFile, azureFile, "Colocación_> 100 M", 1000, 10000, mesAnoCorte, tempFile);
 
 
             JOptionPane.showMessageDialog(null, "Archivos analizados correctamente...");
@@ -244,7 +244,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     }
 
 
-    public static void nuevosOficinas(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile, List<String> machSheets) throws IOException {
+    public static void nuevosOficinas(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile) throws IOException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -253,7 +253,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -285,7 +285,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -345,7 +345,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
     }
 
 
-    public static void nuevosOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void nuevosOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -354,7 +354,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -391,7 +391,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -450,7 +450,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void nuevosOficinasBE(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void nuevosOficinasBE(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -459,7 +459,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -497,7 +497,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -556,7 +556,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void renovadoOficinas(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void renovadoOficinas(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -565,7 +565,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -603,7 +603,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -662,7 +662,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void renovadoOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void renovadoOficinasMay30(String okCarteraFile, String masterFile, String azureFile, String hoja, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -670,7 +670,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -708,7 +708,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -767,7 +767,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void renovadoOficinasBE(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void renovadoOficinasBE(String okCarteraFile, String masterFile, String azureFile, String hoja, String calificacion, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -776,7 +776,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -814,7 +814,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
 
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
@@ -874,7 +874,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void oficinasMontoColoc(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void oficinasMontoColoc(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -883,7 +883,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -921,7 +921,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -980,7 +980,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void oficinasMontoColocMay30(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void oficinasMontoColocMay30(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -989,7 +989,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1026,7 +1026,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1084,7 +1084,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void oficinasMontoColocBE(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String calificacion, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void oficinasMontoColocBE(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String calificacion, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1093,7 +1093,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1130,7 +1130,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1188,7 +1188,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void reestOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void reestOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1197,7 +1197,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1235,7 +1235,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1293,7 +1293,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void clientesOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void clientesOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1302,7 +1302,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1339,7 +1339,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularSumaPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1397,7 +1397,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void operacionesOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile, List<String> machSheets) throws IOException, InterruptedException {
+    public static void operacionesOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String tempFile) throws IOException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1406,7 +1406,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1444,7 +1444,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
@@ -1502,7 +1502,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
 
     }
 
-    public static void colocacionOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String mesAnoCorte, String tempFile, List<String> machSheets) throws IOException, ParseException, InterruptedException {
+    public static void colocacionOF(String okCarteraFile, String masterFile, String azureFile, String hoja, int valorInic, int valorFinal, String mesAnoCorte, String tempFile) throws IOException, ParseException, InterruptedException {
 
         IOUtils.setByteArrayMaxOverride(300000000);
 
@@ -1511,7 +1511,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
         try {
             String message;
 
-            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+            List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
             if (datosMasterFile == null) {
                 message = "La información está incompleta, no es posible completar el análisis. " +
@@ -1553,7 +1553,7 @@ public class HistoricoCarteraSegMonto_ColocPorOF {
                 System.out.println("SHEET_NAME TEMP_FILE: " + sheet.getSheetName());
 
                 Map<String, String> resultado = functions.calcularConteoPorValoresUnicos(tempFile, camposDeseados.get(0), camposDeseados.get(1));
-                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, machSheets, hoja);
+                //List<Map<String, String>> datosMasterFile = getSheetInformation(azureFile, masterFile, hoja);
 
                 for (Map.Entry<String, String> entryOkCartera : resultado.entrySet()) {
 
