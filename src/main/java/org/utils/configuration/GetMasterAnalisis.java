@@ -81,42 +81,36 @@ public class GetMasterAnalisis {
             Sheet sheet1;
             Sheet sheet2;
             String sht1 = "";
-            List<String> sht2 = new ArrayList<>();
+            //List<String> sht2 = new ArrayList<>();
             List<String> encabezados1;
             List<String> encabezados2;
-            String encabezado;
+            //String encabezado;
             int i = 0;
             String message;
 
-            for (String seleccion : dataList) {
+            /*for (String seleccion : dataList) {
                 String[] elementos = seleccion.split(SPECIAL_CHAR);
                 sht1 = elementos[0];
                 sht2.add(elementos[1]);
                 //System.out.println("ELEMENTOS SELECCIONADOS: " + sht1 + ", " + sht2);
+            }*/
+            String azureSheet = workbook.getSheetName(0);
+            List<String> sheets = new ArrayList<>();
+            for (int j = 0; j < workbook2.getNumberOfSheets(); j++) {
+                sheets.add(workbook2.getSheetName(i));
             }
 
-            for (String sheet : sht2) {
+            for (String sheet : sheets) {
 
                 if (sheet.equals(hoja)) {
 
                     System.out.println();
                     System.out.println("SE ESTA ANALIZANDO LA HOJA: " + hoja);
 
-                    sheet1 = workbook.getSheet(sht1);
+                    sheet1 = workbook.getSheet(azureSheet);
                     sheet2 = workbook2.getSheet(sheet);
 
                     encabezados1 = getHeadersN(sheet1);
-
-                    /*JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
-                    encabezado = mostrarMenu(encabezados1);*/
-
-                    /**/
-                    /*while (encabezado == null) {
-                        errorMessage("No fue seleccionado el encabezado. Por favor siga la instrucción");
-                        JOptionPane.showMessageDialog(null, "Del siguiente menú escoja el primer encabezado ubicado en las hojas del archivo Maestro");
-                        encabezado = mostrarMenu(encabezados1);
-                    }*/
-                    /**/
 
                     encabezados2 = getHeadersMasterfile(sheet1, sheet2, encabezados1);
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda al \"Código\" que será analizado");
@@ -127,16 +121,6 @@ public class GetMasterAnalisis {
                         codigo = mostrarMenu(encabezados2);
                     }
 
-                    /*JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
-                    String fechaCorteMF = mostrarMenu(encabezados2);
-                    if (fechaCorteMF == null || fechaCorteMF == "Ninguno") {
-                        errorMessage("No fue seleccionada la \"fecha de corte\". Por favor siga la instrucción");
-                        JOptionPane.showMessageDialog(null, "Seleccione el encabezado que corresponda a la \"Fecha de corte\" que será analizada");
-                        fechaCorteMF = mostrarMenu(encabezados2);
-                    }*/
-
-                    //String fecha = parsearFecha(fechaCorteMF);
-                    //System.out.println("Fecha formateada: " + fecha);
                     JOptionPane.showMessageDialog(null, "Seleccione el encabezado del archivo Maestro de los valores que desea comparar");
                     String fechaCorteMF = mostrarMenu(encabezados2);
                     if (fechaCorteMF == null || fechaCorteMF == "Ninguno" || fechaCorteMF == "0") {
