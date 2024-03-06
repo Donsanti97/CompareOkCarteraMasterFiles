@@ -70,7 +70,7 @@ public class GetMasterAnalisis {
     /**
      * Función: Este método retorna una lista de keys y valores que corresponden específicamente a la hoja que está siendo analizada en su momento
      * **/
-    public static List<Map<String, String>> getSheetInformation(String azureFile, String masterFile, List<String> dataList, String hoja){
+    public static List<Map<String, String>> getSheetInformation(String azureFile, String masterFile, String hoja){
         IOUtils.setByteArrayMaxOverride(300000000);
         System.setProperty("org.apache.poi.ooxml.strict", "false");
         List<Map<String, String>> valoresEncabezados2;
